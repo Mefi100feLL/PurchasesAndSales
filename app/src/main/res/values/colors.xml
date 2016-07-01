@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="primary_color">@color/md_indigo_500</color>
+    <color name="primary_color_light">@color/md_indigo_100</color>
+    <color name="primary_color_disabled">@color/md_indigo_50</color>
+    <color name="primary_color_dark">@color/md_indigo_700</color>
+    <color name="accent">@color/md_pink_500</color>
+    <color name="accent_dark">@color/md_pink_700</color>
+
+    <color name="swipe_refresh_color_one">@color/md_orange_500</color>
+    <color name="swipe_refresh_color_two">@color/md_blue_500</color>
+    <color name="swipe_refresh_color_three">@color/md_red_500</color>
+
+
+    <color name="ripple_color">#FF000000</color>
+    <color name="grey200">#22555555</color>
+
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+
+    <color name="primary_text_invert">#FFFFFFFF</color>
+    <color name="secondary_text_invert">#B2FFFFFF</color>
+
+    <color name="divider">#1e000000</color>
+</resources>

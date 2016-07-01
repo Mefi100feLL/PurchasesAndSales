@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="sizes_table_lists">
+        <item >1</item>
+        <item >2</item>
+    </string-array>
+
+
+    <string-array name="sortarray">
+        <item>@string/prefs_default_sort_listitem_one</item>
+        <item>@string/prefs_default_sort_listitem_two</item>
+        <item>@string/prefs_default_sort_listitem_three</item>
+    </string-array>
+
+    <string-array name="sorts_of_list">
+        <item>@string/prefs_default_sort_list_one</item>
+        <item>@string/prefs_default_sort_list_two</item>
+    </string-array>
+
+    <string-array name="sizes">
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>22</item>
+        <item>24</item>
+        <item>26</item>
+        <item>28</item>
+        <item>30</item>
+    </string-array>
+
+    <string-array name="filters_list" >
+        <item>@string/prefs_filter_list_default_one</item>
+        <item>@string/prefs_filter_list_default_two</item>
+    </string-array>
+
+    <string-array name="list_sharing_items">
+        <item>@string/share_list_as_sms</item>
+        <item>@string/share_list_as_email</item>
+        <item>@string/share_list_as_text</item>
+    </string-array>
+
+
+    <array name="colors_for_citys">
+        <item>@color/md_indigo_500</item>
+        <item>@color/md_light_blue_500</item>
+        <item>@color/md_brown_500</item>
+        <item>@color/md_pink_500</item>
+        <item>@color/md_amber_500</item>
+        <item>@color/md_deep_purple_500</item>
+        <item>@color/md_yellow_500</item>
+        <item>@color/md_light_green_500</item>
+        <item>@color/md_blue_500</item>
+        <item>@color/md_cyan_500</item>
+        <item>@color/md_red_500</item>
+        <item>@color/md_teal_500</item>
+        <item>@color/md_lime_500</item>
+        <item>@color/md_blue_grey_500</item>
+        <item>@color/md_orange_500</item>
+        <item>@color/md_green_500</item>
+        <item>@color/md_purple_500</item>
+    </array>
+
+    <!--<array name="categories_urls">
+        <item>/produkty/</item>
+        <item>/elektronika-i-bytovaya-tekhnika/</item>
+        <item>/kosmetika-i-bytovaya-khimiya/</item>
+        <item>/stroymaterialy/</item>
+        <item>/tovary-dlya-detey/</item>
+        <item>/odezhda-i-obuv/</item>
+        <item>/mebel/</item>
+        <item>/apteki/</item>
+        <item>/internet-magaziny/</item>
+        <item>/yuvelirnyye-izdeliya/</item>
+        <item>/magaziny-novogo-formata/</item>
+        <item>/tovary-dlya-avtomobilya/</item>
+        <item>/tovary-dlya-zhivotnykh/</item>
+    </array>
+
+    <array name="categories_icons">
+        <item>@mipmap/ic_food_grey600_24dp</item>
+        <item>@mipmap/ic_responsive_grey600_24dp</item>
+        <item>@mipmap/ic_brush_grey600_24dp</item>
+        <item>@mipmap/ic_home_variant_grey600_24dp</item>
+        <item>@mipmap/ic_duck_grey600_24dp</item>
+        <item>@mipmap/ic_tshirt_crew_grey600_24dp</item>
+        <item>@mipmap/ic_readability_grey600_24dp</item>
+        <item>@mipmap/ic_hospital_grey600_24dp</item>
+        <item>@mipmap/ic_shopping_music_grey600_24dp</item>
+        <item>@mipmap/ic_diamond_grey600_24dp</item>
+        <item>@mipmap/ic_store_grey600_24dp</item>
+        <item>@mipmap/ic_car_grey600_24dp</item>
+        <item>@mipmap/ic_cat_grey600_24dp</item>
+    </array>-->
+
+
+    <string name="share_list_as_sms">По SMS</string>
+    <string name="share_list_as_email">По Email</string>
+    <string name="share_list_as_text">Как текст</string>
+</resources>

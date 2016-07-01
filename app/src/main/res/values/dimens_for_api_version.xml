@@ -1,0 +1,5 @@
+<resources>
+    <integer name="visibility_toolbar_show_image">0</integer>
+    <dimen name="margin_top_bottom_card_of_api_version">0dp</dimen>
+    <dimen name="margin_card">0dp</dimen>
+</resources>

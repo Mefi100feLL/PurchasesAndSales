@@ -1,0 +1,218 @@
+<resources>
+    <string name="app_name">Покупки по акциям</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_mestoskidki">Mestoskidki.ru</string>
+    <string name="navigation_drawer_shops">Магазины</string>
+    <string name="navigation_drawer_categories">Категории</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <!-- Empty -->
+    <string name="empty_shops_select_region">Не указан регион для загрузки магазинов.\nПожалуйста выберите регион</string>
+    <string name="empty_categories_select_region">Не указан регион для загрузки категорий.\nПожалуйста выберите регион</string>
+    <string name="empty_no_shops_restart_app">Нет магазинов.\nПопробуйте перезапустить приложение</string>
+    <string name="empty_no_favorite_shops">Нет избранных магазинов\nОткройте все магазины и добавьте в избранные те, которые Вам нужны, нажав на звездочку</string>
+    <string name="empty_no_categories_restart_app">Нет категорий.\nПопробуйте перезапустить приложение</string>
+    <string name="empty_no_favorite_categories">Нет избранных категорий.\nОткройте все категории и добавьте в избранные те, которые Вам нужны, нажав на звездочку</string>
+    <string name="empty_no_categories_try_update">Нет категорий.\nПопробуйте обновить</string>
+    <string name="empty_select_city">Не выбран город.\nВыберите город для загрузки магазинов</string>
+    <string name="empty_no_sales_in_shop">Нет акций\nВозможно в магазине в данный момент не проводятся акции или они пока не появились на сайте\nПопробуйте посмотреть позже</string>
+    <string name="empty_no_shopping_lists">Нет списков покупок</string>
+    <string name="empty_no_shops">Нет магазинов\nНе получилось загрузить магазины. То ли на сервере проблемы, то ли у Вас интернет пошаливает.\nПопробуйте позже!</string>
+    <string name="empty_no_categgories">Нет категорий\nНе получилось загрузить категории. То ли на сервере проблемы, то ли у Вас интернет пошаливает.\nПопробуйте позже!</string>
+    <string name="empty_no_favorite_categories_in_shop">Нет избранных категорий\nВыберите категории, для которых загружать акции</string>
+    <string name="empty_no_favorite_shops_in_category">Нет избранных магазинов\nВыберите магазины, для которых загружать акции</string>
+    <string name="empty_no_sales_in_category">Нет акций\nВозможно в магазинах в данный момент не проводятся акции данной категории или они пока не появились на сайте\nПопробуйте посмотреть позже</string>
+
+
+    <!-- Buttons -->
+    <string name="button_select_region">Выбрать регион</string>
+    <string name="button_restart_app">Перезапустить</string>
+    <string name="button_show_all_shops">Все магазины</string>
+    <string name="button_show_all_categories">Все категории</string>
+    <string name="button_update">Обновить</string>
+    <string name="button_select_city">Выбрать город</string>
+    <string name="button_add_list">Создать</string>
+    <string name="button_select_shops">Выбрать магазины</string>
+    <string name="button_select_categories">Выбрать категории</string>
+    <string name="button_try_again">Попробовать ещё раз</string>
+    <string name="button_exit">Выход</string>
+
+    <!--
+        <string name="button_how_this">Как так то?</string>
+        <string name="button_hm_okey">Хм, ладно</string>
+        <string name="button_its_not_good">Это не круто</string>
+        <string name="button_its_not_good">И что теперь делать?</string>
+        <string name="button_its_not_good">Не особо и хотелось</string>
+        <string name="button_its_not_good">Ну и денек</string>
+        <string name="button_its_not_good">Это не смешно</string>
+        <string name="button_its_not_good">Уму не постижимо</string>
+        <string name="button_its_not_good">Я буду жаловаться</string>
+        <string name="button_its_not_good">Ожидаемо</string>
+        <string name="button_its_not_good">Предсказуемо</string>
+        <string name="button_its_not_good">И заходить не стоило</string>-->
+
+
+        <!-- Dialogs -->
+    <string name="dialog_title_select_region">Выберите регион</string>
+    <string name="dialog_button_select">Выбрать</string>
+    <string name="dialog_button_cancel">Отмена</string>
+    <string name="dialog_title_select_favorite_shops">Выберите избранные магазины</string>
+    <string name="dialog_title_select_favorite_categories">Выберите избранные категории</string>
+    <string name="dialog_content_loading_categories">Загрузка категорий</string>
+    <string name="dialog_title_new_list">Новый список</string>
+    <string name="dialog_button_create">Создать</string>
+    <string name="dialog_content_loading_shops">Загрузка магазинов</string>
+    <string name="dialog_title_info_about_regions">Регионы</string>
+    <string name="dialog_button_ok">ОК</string>
+    <string name="dialog_content_info_about_regions">Не нашли свой регион?\nК нашему сожалению, на сайте пока представлены не все регионы страны.\nПопробуйте найти свой город в разделе SkidkaOnline.ru\nСпасибо за понимание!</string>
+
+
+    <!-- Spinners -->
+    <string name="spinner_all_shops">Все магазины</string>
+    <string name="spinner_favorite_shops">Избранные</string>
+    <string name="spinner_all_categories">Все категории</string>
+    <string name="spinner_favorite_categories">Избранные</string>
+    <string name="spinner_category">Категория</string>
+
+
+    <!-- Actions -->
+    <string name="action_size_table">Кол-во столбцов</string>
+    <string name="action_share">Отправить</string>
+    <string name="action_sale_crop">Обрезать</string>
+    <string name="action_sale_share">Отправить</string>
+    <string name="action_crop">Обрезать</string>
+    <string name="action_change_list">Изменить</string>
+    <string name="action_remove_list">Удалить</string>
+    <string name="action_send_list">Отправить</string>
+    <string name="action_set_alarm">Напоминание</string>
+    <string name="action_remove_buyed">Удалить купленные</string>
+    <string name="action_load_from_sms">Загрузить из SMS</string>
+    <string name="action_filter_list">Фильтр</string>
+    <string name="action_show_all">Все</string>
+
+
+    <!-- Errors -->
+    <string name="error_input_name_of_list">Введите имя списка</string>
+    <string name="error_server_no_response">Сервер не отвечает</string>
+    <string name="error_no_internet_connection">Нет подключения к сети</string>
+    <string name="error_unknown_error">Неизвестная ошибка</string>
+    <string name="error_timeout">Время ожидания превышено</string>
+    <string name="error_input_author_of_comment">Введите Ваше имя</string>
+    <string name="error_input_text_of_comment">Введите текст комментария</string>
+    <string name="error_when_loading_sales">Ошибка при заргузке акций</string>
+
+
+    <!-- Notifications -->
+    <string name="notification_loading_sales">Загрузка акций</string>
+    <string name="notification_action_stop">Стоп</string>
+    <string name="notification_new_shops">Добавилось новых магазинов: count</string>
+    <string name="notification_new_categories">Добавилось новых категорий: count</string>
+    <string name="notification_new_shop">Новый магазин - name</string>
+    <string name="notification_new_category">Новая категория - name</string>
+
+
+    <!-- Hints -->
+    <string name="hint_listitem_name">Наименование товара</string>
+    <string name="hint_listitem_count">Кол-во</string>
+    <string name="hint_listitem_coast">Цена за edizm</string>
+    <string name="hint_comment_author">Автор</string>
+    <string name="hint_comment_whom">Кому</string>
+    <string name="hint_comment_text">Текст комментария</string>
+    <string name="hint_listitem_comment">Комментарий</string>
+
+
+    <string name="title_sales">Акции</string>
+    <string name="all">Все</string>
+    <string name="toast_please_select_favorite_shops">Пожалуйста выберите избранные магазины</string>
+    <string name="toast_please_select_favorite_categories">Пожалуйста выберите избранные категории</string>
+    <string name="toast_please_select_region">Пожалуйста выберите регион</string>
+    <string name="string_from">из</string>
+    <string name="string_za">за</string>
+    <string name="string_in">в</string>
+    <string name="toast_no_founded_sale_image">Не найдена картинка акции</string>
+    <string name="string_for_share_sale">В \"shop\" period проводится акция на: name (comment). Цена: coast.\nОтправлено из приложения \"Покупки по акциям\"\nhttps://play.google.com/store/apps/details?id=com.PopCorp.Purchases</string>
+    <string name="string_send_sale_with_app">Отправить акцию через</string>
+    <string name="navigation_drawer_skidkaonline">SkidkaOnline.ru</string>
+    <string name="navigation_drawer_shopping_lists">Списки покупок</string>
+    <string name="navigation_drawer_all_products">Все товары</string>
+    <string name="navigation_drawer_settings">Настройки</string>
+    <string name="navigation_drawer_lists">Списки</string>
+    <string name="title_selecting_city">Выбор города</string>
+    <string name="title_shops">Магазины</string>
+    <string name="name_of_list">Имя списка</string>
+    <string name="currency">Валюта</string>
+    <string name="list">Список</string>
+    <string name="removed">удален</string>
+    <string name="snackbar_undo">Отмена</string>
+    <string name="listitem_shop">в shop</string>
+    <string name="listitem_count">count edizm по coast currency shop</string>
+    <string name="checkbox_listitem_important">Важное</string>
+    <string name="string_no_shop">Нет магазина</string>
+    <string name="comments">Комментарии</string>
+    <string name="same_sales">Похожие акции</string>
+    <string name="whom">для: name</string>
+    <string name="coast_in_shop">за coast в \"shop\"</string>
+    <string name="count_of_sales">Акций: count</string>
+    <string name="comments_count">Комментарии</string>
+    <string name="error_can_not_connect">Ошибка при подключении к сети</string>
+    <string name="button_save_author">Запомнить</string>
+    <string name="action_comments">Комментарии</string>
+    <string name="notification_no_apps_for_share_sale">Нет приложений для отправки акции</string>
+    <string name="sending_comment">Отправка...</string>
+    <string name="navigation_drawer_skidkaonline_sales">Акции</string>
+    <string name="dialog_button_add">Добавить</string>
+    <string name="hint_category_name">Имя категории</string>
+    <string name="dialog_title_edit_category">Изменение категории</string>
+    <string name="dialog_button_remove">Удалить</string>
+    <string name="dialog_button_save">Сохранить</string>
+    <string name="dialog_title_new_category">Создание категории</string>
+    <string name="dialog_title_selecting_color">Выбор цвета</string>
+    <string name="dialog_button_back">Назад</string>
+    <string name="color">Цвет</string>
+    <string name="select_color">Выбрать цвет</string>
+    <string name="error_enter_category_name">Введите имя категории</string>
+    <string name="error_category_exists">Категория с таким именем уже есть</string>
+    <string name="add_new_currency">Новая валюта</string>
+    <string name="hint_currency_name">Наименование валюты</string>
+    <string name="dialog_title_new_currency">Новая валюта</string>
+    <string name="error_input_currency_name">Введите наименование валюты</string>
+    <string name="error_currency_exists">Валюта с таким наименованием уже есть</string>
+    <string name="add_new_unit">Новая ед. измерения</string>
+    <string name="hint_unit_name">Наименование ед. измерения</string>
+    <string name="dialog_title_new_unit">Новая ед. измерения</string>
+    <string name="error_input_unit_name">Введите наименование ед. измерения</string>
+    <string name="error_unit_exists">Ед. измерения с таким наименованием уже есть</string>
+    <string name="error_no_shops">Не удалось загрузить регионы</string>
+    <string name="dialog_title_loading_regions">Загрузка регионов...</string>
+    <string name="count_of_items_in_list">Товаров:</string>
+    <string name="empty_no_lists">Нет списков покупок\nСоздайте новый список, чтобы ничего не забыть купить</string>
+    <string name="button_create">Создать</string>
+    <string name="hint_list_name">Имя списка</string>
+    <string name="error_enter_list_name">Введите имя списка</string>
+    <string name="list_item_main_info">count unit по coast currency</string>
+    <string name="total">total currency</string>
+    <string name="in_shop">в shop</string>
+    <string name="header_buyed">Куплено</string>
+    <string name="action_change">Изменить</string>
+    <string name="action_remove">Удалить</string>
+    <string name="action_send">Отправить</string>
+    <string name="action_alarm">Напоминание</string>
+    <string name="notification_list_empty">Список пуст</string>
+    <string name="dialog_title_share_list">Отправить список</string>
+    <string name="date_alarm">Дата</string>
+    <string name="time_alarm">Время</string>
+    <string name="dialog_title_list_alarm">Напоминание</string>
+    <string name="notification_list_removed">Удален список: name</string>
+    <string name="action_undo">Отменить</string>
+    <string name="listitem_category">Категория</string>
+    <string name="hint_listitem_shop">Магазин</string>
+    <string name="hint_listitem_category">Категория</string>
+    <string name="error_listitem_name_empty">Введите наименование товара</string>
+    <string name="error_listitem_with_name_exists">Товар с таким именем уже есть в списке</string>
+    <string name="action_edit">Изменить</string>
+
+
+</resources>
