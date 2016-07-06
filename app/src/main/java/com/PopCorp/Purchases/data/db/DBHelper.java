@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.PopCorp.Purchases.R;
@@ -19,7 +18,7 @@ import com.PopCorp.Purchases.data.dao.SaleDAO;
 import com.PopCorp.Purchases.data.dao.SameSaleDAO;
 import com.PopCorp.Purchases.data.dao.ShopDAO;
 import com.PopCorp.Purchases.data.dao.ShoppingListDAO;
-import com.PopCorp.Purchases.data.model.Category;
+import com.PopCorp.Purchases.data.dao.skidkaonline.CityDAO;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
 import com.PopCorp.Purchases.data.model.Product;
 
@@ -54,6 +53,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CategoryDAO.CREATE_TABLE_SALE_CATEGS);
         db.execSQL(SameSaleDAO.CREATE_TABLE_SALES_SAMES);
         db.execSQL(SaleCommentDAO.CREATE_TABLE_SALES_COMMENTS);
+
+        //skidkaonline
+        db.execSQL(CityDAO.CREATE_TABLE_CITIES);
+        db.execSQL(com.PopCorp.Purchases.data.dao.skidkaonline.CategoryDAO.CREATE_TABLE_CATEGORIES);
+        db.execSQL(com.PopCorp.Purchases.data.dao.skidkaonline.ShopDAO.CREATE_TABLE_SHOPES);
+        db.execSQL(com.PopCorp.Purchases.data.dao.skidkaonline.SaleDAO.CREATE_TABLE_SALES);
 
         //db.execSQL(DB.CREATE_TABLE_SHOP_SALES);
 

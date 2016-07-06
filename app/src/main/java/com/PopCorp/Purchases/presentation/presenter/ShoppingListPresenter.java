@@ -3,7 +3,10 @@ package com.PopCorp.Purchases.presentation.presenter;
 import android.view.View;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.callback.AlarmListCallback;
+import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.ShareListCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
@@ -14,7 +17,10 @@ import com.afollestad.materialcab.MaterialCab;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observer;
@@ -22,7 +28,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implements RecyclerCallback<ListItem> {
+public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implements RecyclerCallback<ListItem>, CreateEditListCallback, ShareListCallback, AlarmListCallback {
 
     private ShoppingListInteractor interactor = new ShoppingListInteractor();
     private ListItemInteractor itemsInteractor = new ListItemInteractor();
@@ -124,12 +130,12 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
         return currentList;
     }
 
-    public void onItemRerurned(ListItem item) {
+    public void onItemsRerurned(ListItem... item) {
         if (currentList.getItems().contains(item)) {
             currentList.getItems().remove(item);
         }
-        currentList.getItems().add(item);
-        itemsInteractor.addItem(item);
+        Collections.addAll(currentList.getItems(), item);
+        itemsInteractor.addItems(item);
         if (currentList.getItems().size() == 1) {
             getViewState().showData();
         } else {
@@ -139,15 +145,19 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
 
     public void editItem() {
         getViewState().showInputFragment(selectedItems.get(0));
-        getViewState().finishActionMode();
+        closeActionMode();
+    }
+
+    public void closeActionMode(){
         selectedItems.clear();
+        getViewState().finishActionMode();
+        getViewState().updateAllItems();
+        getViewState().filter(currentFilter);
     }
 
     public void removeItem() {
         ArrayList<ListItem> itemsForRemove = new ArrayList<>(selectedItems);
-        selectedItems.clear();
         getObjects().removeAll(itemsForRemove);
-        getViewState().filter(currentFilter);
         if (itemsForRemove.size() == 1){
             getViewState().showItemRemoved(itemsForRemove.get(0));
         } else{
@@ -156,10 +166,75 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
         for (ListItem item : itemsForRemove){
             itemsInteractor.removeItem(item);
         }
-        getViewState().finishActionMode();
+        closeActionMode();
     }
 
     public ArrayList<ListItem> getSelectedItems() {
         return selectedItems;
+    }
+
+    public void removeBuyed() {
+        ArrayList<ListItem> itemsForRemove = new ArrayList<>();
+        for (ListItem item : getObjects()){
+            if (item.isBuyed()){
+                itemsForRemove.add(item);
+            }
+        }
+        if (itemsForRemove.size() > 0){
+            getViewState().showItemsRemoved(itemsForRemove);
+            getObjects().removeAll(itemsForRemove);
+            for (ListItem item : itemsForRemove){
+                itemsInteractor.removeItem(item);
+            }
+            getViewState().filter(currentFilter);
+        } else{
+            getViewState().showNothingRemoving();
+        }
+    }
+
+    @Override
+    public void onListEdited(ShoppingList list, String name, String currency) {
+        currentList.setName(name);
+        currentList.setCurrency(currency);
+        interactor.saveList(currentList);
+        getViewState().showTitle(name);
+        getViewState().updateCurrency(currency);
+    }
+
+    @Override
+    public void addNewList(String name, String currency) {
+
+    }
+
+    public void removeList() {
+        interactor.removeList(currentList);
+        getViewState().finish();
+    }
+
+    @Override
+    public void shareAsSMS(ShoppingList list) {
+
+    }
+
+    @Override
+    public void shareAsEmail(ShoppingList list) {
+
+    }
+
+    @Override
+    public void shareAsText(ShoppingList list) {
+
+    }
+
+    @Override
+    public void setAlarm(ShoppingList list, Calendar date) {
+        list.setAlarm(date.getTimeInMillis());
+        interactor.saveList(list);
+    }
+
+    @Override
+    public void removeAlarm(ShoppingList list) {
+        list.setAlarm(0);
+        interactor.saveList(list);
     }
 }

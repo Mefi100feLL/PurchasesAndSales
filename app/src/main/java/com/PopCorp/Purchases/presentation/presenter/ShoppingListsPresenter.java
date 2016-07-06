@@ -30,7 +30,7 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
         loadData();
     }
 
-    private void loadData() {
+    public void loadData() {
         interactor.getData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,6 +49,7 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
                     @Override
                     public void onNext(List<ShoppingList> shoppingLists) {
                         if (shoppingLists.size() > 0) {
+                            objects.clear();
                             objects.addAll(shoppingLists);
                             getViewState().showData();
                         } else {
@@ -68,7 +69,10 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
 
     @Override
     public void onListEdited(ShoppingList list, String name, String currency) {
-
+        list.setName(name);
+        list.setCurrency(currency);
+        interactor.saveList(list);
+        getViewState().showData();
     }
 
     @Override
@@ -76,13 +80,15 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
         Calendar calendar = Calendar.getInstance();
         ShoppingList list = new ShoppingList(-1, name, calendar.getTimeInMillis(), 0, currency);
         interactor.addNewShoppingList(list);
+        objects.add(list);
+        getViewState().showData();
         getViewState().openShoppingList(list);
     }
 
     public void removeList(ShoppingList list) {
         objects.remove(list);
         interactor.removeList(list);
-        if (objects.size() > 0){
+        if (objects.size() > 0) {
             getViewState().showData();
         } else {
             getViewState().showEmptyLists();

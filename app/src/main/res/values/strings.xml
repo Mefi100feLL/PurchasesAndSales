@@ -213,6 +213,15 @@
     <string name="error_listitem_name_empty">Введите наименование товара</string>
     <string name="error_listitem_with_name_exists">Товар с таким именем уже есть в списке</string>
     <string name="action_edit">Изменить</string>
+    <string name="notification_item_removed">Удален товар: name</string>
+    <string name="notification_items_removed">Удалено товаров: count</string>
+    <string name="action_shop">Фильтр по магазину</string>
+    <string name="notification_no_items_for_removing">Нет товаров для удаления</string>
+    <string name="dialog_title_removing_list">Удалить список</string>
+    <string name="dialog_content_sure_remove_list">Вы действительно хотите удалить данный список?</string>
+    <string name="string_send_list_with_app">Отправить список через:</string>
+    <string name="notification_no_apps_for_share_list">Нет приложений для отправки списка</string>
+    <string name="empty_no_cities">Не получилось загрузить города\nПроверьте интернет соединение и попробуйте обновить</string>
 
 
 </resources>

@@ -30,4 +30,5 @@ public class ShoppingListInteractor {
     public void removeList(ShoppingList list) {
         dbRepository.removeList(list);
     }
+
 }

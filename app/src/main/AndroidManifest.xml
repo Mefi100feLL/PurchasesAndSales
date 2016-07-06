@@ -76,6 +76,10 @@
         <activity
             android:name=".presentation.view.activity.InputListItemActivity"
             android:label=""/>
+
+        <activity
+            android:name=".presentation.view.activity.SelectingCityActivity"
+            android:label=""/>
     </application>
 
 </manifest>

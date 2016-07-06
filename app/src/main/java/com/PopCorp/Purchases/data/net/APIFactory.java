@@ -9,6 +9,7 @@ public class APIFactory {
 
     private static final String BASE_URL = "http://popcorp.cf";
     public static final String MESTOSKIDKI_URL = "http://mestoskidki.ru";
+    public static final String SKIDKAONLINE_URL = "https://skidkaonline.ru";
 
     private static API api;
 

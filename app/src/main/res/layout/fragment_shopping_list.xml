@@ -12,18 +12,23 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="8dp">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:contentInsetStart="@dimen/mcab_default_content_inset"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            android:layout_height="wrap_content">
 
-        <ViewStub
-            android:id="@+id/cab_stub"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:contentInsetStart="@dimen/mcab_default_content_inset"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+            <ViewStub
+                android:id="@+id/cab_stub"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"/>
+        </FrameLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -35,9 +40,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
             style="@style/RecyclerView"
-            android:paddingBottom="88dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:paddingBottom="88dp"/>
 
         <include
             layout="@layout/content_empty"/>
@@ -57,9 +62,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_white_24dp"
-        android:layout_marginRight="16dp"
+        android:layout_gravity="end|bottom"
         android:layout_marginBottom="16dp"
-        android:layout_gravity="end|bottom"/>
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_add_white_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

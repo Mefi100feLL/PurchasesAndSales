@@ -20,4 +20,12 @@ public interface ShoppingListView extends SampleDataView {
     void showItemsRemoved(ArrayList<ListItem> itemsForRemove);
 
     void showItemRemoved(ListItem listItem);
+
+    void updateAllItems();
+
+    void showNothingRemoving();
+
+    void finish();
+
+    void updateCurrency(String currency);
 }

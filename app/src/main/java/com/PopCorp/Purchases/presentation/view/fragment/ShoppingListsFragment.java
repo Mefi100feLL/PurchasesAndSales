@@ -6,9 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +23,7 @@ import com.PopCorp.Purchases.data.callback.ShoppingListCallback;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.sharing.SharingListBuilderFactory;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.ShoppingListsPresenter;
@@ -67,7 +68,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         progressBar = rootView.findViewById(R.id.progress);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), PreferencesManager.getInstance().getListTableSize());
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(PreferencesManager.getInstance().getListTableSize(), StaggeredGridLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -88,6 +89,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
     @Override
     public void onResume() {
         super.onResume();
+        presenter.loadData();
         toolBar.setTitle(R.string.navigation_drawer_lists);
     }
 
@@ -148,7 +150,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
             if (item.getItemId() == filterItem.hashCode()) {
                 PreferencesManager.getInstance().putListTableSize(Integer.parseInt(filterItem));
                 item.setChecked(true);
-                GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), Integer.parseInt(filterItem));
+                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(Integer.parseInt(filterItem), StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(layoutManager);
             }
         }
@@ -206,17 +208,32 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
 
     @Override
     public void shareListAsSMS(ShoppingList list) {
-
+        Intent intent = SharingListBuilderFactory.getBuilder(0).getIntent(list.getName(), list.getCurrency(), list.getItems());
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
+        } catch (Exception e){
+            Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void shareListAsEmail(ShoppingList list) {
-
+        Intent intent = SharingListBuilderFactory.getBuilder(1).getIntent(list.getName(), list.getCurrency(), list.getItems());
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
+        } catch (Exception e){
+            Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void shareListAsText(ShoppingList list) {
-
+        Intent intent = SharingListBuilderFactory.getBuilder(2).getIntent(list.getName(), list.getCurrency(), list.getItems());
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
+        } catch (Exception e){
+            Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

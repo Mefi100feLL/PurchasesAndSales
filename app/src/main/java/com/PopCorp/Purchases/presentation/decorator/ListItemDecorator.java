@@ -3,6 +3,9 @@ package com.PopCorp.Purchases.presentation.decorator;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class ListItemDecorator {
 
     private String name;
@@ -74,5 +77,42 @@ public class ListItemDecorator {
 
     public void setCategory(ListItemCategory category) {
         this.category = category;
+    }
+
+    public boolean contentEquals(ListItemDecorator decorator) {
+        boolean result = Arrays.equals(getFields(), decorator.getFields());
+        if ((!header && !decorator.isHeader()) && result){
+            result = Arrays.equals(getItemFields(), decorator.getItemFields());
+        }
+        return result;
+    }
+
+    public String[] getFields(){
+        String categoryId = "";
+        if (category != null){
+            categoryId = String.valueOf(category.getId());
+        }
+        return new String[] {
+                name,
+                String.valueOf(header),
+                String.valueOf(buyed),
+                categoryId
+        };
+    }
+
+    public String[] getItemFields(){
+        String saleId = String.valueOf(item.getSale() != null ? item.getSale().getId() : "");
+        return new String[] {
+                item.getName(),
+                item.getCountString(),
+                item.getEdizm(),
+                item.getCoastString(),
+                String.valueOf(item.getCategory().getId()),
+                item.getShop(),
+                item.getComment(),
+                String.valueOf(item.isBuyed()),
+                String.valueOf(item.isImportant()),
+                saleId
+        };
     }
 }

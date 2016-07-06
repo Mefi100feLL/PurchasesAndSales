@@ -5,6 +5,7 @@ import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.Shop;
+import com.PopCorp.Purchases.data.model.skidkaonline.City;
 
 import java.util.List;
 
@@ -49,4 +50,32 @@ public interface API {
                                           @Field("id") int saleId);
 
     //  Skidkaonline
+    @GET("/skidkaonline/cities")
+    Observable<List<City>> getSkidkaonlineCities();
+
+    @FormUrlEncoded
+    @POST("/skidkaonline/shops")
+    Observable<List<com.PopCorp.Purchases.data.model.skidkaonline.Shop>> getSkidkaonlineShops(@Field("city") int cityId);
+
+    @FormUrlEncoded
+    @POST("/skidkaonline/sales")
+    Observable<List<com.PopCorp.Purchases.data.model.skidkaonline.Sale>> getSkidkaonlineSales(@Field("city") int cityId,
+                                                                                              @Field("shop") String shopUrl);
+
+
+    @FormUrlEncoded
+    @POST("/skidkaonline/sale")
+    Observable<com.PopCorp.Purchases.data.model.skidkaonline.Sale> getSkidkaonlineSale(@Field("city") int cityId,
+                                                                                       @Field("id") int saleId);
+
+    @FormUrlEncoded
+    @POST("/skidkaonline/comments")
+    Observable<List<com.PopCorp.Purchases.data.model.skidkaonline.SaleComment>> getSkidkaonlineSaleComments(@Field("sale_id") int saleId);
+
+    @FormUrlEncoded
+    @POST("/skidkaonline/comments/new")
+    Observable<com.PopCorp.Purchases.data.model.skidkaonline.SaleComment> sendSkidkaonlineSaleComment(@Field("author") String author,
+                                                 @Field("text") String text,
+                                                 @Field("city_id") int cityId,
+                                                 @Field("sale_id") int saleId);
 }

@@ -3,12 +3,11 @@ package com.PopCorp.Purchases.presentation.view.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,10 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
-import com.PopCorp.Purchases.data.callback.ShoppingListCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
-import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
@@ -33,10 +29,12 @@ import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListView;
 import com.afollestad.materialcab.MaterialCab;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.mikepenz.materialize.color.Material;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ShoppingListFragment extends MvpAppCompatFragment implements ShoppingListView, MaterialCab.Callback {
 
@@ -55,6 +53,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     private ListItemAdapter adapter;
 
     private MaterialCab actionMode;
+    private FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
@@ -103,17 +102,44 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void showItemsRemoved(ArrayList<ListItem> itemsForRemove) {
-
+        Snackbar.make(fab, getString(R.string.notification_items_removed).replace("count", String.valueOf(itemsForRemove.size())), Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_undo, v -> {
+                    presenter.onItemsRerurned(itemsForRemove.toArray(new ListItem[itemsForRemove.size()]));
+                }).show();
     }
 
     @Override
     public void showItemRemoved(ListItem listItem) {
+        Snackbar.make(fab, getString(R.string.notification_item_removed).replace("name", listItem.getName()), Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_undo, v -> {
+                    presenter.onItemsRerurned(listItem);
+                }).show();
+    }
 
+    @Override
+    public void updateAllItems() {
+        adapter.updateAll();
+    }
+
+    @Override
+    public void showNothingRemoving() {
+        Snackbar.make(fab, getString(R.string.notification_no_items_for_removing), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void finish() {
+        getActivity().finish();
+    }
+
+    @Override
+    public void updateCurrency(String currency) {
+        adapter.setCurrency(currency);
+        adapter.updateAll();
     }
 
     @Override
     public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(fab, errorRes, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -126,7 +152,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void showData() {
         if (adapter == null) {
-            adapter = new ListItemAdapter(getActivity(), presenter, presenter.getObjects(), presenter.getSelectedItems(),  presenter.getCurrency());
+            adapter = new ListItemAdapter(getActivity(), presenter, presenter.getObjects(), presenter.getSelectedItems(), PreferencesManager.getInstance().getListItemDecoratorComparator(), presenter.getCurrency());
             recyclerView.setAdapter(adapter);
         }
         progressBar.setVisibility(View.INVISIBLE);
@@ -158,8 +184,41 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+            case R.id.action_shop:
 
+                break;
+            case R.id.action_remove_buyed:
+                presenter.removeBuyed();
+                break;
+            case R.id.action_change:
+                DialogController.showDialogForEditingList(getActivity(), presenter.getList(), presenter);
+                break;
+            case R.id.action_remove:
+                showDialogForRemovingList();
+                break;
+            case R.id.action_send:
+                DialogController.showDialogForSendingList(getActivity(), presenter.getList(), presenter);
+                break;
+            case R.id.action_alarm:
+                DialogController.showDialogForAlarm(getActivity(), presenter.getList(), presenter);
+                break;
+        }
         return true;
+    }
+
+    private void showDialogForRemovingList() {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.dialog_title_removing_list);
+        builder.content(R.string.dialog_content_sure_remove_list);
+        builder.positiveText(R.string.dialog_button_remove);
+        builder.negativeText(R.string.dialog_button_cancel);
+        builder.onPositive((dialog, which) -> presenter.removeList());
+        MaterialDialog dialog = builder.build();
+        dialog.show();
     }
 
     @Override
@@ -204,7 +263,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
             if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
                 ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
                 if (item != null){
-                    presenter.onItemRerurned(item);
+                    presenter.onItemsRerurned(item);
                 }
             }
         }
@@ -220,6 +279,10 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public boolean onCabItemClicked(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home: {
+                presenter.closeActionMode();
+                break;
+            }
             case R.id.action_edit: {
                 presenter.editItem();
                 break;

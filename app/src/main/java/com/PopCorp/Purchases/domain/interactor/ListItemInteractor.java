@@ -33,10 +33,14 @@ public class ListItemInteractor {
     }
 
     public void updateItem(ListItem item) {
-        dbRepository.addItem(item);
+        dbRepository.updateItem(item);
     }
 
     public void removeItem(ListItem item) {
         dbRepository.removeItem(item);
+    }
+
+    public void addItems(ListItem[] items) {
+        dbRepository.addItems(items);
     }
 }

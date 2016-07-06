@@ -64,7 +64,7 @@ public class InputListItemPresenter extends MvpPresenter<InputListItemView> {
     }
 
     public void setItem(ListItem listItem) {
-        if (item != null){
+        if (item == null){
             item = listItem;
             getViewState().setFields(item);
         }

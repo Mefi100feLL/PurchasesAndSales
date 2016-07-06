@@ -30,7 +30,17 @@ public class ListItemDBRepository implements ListItemRepository {
         item.setId(dao.updateOrAddToDB(item));
     }
 
+    public void updateItem(ListItem item){
+        dao.updateOrAddToDB(item);
+    }
+
     public void removeItem(ListItem item) {
         dao.remove(item);
+    }
+
+    public void addItems(ListItem[] items) {
+        for (ListItem item : items){
+            item.setId(dao.updateOrAddToDB(item));
+        }
     }
 }
