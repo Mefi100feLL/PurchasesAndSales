@@ -11,9 +11,6 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Александр on 06.07.2016.
- */
 public class ShopInteractor {
 
     private ShopDBRepository dbRepository = new ShopDBRepository();
@@ -51,5 +48,9 @@ public class ShopInteractor {
                         }
                     }).materialize().observeOn(AndroidSchedulers.mainThread()).<List<Shop>>dematerialize();
                 });
+    }
+
+    public void update(Shop item) {
+        dbRepository.update(item);
     }
 }

@@ -80,6 +80,15 @@
         <activity
             android:name=".presentation.view.activity.SelectingCityActivity"
             android:label=""/>
+
+        <activity
+            android:name=".presentation.view.activity.skidkaonline.SalesActivity"
+            android:label=""/>
+
+        <activity
+            android:name=".presentation.view.activity.skidkaonline.SaleActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:label=""/>
     </application>
 
 </manifest>

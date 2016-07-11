@@ -1,7 +1,9 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -35,6 +37,8 @@ import com.PopCorp.Purchases.presentation.common.ColorDialog;
 import com.PopCorp.Purchases.presentation.common.MvpPreferenceFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SettingsPresenter;
+import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
+import com.PopCorp.Purchases.presentation.view.activity.SelectingCityActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.SettingsView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -219,11 +223,21 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
             });
         }
 
-        Preference prefCity = findPreference(PreferencesManager.PREFS_CITY);
-        if (prefCity != null) {
-            prefCity.setSummary("");
-            prefCity.setOnPreferenceClickListener(preference -> {
+        Preference prefRegion = findPreference(PreferencesManager.PREFS_CITY);
+        if (prefRegion != null) {
+            prefRegion.setSummary(presenter.getSelectedRegion());
+            prefRegion.setOnPreferenceClickListener(preference -> {
                 presenter.loadRegions();
+                return true;
+            });
+        }
+
+        Preference prefCity = findPreference(PreferencesManager.PREFS_SKIDKAONLINE_CITY);
+        if (prefCity != null) {
+            prefCity.setSummary(presenter.getSelectedCity());
+            prefCity.setOnPreferenceClickListener(preference -> {
+                Intent intent = new Intent(getActivity(), SelectingCityActivity.class);
+                startActivityForResult(intent, MainActivity.REQUEST_CODE_FOR_SELECTING_CITY_ACTIVITY);
                 return true;
             });
         }
@@ -260,11 +274,28 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         }
     }
 
-    public void selectCity(String selectedCity) {
+    public void selectRegion(String selectedCity) {
         Preference prefCity = findPreference(PreferencesManager.PREFS_CITY);
         if (prefCity != null) {
             prefCity.setSummary(selectedCity);
         }
+    }
+
+    public void selectCity(String selectedCity) {
+        Preference prefCity = findPreference(PreferencesManager.PREFS_SKIDKAONLINE_CITY);
+        if (prefCity != null) {
+            prefCity.setSummary(selectedCity);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == MainActivity.REQUEST_CODE_FOR_SELECTING_CITY_ACTIVITY) {
+                selectCity(presenter.getSelectedCity());
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -540,8 +571,8 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         DialogController.showDialogWithRegions(getActivity(), regions, new DialogRegionsCallback() {
 
             @Override
-            public void onSelected() {
-
+            public void onSelected(Region region) {
+                selectRegion(region.getName());
             }
 
             @Override

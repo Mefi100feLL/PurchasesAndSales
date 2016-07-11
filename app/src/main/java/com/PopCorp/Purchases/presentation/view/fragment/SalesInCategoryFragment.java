@@ -96,7 +96,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        adapter = new SalesInCategoryAdapter(getActivity(), presenter, presenter.getObjects(), new SalesShopComparator());
+        adapter = new SalesInCategoryAdapter(presenter, presenter.getObjects(), new SalesShopComparator());
         adapter.setLayoutManager(layoutManager, PreferencesManager.getInstance().getSaleTableSize());
         recyclerView.setAdapter(adapter);
 
@@ -111,8 +111,8 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showShopsEmpty() {
-        showError(R.string.empty_no_favorite_shops, R.drawable.ic_menu_gallery, R.string.button_select_shops, v -> {
-            presenter.selectShops();
+        showError(R.string.empty_no_shops, R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
+            presenter.loadShops();
         });
     }
 
@@ -126,7 +126,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
             @Override
             public void onCancel() {
-                showShopsEmpty();
+                showFavoriteShopsEmpty();
             }
         });
     }
@@ -260,6 +260,9 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            getActivity().onBackPressed();
+        }
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
                 PreferencesManager.getInstance().putSaleTableSize(Integer.parseInt(filterItem));

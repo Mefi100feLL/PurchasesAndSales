@@ -4,6 +4,7 @@ import com.PopCorp.Purchases.data.dto.CommentResult;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.model.Sale;
+import com.PopCorp.Purchases.data.model.SaleComment;
 import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.data.model.skidkaonline.City;
 
@@ -40,6 +41,10 @@ public interface API {
     @POST("/mestoskidki/sale")
     Observable<Sale> getSale(@Field("city") int regionId,
                              @Field("id") int saleId);
+
+    @FormUrlEncoded
+    @POST("/mestoskidki/comments")
+    Observable<List<SaleComment>> getComments(@Field("sale") int saleId);
 
     @FormUrlEncoded
     @POST("/mestoskidki//comments/new")

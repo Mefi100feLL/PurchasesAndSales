@@ -11,6 +11,8 @@ import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.CategoryInteractor;
 import com.PopCorp.Purchases.domain.interactor.SaleInteractor;
+import com.PopCorp.Purchases.presentation.presenter.factory.ViewPagerPresenterFactory;
+import com.PopCorp.Purchases.presentation.view.moxy.SaleView;
 import com.PopCorp.Purchases.presentation.view.moxy.SalesInShopView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -90,27 +92,33 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
     public void setCurrentShop(Shop shop) {
         if (shop != null && currentShop == null) {
             currentShop = shop;
-            categoryInteractor.loadFromDB()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Category>>() {
-                        @Override
-                        public void onCompleted() {
+            loadCategories();
+        }
+    }
 
-                        }
+    public void loadCategories() {
+        categoryInteractor.loadFromDB()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Category>>() {
+                    @Override
+                    public void onCompleted() {
 
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        e.printStackTrace();
+                        getViewState().showCategoriesEmpty();
+                    }
+
+                    @Override
+                    public void onNext(List<Category> categories) {
+                        if (categories.size() == 0) {
                             getViewState().showCategoriesEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Category> categories) {
-                            if (categories.size() == 0) {
-                                getViewState().showCategoriesEmpty();
-                            } else {
+                        } else {
+                            if (allCategories.size() == 0) {
                                 allCategories.addAll(categories);
                                 for (Category category : categories) {
                                     if (category.isFavorite()) {
@@ -124,8 +132,8 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                                 }
                             }
                         }
-                    });
-        }
+                    }
+                });
     }
 
     public void onRefresh() {
@@ -138,29 +146,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
     public void selectCategories() {
         if (allCategories.size() == 0) {
             getViewState().showProgress();
-            categoryInteractor.loadFromNet()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Category>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
-                            getViewState().showCategoriesEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Category> categories) {
-                            getViewState().showCategoriesEmpty();
-                            allCategories.addAll(categories);
-                            getViewState().showCategoriesForSelectingFavorites(allCategories);
-                        }
-                    });
+            loadCategories();
         } else {
             getViewState().showCategoriesForSelectingFavorites(allCategories);
         }

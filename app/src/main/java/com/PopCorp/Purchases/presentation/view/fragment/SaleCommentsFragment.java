@@ -25,38 +25,26 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
-import com.PopCorp.Purchases.data.comparator.SaleCommentComparator;
-import com.PopCorp.Purchases.data.dao.SaleCommentDAO;
-import com.PopCorp.Purchases.data.dao.SaleDAO;
-import com.PopCorp.Purchases.data.dto.CommentResult;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.SaleComment;
-import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
-import com.PopCorp.Purchases.domain.interactor.SaleInteractor;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
-import com.PopCorp.Purchases.presentation.presenter.SalePresenter;
-import com.PopCorp.Purchases.presentation.presenter.factory.ViewPagerPresenterFactory;
+import com.PopCorp.Purchases.presentation.presenter.SaleCommentsPresenter;
+import com.PopCorp.Purchases.presentation.presenter.factory.SaleCommentsPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.view.adapter.SaleCommentAdapter;
-import com.PopCorp.Purchases.presentation.view.moxy.SaleView;
+import com.PopCorp.Purchases.presentation.view.moxy.SaleCommentsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-
-import java.util.Collections;
-
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class SaleCommentsFragment extends MvpAppCompatFragment
         implements View.OnClickListener,
         SaleChildCallback,
         RecyclerCallback<SaleComment>,
-        SaleView,
+        SaleCommentsView,
         SaleParamsProvider {
 
-    @InjectPresenter(factory = ViewPagerPresenterFactory.class, presenterId = "SalePresenter")
-    SalePresenter presenter;
+    @InjectPresenter(factory = SaleCommentsPresenterFactory.class, presenterId = "SaleCommentsPresenter")
+    SaleCommentsPresenter presenter;
 
     private int saleId;
 
@@ -116,7 +104,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
             }
         });
-        commentSend.setBackground(createOvalSelector(ThemeManager.getInstance().getAccentColor()));
+        commentSend.setBackgroundDrawable(createOvalSelector(ThemeManager.getInstance().getAccentColor()));
         commentSend.setOnClickListener(v -> presenter.sendComment(commentAuthor.getText().toString(), commentText.getText().toString()));
 
         return rootView;
@@ -168,21 +156,6 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     @Override
     public String getSaleId(String presenterId) {
         return String.valueOf(saleId);
-    }
-
-    @Override
-    public void showInfo(Sale sale) {
-
-    }
-
-    @Override
-    public void showFragmentComments(Sale sale) {
-
-    }
-
-    @Override
-    public void showFragmentInfo(Sale sale) {
-
     }
 
     @Override

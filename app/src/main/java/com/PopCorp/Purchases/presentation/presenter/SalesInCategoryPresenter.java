@@ -3,10 +3,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 import android.view.View;
 
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
-import com.PopCorp.Purchases.data.comparator.CategoryComparator;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
-import com.PopCorp.Purchases.data.dao.CategoryDAO;
-import com.PopCorp.Purchases.data.dao.ShopDAO;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.Shop;
@@ -92,27 +89,33 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
     public void setCurrentCategory(Category currentCategory) {
         if (currentCategory != null) {
             this.currentCategory = currentCategory;
-            shopsInteractor.loadFromDB(Integer.valueOf(PreferencesManager.getInstance().getRegionId()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Shop>>() {
-                        @Override
-                        public void onCompleted() {
+            loadShops();
+        }
+    }
 
-                        }
+    public void loadShops() {
+        shopsInteractor.getData(Integer.valueOf(PreferencesManager.getInstance().getRegionId()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Shop>>() {
+                    @Override
+                    public void onCompleted() {
 
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        e.printStackTrace();
+                        getViewState().showShopsEmpty();
+                    }
+
+                    @Override
+                    public void onNext(List<Shop> shops) {
+                        if (shops.size() == 0) {
                             getViewState().showShopsEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Shop> shops) {
-                            if (shops.size() == 0) {
-                                getViewState().showShopsEmpty();
-                            } else {
+                        } else {
+                            if (allShops.size() == 0) {
                                 allShops.addAll(shops);
                                 for (Shop shop : shops) {
                                     if (shop.isFavorite()) {
@@ -126,8 +129,8 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                                 }
                             }
                         }
-                    });
-        }
+                    }
+                });
     }
 
     public void onRefresh() {
@@ -140,29 +143,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
     public void selectShops() {
         if (allShops.size() == 0) {
             getViewState().showProgress();
-            shopsInteractor.loadFromNet(Integer.valueOf(PreferencesManager.getInstance().getRegionId()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Shop>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
-                            getViewState().showShopsEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Shop> shops) {
-                            getViewState().showShopsEmpty();
-                            allShops.addAll(shops);
-                            getViewState().showShopsForSelectingFavorites(allShops);
-                        }
-                    });
+            loadShops();
         } else {
             getViewState().showShopsForSelectingFavorites(allShops);
         }

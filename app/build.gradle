@@ -67,6 +67,7 @@ dependencies {
     compile 'com.afollestad:material-cab:0.1.12'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.4.0'
+    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.9'
 
 
     compile 'de.hdodenhof:circleimageview:2.0.0'

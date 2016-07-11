@@ -13,9 +13,6 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Александр on 06.07.2016.
- */
 public class SaleInteractor {
 
     private SaleNetRepository netRepository = new SaleNetRepository();

@@ -213,7 +213,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
         DialogController.showDialogWithRegions(getActivity(), regions, new DialogRegionsCallback() {
 
             @Override
-            public void onSelected() {
+            public void onSelected(Region region) {
                 presenter.onRegionSelected();
             }
 

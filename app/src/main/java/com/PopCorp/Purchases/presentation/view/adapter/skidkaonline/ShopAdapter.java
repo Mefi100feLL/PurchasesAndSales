@@ -1,8 +1,9 @@
 package com.PopCorp.Purchases.presentation.view.adapter.skidkaonline;
 
-import android.content.Context;
 import android.support.v7.util.SortedList;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
-import com.PopCorp.Purchases.data.comparator.skidkaonline.ShopComparator;
-import com.PopCorp.Purchases.data.dao.skidkaonline.ShopDAO;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
+import com.PopCorp.Purchases.data.comparator.skidkaonline.ShopDecoratorComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.UIL;
+import com.PopCorp.Purchases.presentation.decorator.skidkaonline.ShopDecorator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -26,34 +27,28 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
     public static final String FILTER_ALL = "";
     public static final String FILTER_FAVORITE = "favorite";
 
-    private final Context context;
-    private final RecyclerCallback<Shop> callback;
-    private final ShopComparator comparator = new ShopComparator();
-
-    private ShopDAO shopDAO = new ShopDAO();
+    private final FavoriteRecyclerCallback<Shop> callback;
+    private final ShopDecoratorComparator comparator = new ShopDecoratorComparator();
 
     private ArrayList<Shop> objects;
-    private final SortedList<Shop> publishItems;
+    private final SortedList<ShopDecorator> publishItems;
 
-    private String currentFilter;
-
-    public ShopAdapter(Context context, RecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
-        this.context = context;
+    public ShopAdapter(FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
         this.callback = callback;
         this.objects = objects;
-        publishItems = new SortedList<>(Shop.class, new SortedList.Callback<Shop>() {
+        publishItems = new SortedList<>(ShopDecorator.class, new SortedList.Callback<ShopDecorator>() {
             @Override
-            public boolean areContentsTheSame(Shop oneItem, Shop twoItem) {
+            public boolean areContentsTheSame(ShopDecorator oneItem, ShopDecorator twoItem) {
                 return oneItem.equals(twoItem);
             }
 
             @Override
-            public boolean areItemsTheSame(Shop oneItem, Shop twoItem) {
+            public boolean areItemsTheSame(ShopDecorator oneItem, ShopDecorator twoItem) {
                 return oneItem.equals(twoItem);
             }
 
             @Override
-            public int compare(Shop oneItem, Shop twoItem) {
+            public int compare(ShopDecorator oneItem, ShopDecorator twoItem) {
                 return comparator.compare(oneItem, twoItem);
             }
 
@@ -79,9 +74,22 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         });
     }
 
+    public void setLayoutManager(GridLayoutManager layoutManager, final int countColumns) {
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if (publishItems.get(position).isHeader()) {
+                    return countColumns;
+                }
+                return 1;
+            }
+        });
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final View view;
+        public final TextView headerName;
         public final ImageView image;
         public final TextView name;
         public final TextView count;
@@ -91,6 +99,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         public ViewHolder(View view) {
             super(view);
             this.view = view;
+            headerName = (TextView) view.findViewById(R.id.header_text);
             image = (ImageView) view.findViewById(R.id.image);
             name = (TextView) view.findViewById(R.id.name);
             count = (TextView) view.findViewById(R.id.sales_count);
@@ -119,39 +128,56 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Shop shop = publishItems.get(position);
+        ShopDecorator decorator = publishItems.get(position);
 
-        ImageLoader.getInstance().displayImage(shop.getImage(), holder.image, UIL.getImageOptions());
-
-        holder.name.setText(shop.getName());
-        holder.count.setVisibility(View.GONE);
-
-        if (shop.isFavorite()) {
-            holder.favorite.setImageResource(R.drawable.ic_star_amber_24dp);
+        if (decorator.isHeader()) {
+            holder.headerName.setText(decorator.getName());
         } else {
-            holder.favorite.setImageResource(R.drawable.ic_star_border_amber_24dp);
+            Shop shop = decorator.getShop();
+
+            ImageLoader.getInstance().displayImage(shop.getImage(), holder.image, UIL.getImageOptions());
+
+            holder.name.setText(shop.getName());
+            holder.count.setVisibility(View.GONE);
+
+            if (shop.isFavorite()) {
+                holder.favorite.setImageResource(R.drawable.ic_star_amber_24dp);
+            } else {
+                holder.favorite.setImageResource(R.drawable.ic_star_border_amber_24dp);
+            }
+
+            holder.favorite.setTag(shop);
+            holder.favorite.setOnClickListener(v -> {
+                Shop clickedShop = (Shop) v.getTag();
+                callback.onFavoriteClicked(clickedShop);
+            });
         }
 
-        holder.favorite.setTag(shop);
-        holder.favorite.setOnClickListener(v -> {
-            Shop clickedShop = (Shop) v.getTag();
-            clickedShop.setFavorite(!clickedShop.isFavorite());
-            notifyItemChanged(publishItems.indexOf(clickedShop));
-            shopDAO.updateOrAddToDB(clickedShop);
-            if (currentFilter.equals(FILTER_FAVORITE)) {
-                publishItems.remove(clickedShop);
-                if (publishItems.size() == 0){
-                    callback.onEmpty();
-                }
+        holder.setClickListener((v, pos) -> {
+            ShopDecorator saleDecorator = publishItems.get(pos);
+            if (!saleDecorator.isHeader()) {
+                callback.onItemClicked(v, saleDecorator.getShop());
             }
         });
+    }
 
-        holder.setClickListener((v, position1) -> callback.onItemClicked(v, publishItems.get(position1)));
+    @Override
+    public int getItemViewType(int position) {
+        if (publishItems.get(position).isHeader()) {
+            return 1;
+        }
+        return 2;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shop, parent, false);
+        View v;
+        if (position == 1) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
+        } else {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shop, parent, false);
+        }
+
         return new ViewHolder(v);
     }
 
@@ -169,7 +195,6 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
                 FilterResults results = new FilterResults();
                 ArrayList<Shop> FilteredArrayNames = new ArrayList<>();
 
-                currentFilter = (String) constraint;
                 if (constraint.equals(FILTER_ALL)) {
                     results.count = objects.size();
                     results.values = objects;
@@ -193,24 +218,63 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
 
     private void update(ArrayList<Shop> newItems) {
         publishItems.beginBatchedUpdates();
-        for (Shop shop : newItems) {
-            int index = publishItems.indexOf(shop);
-            if (index == SortedList.INVALID_POSITION) {
-                publishItems.add(shop);
-            } else {
-                publishItems.updateItemAt(index, shop);
+        ArrayList<ShopDecorator> arrayForRemoving = new ArrayList<>();
+        if (newItems.size() != 0) {
+            for (Shop shop : newItems) {
+                boolean finded = false;
+                for (int i = 0; i < publishItems.size(); i++) {
+                    ShopDecorator decorator = publishItems.get(i);
+                    if (decorator.isHeader()) {
+                        continue;
+                    }
+                    if (!newItems.contains(decorator.getShop())) {
+                        arrayForRemoving.add(decorator);
+                    }
+                    if (decorator.getShop().equals(shop)) {
+                        finded = true;
+                        publishItems.updateItemAt(i, decorator);
+                    }
+                }
+                if (!finded) {
+                    publishItems.add(new ShopDecorator(shop.getName(), false, shop, shop.getCategory()));
+                }
+            }
+        } else {
+            for (int i = 0; i < publishItems.size(); i++) {
+                ShopDecorator decorator = publishItems.get(i);
+                if (decorator.getShop() != null && !newItems.contains(decorator.getShop())) {
+                    arrayForRemoving.add(decorator);
+                }
             }
         }
-
-        ArrayList<Shop> arrayForRemoving = new ArrayList<>();
+        for (ShopDecorator decorator : arrayForRemoving) {
+            publishItems.remove(decorator);
+        }
+        ArrayList<ShopDecorator> headers = new ArrayList<>();
         for (int i = 0; i < publishItems.size(); i++) {
-            Shop shop = publishItems.get(i);
-            if (!newItems.contains(shop)) {
-                arrayForRemoving.add(shop);
+            ShopDecorator decorator = publishItems.get(i);
+            if (decorator.isHeader()) {
+                continue;
+            }
+            ShopDecorator header = new ShopDecorator(decorator.getShop().getCategory().getName(), true, null, decorator.getShop().getCategory());
+            if (!headers.contains(header)) {
+                headers.add(header);
             }
         }
-        for (Shop shop : arrayForRemoving) {
-            publishItems.remove(shop);
+        for (ShopDecorator decorator : headers) {
+            if (publishItems.indexOf(decorator) == SortedList.INVALID_POSITION) {
+                publishItems.add(decorator);
+            }
+        }
+        arrayForRemoving.clear();
+        for (int i = 0; i < publishItems.size(); i++) {
+            ShopDecorator decorator = publishItems.get(i);
+            if (decorator.isHeader() && !headers.contains(decorator)) {
+                arrayForRemoving.add(decorator);
+            }
+        }
+        for (ShopDecorator decorator : arrayForRemoving) {
+            publishItems.remove(decorator);
         }
 
         if (publishItems.size() == 0) {

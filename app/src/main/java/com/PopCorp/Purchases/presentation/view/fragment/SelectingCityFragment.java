@@ -1,38 +1,40 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.skidkaonline.City;
 import com.PopCorp.Purchases.data.utils.EmptyView;
-import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingCityPresenter;
-import com.PopCorp.Purchases.presentation.view.adapter.CategoriesAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.CityAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SelectingCityView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 public class SelectingCityFragment extends MvpAppCompatFragment implements SelectingCityView {
 
     @InjectPresenter
     SelectingCityPresenter presenter;
 
-
     private Toolbar toolBar;
-    private RecyclerView recyclerView;
+    private FastScrollRecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
     private View progressBar;
     private EmptyView emptyView;
@@ -40,7 +42,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     private CityAdapter adapter;
 
     private FloatingActionButton fab;
-
+    private SearchView searchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        recyclerView = (FastScrollRecyclerView) rootView.findViewById(R.id.recycler);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
 
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
@@ -72,7 +74,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
         adapter = new CityAdapter(presenter, presenter.getObjects());
         recyclerView.setAdapter(adapter);
 
-        fab.setOnClickListener(v -> {});
+        fab.setOnClickListener(v -> presenter.onFabClicked());
 
         return rootView;
     }
@@ -91,6 +93,16 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     }
 
     @Override
+    public void showEmptyForSearch(String searchText) {
+        showError(R.string.empty_search_city, R.drawable.ic_menu_gallery, R.string.button_all_cities, view -> {
+            presenter.search("");
+            if (searchView!=null){
+                searchView.onActionViewCollapsed();
+            }
+        });
+    }
+
+    @Override
     public void filter(String filter) {
         adapter.getFilter().filter(filter);
     }
@@ -98,6 +110,27 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     @Override
     public void setSelectedCity(City selectedCity) {
         adapter.setSelectedCity(selectedCity);
+    }
+
+    @Override
+    public void showEmptySelectedCity() {
+        showSnackBar(R.string.notification_city_not_selected);
+    }
+
+    @Override
+    public void setResultAndExit() {
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
+    }
+
+    @Override
+    public void showFastScroll() {
+        recyclerView.setAutoHideDelay(1500);
+    }
+
+    @Override
+    public void hideFastScroll() {
+        recyclerView.setAutoHideDelay(0);
     }
 
     @Override
@@ -135,4 +168,34 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
         swipeRefresh.setEnabled(!refresh);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.cities, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                presenter.search(newText);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                getActivity().setResult(Activity.RESULT_CANCELED);
+                getActivity().finish();
+                break;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

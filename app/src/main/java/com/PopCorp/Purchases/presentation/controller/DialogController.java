@@ -73,7 +73,7 @@ public class DialogController {
                 return false;
             }
             PreferencesManager.getInstance().putRegion(String.valueOf(regions.get(which).getId()));
-            callback.onSelected();
+            callback.onSelected(regions.get(which));
             dialog.dismiss();
             return true;
         });

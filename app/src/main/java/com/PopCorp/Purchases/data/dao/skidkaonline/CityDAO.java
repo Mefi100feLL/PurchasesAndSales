@@ -8,17 +8,14 @@ import com.PopCorp.Purchases.data.model.skidkaonline.City;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Александр on 06.07.2016.
- */
 public class CityDAO {
 
     public static final String TABLE_CITIES = "skidkaonline_cities";
 
     public static final String KEY_CITY_ID = "id";
     public static final String KEY_CITY_NAME = "name";
-    public static final String KEY_CITY_REGION = "name";
-    public static final String KEY_CITY_URL = "name";
+    public static final String KEY_CITY_REGION = "region";
+    public static final String KEY_CITY_URL = "url";
 
     public static final String[] COLUMNS_CITIES = new String[]{
             KEY_CITY_ID,
@@ -90,5 +87,17 @@ public class CityDAO {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public City getWithId(String id) {
+        City result = null;
+        Cursor cursor = db.getData(TABLE_CITIES, KEY_CITY_ID + "=" + id);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                result = getCity(cursor);
+            }
+            cursor.close();
+        }
+        return result;
     }
 }

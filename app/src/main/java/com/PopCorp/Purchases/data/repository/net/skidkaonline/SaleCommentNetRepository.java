@@ -9,9 +9,6 @@ import java.util.List;
 
 import rx.Observable;
 
-/**
- * Created by Александр on 06.07.2016.
- */
 public class SaleCommentNetRepository implements SaleCommentRepository {
 
     private API api = APIFactory.getAPI();

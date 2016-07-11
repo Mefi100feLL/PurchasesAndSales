@@ -2,9 +2,6 @@ package com.PopCorp.Purchases.data.model.skidkaonline;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Александр on 06.07.2016.
- */
 public class Sale {
 
     @SerializedName("id")
@@ -42,6 +39,13 @@ public class Sale {
         this.cityId = cityId;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Sale)) return false;
+        Sale sale = (Sale) object;
+        return id == sale.getId() && cityId == sale.getCityId();
     }
 
     public int getId() {

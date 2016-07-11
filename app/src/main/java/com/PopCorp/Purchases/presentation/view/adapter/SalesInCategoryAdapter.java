@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.presentation.view.adapter;
 
-import android.content.Context;
 import android.support.v7.util.SortedList;
 
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
@@ -13,8 +12,8 @@ import java.util.Comparator;
 
 public class SalesInCategoryAdapter extends SalesAdapter {
 
-    public SalesInCategoryAdapter(Context context, RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
-        super(context, callback, objects, saleComparator);
+    public SalesInCategoryAdapter(RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
+        super(callback, objects, saleComparator);
     }
 
     @Override

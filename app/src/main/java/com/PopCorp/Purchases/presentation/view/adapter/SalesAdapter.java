@@ -24,15 +24,13 @@ import java.util.Comparator;
 
 public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.ViewHolder> implements Filterable {
 
-    private Context context;
     private RecyclerCallback<Sale> callback;
     private Comparator<SaleDecorator> comparator;
 
     protected SortedList<SaleDecorator> publishItems;
     protected ArrayList<Sale> objects;
 
-    public SalesAdapter(Context context, RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
-        this.context = context;
+    public SalesAdapter(RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
         this.callback = callback;
         this.objects = objects;
         this.comparator = saleComparator;

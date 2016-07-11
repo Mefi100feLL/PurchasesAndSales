@@ -96,7 +96,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        adapter = new SalesInShopAdapter(getActivity(), presenter, presenter.getObjects(), new SalesCategoryComparator());
+        adapter = new SalesInShopAdapter(presenter, presenter.getObjects(), new SalesCategoryComparator());
         adapter.setLayoutManager(layoutManager, PreferencesManager.getInstance().getSaleTableSize());
         recyclerView.setAdapter(adapter);
 
@@ -112,7 +112,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     @Override
     public void showCategoriesEmpty() {
         showError(R.string.empty_no_categgories, R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.selectCategories();
+            presenter.loadCategories();
         });
     }
 
@@ -126,7 +126,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
             @Override
             public void onCancel() {
-                showCategoriesEmpty();
+                showFavoriteCategoriesEmpty();
             }
         });
     }
@@ -260,6 +260,9 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            getActivity().onBackPressed();
+        }
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
                 PreferencesManager.getInstance().putSaleTableSize(Integer.parseInt(filterItem));

@@ -4,22 +4,26 @@ import com.PopCorp.Purchases.presentation.decorator.skidkaonline.ShopDecorator;
 
 import java.util.Comparator;
 
-/**
- * Created by Александр on 06.07.2016.
- */
 public class ShopDecoratorComparator implements Comparator<ShopDecorator> {
+
+    private ShopComparator comparator = new ShopComparator();
 
     @Override
     public int compare(ShopDecorator lhs, ShopDecorator rhs) {
         int result = 0;
-        if (!lhs.isHeader() && rhs.isHeader()){
-            result = -1;
-        } else if(lhs.isHeader() && !rhs.isHeader()){
-            result = 1;
+        if (lhs.getCategory() != null && rhs.getCategory() != null) {
+            result = lhs.getCategory().getName().compareToIgnoreCase(rhs.getCategory().getName());
         }
-        if (result == 0){
-
+        if (result == 0) {
+            if (!lhs.isHeader() && rhs.isHeader()) {
+                result = 1;
+            } else if (lhs.isHeader() && !rhs.isHeader()) {
+                result = -1;
+            }
         }
-        return 0;
+        if (result == 0 && lhs.getShop() != null && rhs.getShop() != null) {
+            result = comparator.compare(lhs.getShop(), rhs.getShop());
+        }
+        return result;
     }
 }

@@ -13,8 +13,8 @@ import java.util.Comparator;
 
 public class SalesInShopAdapter extends SalesAdapter {
 
-    public SalesInShopAdapter(Context context, RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
-        super(context, callback, objects, saleComparator);
+    public SalesInShopAdapter(RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
+        super(callback, objects, saleComparator);
     }
 
     @Override

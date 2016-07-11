@@ -96,6 +96,10 @@
             android:key="city"
             android:title="@string/prefs_region" />
 
+        <Preference
+            android:key="skidkaonline_city"
+            android:title="@string/prefs_city" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -23,11 +23,11 @@ import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.SameSale;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
-import com.PopCorp.Purchases.presentation.presenter.SalePresenter;
-import com.PopCorp.Purchases.presentation.presenter.factory.ViewPagerPresenterFactory;
+import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
+import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.view.adapter.SameSaleAdapter;
-import com.PopCorp.Purchases.presentation.view.moxy.SaleView;
+import com.PopCorp.Purchases.presentation.view.moxy.SaleInfoView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -41,11 +41,11 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         Toolbar.OnMenuItemClickListener,
         SaleChildCallback,
         View.OnClickListener,
-        SaleView,
+        SaleInfoView,
         SaleParamsProvider {
 
-    @InjectPresenter(factory = ViewPagerPresenterFactory.class, presenterId = "SalePresenter")
-    SalePresenter presenter;
+    @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = "SaleInfoPresenter")
+    SaleInfoPresenter presenter;
 
     private int saleId;
 
@@ -178,33 +178,18 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void showFragmentComments(Sale sale) {
-
+    public void setParent(SaleMainCallback parent) {
+        this.parent = parent;
     }
 
     @Override
-    public void showFragmentInfo(Sale sale) {
-
+    public void onClick(View v) {
+        getActivity().onBackPressed();
     }
 
     @Override
-    public void showCommentTextEmpty() {
-
-    }
-
-    @Override
-    public void hideCommentTextError() {
-
-    }
-
-    @Override
-    public void showCommentAuthorEmpty() {
-
-    }
-
-    @Override
-    public void hideCommentAuthorError() {
-
+    public String getSaleId(String presenterId) {
+        return String.valueOf(saleId);
     }
 
     public void showSameSales(Sale sale) {
@@ -249,7 +234,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_share:
                 shareSale(presenter.getSale());
                 break;
@@ -276,9 +261,9 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         String string = getString(R.string.string_for_share_sale);
         string = string.replace("shop", sale.getShop().getName());
         string = string.replace("name", sale.getTitle());
-        if (!sale.getSubTitle().isEmpty()){
+        if (!sale.getSubTitle().isEmpty()) {
             string = string.replace("comment", sale.getSubTitle());
-        } else{
+        } else {
             string = string.replace(" (comment)", "");
         }
         String periodBegin;
@@ -305,28 +290,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.string_send_sale_with_app)));
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_sale, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void setParent(SaleMainCallback parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public void onClick(View v) {
-        getActivity().onBackPressed();
-    }
-
-    @Override
-    public String getSaleId(String presenterId) {
-        return String.valueOf(saleId);
-    }
-
-    @Override
-    public void showComments(Sale sale) {
-
     }
 }

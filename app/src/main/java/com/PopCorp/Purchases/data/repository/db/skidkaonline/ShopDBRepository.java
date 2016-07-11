@@ -23,4 +23,8 @@ public class ShopDBRepository implements ShopRepository {
     public void addAllShops(List<Shop> shops) {
         dao.addAllShops(shops);
     }
+
+    public void update(Shop item) {
+        dao.updateOrAddToDB(item);
+    }
 }

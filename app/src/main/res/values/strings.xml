@@ -11,6 +11,7 @@
 
     <!-- Empty -->
     <string name="empty_shops_select_region">Не указан регион для загрузки магазинов.\nПожалуйста выберите регион</string>
+    <string name="empty_shops_select_city">Не указан город для загрузки магазинов.\nПожалуйста выберите город</string>
     <string name="empty_categories_select_region">Не указан регион для загрузки категорий.\nПожалуйста выберите регион</string>
     <string name="empty_no_shops_restart_app">Нет магазинов.\nПопробуйте перезапустить приложение</string>
     <string name="empty_no_favorite_shops">Нет избранных магазинов\nОткройте все магазины и добавьте в избранные те, которые Вам нужны, нажав на звездочку</string>
@@ -134,6 +135,7 @@
     <string name="string_in">в</string>
     <string name="toast_no_founded_sale_image">Не найдена картинка акции</string>
     <string name="string_for_share_sale">В \"shop\" period проводится акция на: name (comment). Цена: coast.\nОтправлено из приложения \"Покупки по акциям\"\nhttps://play.google.com/store/apps/details?id=com.PopCorp.Purchases</string>
+    <string name="string_for_share_sale_skidkaonline">Акция проводится в \"shop\" period \nОтправлено из приложения \"Покупки по акциям\"\nhttps://play.google.com/store/apps/details?id=com.PopCorp.Purchases</string>
     <string name="string_send_sale_with_app">Отправить акцию через</string>
     <string name="navigation_drawer_skidkaonline">SkidkaOnline.ru</string>
     <string name="navigation_drawer_shopping_lists">Списки покупок</string>
@@ -222,6 +224,15 @@
     <string name="string_send_list_with_app">Отправить список через:</string>
     <string name="notification_no_apps_for_share_list">Нет приложений для отправки списка</string>
     <string name="empty_no_cities">Не получилось загрузить города\nПроверьте интернет соединение и попробуйте обновить</string>
+    <string name="notification_city_not_selected">Выберите город</string>
+    <string name="action_search">Поиск</string>
+    <string name="button_all_cities">Все города</string>
+    <string name="empty_search_city">К сожалению у нас в списке нет города с таким именем\nПроверьте правильность введенного имени или попробуйте найти ближайший районный центр или крупный город</string>
+    <string name="prefs_city">Город</string>
+    <string name="spinner_all_catalogs">Все каталоги</string>
+    <string name="empty_comments_for_sale">Нет комментариев к акции</string>
+    <string name="button_close">Закрыть</string>
+    <string name="button_back_to_sale">К акции</string>
 
 
 </resources>

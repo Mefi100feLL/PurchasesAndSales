@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.presentation.view.adapter.skidkaonline;
 
+import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,27 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.skidkaonline.CityComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.City;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 
-public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> implements Filterable, SectionIndexer {
+public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> implements Filterable, FastScrollRecyclerView.SectionedAdapter {
 
     private final RecyclerCallback<City> callback;
     private final CityComparator comparator = new CityComparator();
 
     private ArrayList<City> objects;
     private final SortedList<City> publishItems;
-    private final ArrayList<Section> sections = new ArrayList<>();
 
     private City selectedCity;
-
 
     public CityAdapter(RecyclerCallback<City> callback, ArrayList<City> objects) {
         this.callback = callback;
@@ -129,7 +128,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
             holder.mainLayout.setBackgroundResource(R.drawable.list_selector);
         }
 
-        holder.setClickListener((v, pos) -> callback.onItemClicked(v, publishItems.get(pos)));
+        holder.setClickListener((v, pos) -> {
+            selectedCity = publishItems.get(pos);
+            notifyDataSetChanged();
+            callback.onItemClicked(v, publishItems.get(pos));
+        });
     }
 
     @Override
@@ -157,8 +160,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
                     results.values = objects;
                     return results;
                 } else {
+                    String filter = constraint.toString().toLowerCase();
                     for (City city : objects) {
-                        if (city.getName().contains(constraint) || city.getRegion().contains(constraint)) {
+                        if (city.getName().toLowerCase().contains(filter) || city.getRegion().toLowerCase().contains(filter)) {
                             FilteredArrayNames.add(city);
                         }
                     }
@@ -174,18 +178,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
     }
 
     private void update(ArrayList<City> newItems) {
-        sections.clear();
         publishItems.beginBatchedUpdates();
         for (City city : newItems) {
-            Section section = new Section(city.getName().substring(0, 1), objects.indexOf(city));
-            if (!sections.contains(section)) {
-                sections.add(section);
-            }
             int index = publishItems.indexOf(city);
             if (index == SortedList.INVALID_POSITION) {
                 publishItems.add(city);
-            } else {
-                publishItems.updateItemAt(index, city);
             }
         }
 
@@ -206,62 +203,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
         publishItems.endBatchedUpdates();
     }
 
+    @NonNull
     @Override
-    public Object[] getSections() {
-        return sections.toArray(new Section[sections.size()]);
-    }
-
-    @Override
-    public int getPositionForSection(int sectionIndex) {
-        return sections.get(sectionIndex).getPosition();
-    }
-
-    @Override
-    public int getSectionForPosition(int position) {
-        String word = objects.get(position).getName().substring(0, 1);
-        for (Section section : sections) {
-            if (section.getSection().equals(word)) {
-                return sections.indexOf(section);
-            }
-        }
-        return 0;
-    }
-
-    private class Section {
-
-        private String section;
-        private int position;
-
-        public Section(String section, int position) {
-            setSection(section);
-            setPosition(position);
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            Section section = (Section) object;
-            return section.getSection().equals(getSection());
-        }
-
-        @Override
-        public String toString() {
-            return getSection();
-        }
-
-        public String getSection() {
-            return section;
-        }
-
-        public void setSection(String section) {
-            this.section = section;
-        }
-
-        public int getPosition() {
-            return position;
-        }
-
-        public void setPosition(int position) {
-            this.position = position;
-        }
+    public String getSectionName(int position) {
+        return publishItems.get(position).getName().substring(0, 1);
     }
 }

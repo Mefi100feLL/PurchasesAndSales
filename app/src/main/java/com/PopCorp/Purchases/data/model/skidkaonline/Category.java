@@ -1,14 +1,14 @@
 package com.PopCorp.Purchases.data.model.skidkaonline;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Александр on 06.07.2016.
- */
-public class Category {
+public class Category implements Parcelable {
 
     @SerializedName("name")
     private String name;
@@ -37,6 +37,43 @@ public class Category {
         this.url = url;
         this.cityUrl = cityUrl;
         this.cityId = cityId;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Category)) return false;
+        Category category = (Category) object;
+        return url.equals(category.getUrl()) && cityId == category.getCityId();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(url);
+        dest.writeString(cityUrl);
+        dest.writeInt(cityId);
+    }
+
+    public static final Creator<Category> CREATOR = new Creator<Category>() {
+        public Category createFromParcel(Parcel in) {
+            return new Category(in);
+        }
+
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
+
+    private Category(Parcel parcel) {
+        this.name = parcel.readString();
+        this.url = parcel.readString();
+        this.cityUrl = parcel.readString();
+        this.cityId = parcel.readInt();
     }
 
     public String getName() {

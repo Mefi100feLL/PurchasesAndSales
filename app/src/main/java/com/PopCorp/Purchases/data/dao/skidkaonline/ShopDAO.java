@@ -88,6 +88,7 @@ public class ShopDAO {
     public long updateOrAddToDB(Shop shop) {
         int countUpdated = db.update(TABLE_SHOPES, COLUMNS_SHOPES, KEY_SHOP_URL + "='" + shop.getUrl() + "' AND " + KEY_SHOP_CITY_ID + "=" + shop.getCityId(), values(shop));
         if (countUpdated == 0) {
+            categoryDAO.updateOrAddToDB(shop.getCategory());
             addRec(shop);
         }
         return countUpdated;
@@ -96,6 +97,7 @@ public class ShopDAO {
     public long updateOrAddToDBWithoutFavorite(Shop shop) {
         int countUpdated = db.update(TABLE_SHOPES, COLUMNS_SHOPES_WITHOUT_FAVORITE, KEY_SHOP_URL + "='" + shop.getUrl() + "' AND " + KEY_SHOP_CITY_ID + "=" + shop.getCityId(), valuesWithoutFavorite(shop));
         if (countUpdated == 0) {
+            categoryDAO.updateOrAddToDB(shop.getCategory());
             return addRec(shop);
         }
         return countUpdated;

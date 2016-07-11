@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.decorator.skidkaonline;
 
 import com.PopCorp.Purchases.data.model.skidkaonline.Category;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
+import com.PopCorp.Purchases.presentation.decorator.SaleCategoryDecorator;
 
 public class ShopDecorator {
 
@@ -15,6 +16,20 @@ public class ShopDecorator {
         this.header = header;
         this.shop = shop;
         this.category = category;
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if (!(object instanceof ShopDecorator)) return false;
+
+        ShopDecorator another = (ShopDecorator) object;
+        if (isHeader() && another.isHeader()){
+            return (getCategory().equals(another.getCategory()));
+        }
+        if (!(isHeader() || another.isHeader())){
+            return getShop().equals(another.getShop());
+        }
+        return false;
     }
 
     public String getName() {

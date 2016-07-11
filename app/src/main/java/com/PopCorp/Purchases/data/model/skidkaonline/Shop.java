@@ -1,11 +1,11 @@
 package com.PopCorp.Purchases.data.model.skidkaonline;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Александр on 06.07.2016.
- */
-public class Shop {
+public class Shop implements Parcelable {
 
     @SerializedName("name")
     private String name;
@@ -30,6 +30,49 @@ public class Shop {
         this.cityUrl = cityUrl;
         this.cityId = cityId;
         this.favorite = favorite;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Shop)) return false;
+        Shop shop = (Shop) object;
+        return url.equals(shop.getUrl()) && cityId == shop.getCityId();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(url);
+        dest.writeString(image);
+        dest.writeParcelable(category, flags);
+        dest.writeString(cityUrl);
+        dest.writeInt(cityId);
+        dest.writeString(String.valueOf(favorite));
+    }
+
+    public static final Creator<Shop> CREATOR = new Creator<Shop>() {
+        public Shop createFromParcel(Parcel in) {
+            return new Shop(in);
+        }
+
+        public Shop[] newArray(int size) {
+            return new Shop[size];
+        }
+    };
+
+    private Shop(Parcel parcel) {
+        this.name = parcel.readString();
+        this.url = parcel.readString();
+        this.image = parcel.readString();
+        this.category = parcel.readParcelable(Category.class.getClassLoader());
+        this.cityUrl = parcel.readString();
+        this.cityId = parcel.readInt();
+        this.favorite = Boolean.parseBoolean(parcel.readString());
     }
 
     public String getName() {

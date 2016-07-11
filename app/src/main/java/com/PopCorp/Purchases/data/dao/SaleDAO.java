@@ -24,6 +24,7 @@ public class SaleDAO {
     public static final String KEY_SALE_SHOP = "shop";
     public static final String KEY_SALE_CATEGORY = "category";
     public static final String KEY_SALE_CATEGORY_TYPE = "category_type";
+    public static final String KEY_SALE_COUNT_COMMENTS = "count_comments";
     public static final String KEY_SALE_PERIOD_BEGIN = "period_begin";
     public static final String KEY_SALE_PERIOD_FINISH = "period_finish";
 
@@ -39,6 +40,7 @@ public class SaleDAO {
             KEY_SALE_SHOP,
             KEY_SALE_CATEGORY,
             KEY_SALE_CATEGORY_TYPE,
+            KEY_SALE_COUNT_COMMENTS,
             KEY_SALE_PERIOD_BEGIN,
             KEY_SALE_PERIOD_FINISH
     };
@@ -56,6 +58,7 @@ public class SaleDAO {
             KEY_SALE_SHOP + " integer, " +
             KEY_SALE_CATEGORY + " integer, " +
             KEY_SALE_CATEGORY_TYPE + " integer, " +
+            KEY_SALE_COUNT_COMMENTS + " integer, " +
             KEY_SALE_PERIOD_BEGIN + " text, " +
             KEY_SALE_PERIOD_FINISH + " text);";
 
@@ -81,6 +84,7 @@ public class SaleDAO {
                 String.valueOf(sale.getShopId()),
                 String.valueOf(sale.getCategoryId()),
                 String.valueOf(sale.getCategoryType()),
+                String.valueOf(sale.getCountComments()),
                 sale.getPeriodStart(),
                 sale.getPeriodEnd()
         };
@@ -155,12 +159,14 @@ public class SaleDAO {
                 cursor.getInt(cursor.getColumnIndex(KEY_SALE_CITY_ID)),
                 cursor.getInt(cursor.getColumnIndex(KEY_SALE_SHOP)),
                 cursor.getInt(cursor.getColumnIndex(KEY_SALE_CATEGORY)),
-                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CATEGORY_TYPE))
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CATEGORY_TYPE)),
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_COUNT_COMMENTS))
+
         );
         result.setShop(shopDAO.getShop(result));
         result.setCategory(categoryDAO.getCategory(result));
         result.setSameSales(sameSaleDao.getForSale(result.getCityId(), result.getId()));
-        result.setComments(saleCommentDao.getForSale(result.getId()));
+        //result.setComments(saleCommentDao.getForSale(result.getId()));
         return result;
     }
 

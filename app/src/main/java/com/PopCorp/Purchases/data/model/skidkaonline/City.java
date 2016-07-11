@@ -23,6 +23,13 @@ public class City {
         this.url = url;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof City)) return false;
+        City city = (City) object;
+        return id == city.getId();
+    }
+
     public int getId() {
         return id;
     }

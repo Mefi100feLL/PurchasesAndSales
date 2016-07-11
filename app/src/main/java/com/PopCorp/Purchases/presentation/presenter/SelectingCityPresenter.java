@@ -85,7 +85,11 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
 
     @Override
     public void onEmpty() {
-
+        if (currentFilter.isEmpty()){
+            getViewState().showCitiesEmpty();
+        } else {
+            getViewState().showEmptyForSearch(currentFilter);
+        }
     }
 
     @Override
@@ -110,5 +114,25 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
     public void update() {
         getViewState().showProgress();
         loadData();
+    }
+
+    public void onFabClicked() {
+        if (selectedCity == null){
+            getViewState().showEmptySelectedCity();
+        } else{
+            PreferencesManager.getInstance().setCity(String.valueOf(selectedCity.getId()));
+            getViewState().setResultAndExit();
+        }
+    }
+
+    public void search(String newText) {
+        currentFilter = newText;
+        getViewState().showData();
+        getViewState().filter(newText);
+        if (newText.isEmpty()) {
+            getViewState().showFastScroll();
+        } else {
+            getViewState().hideFastScroll();
+        }
     }
 }
