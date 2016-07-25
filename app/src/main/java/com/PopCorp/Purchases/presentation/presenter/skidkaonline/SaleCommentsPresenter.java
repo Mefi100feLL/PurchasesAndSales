@@ -8,12 +8,13 @@ import com.PopCorp.Purchases.data.dao.skidkaonline.CityDAO;
 import com.PopCorp.Purchases.data.model.skidkaonline.SaleComment;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
-import com.PopCorp.Purchases.domain.interactor.skidkaonline.SaleInteractor;
+import com.PopCorp.Purchases.domain.interactor.skidkaonline.SaleCommentInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleCommentsView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import rx.Observer;
@@ -23,8 +24,7 @@ import rx.schedulers.Schedulers;
 @InjectViewState
 public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implements RecyclerCallback<SaleComment> {
 
-    private SaleInteractor interactor = new SaleInteractor();
-    private CityDAO cityDAO = new CityDAO();
+    private SaleCommentInteractor interactor = new SaleCommentInteractor();
 
     private int currentSaleId = -1;
 
@@ -42,7 +42,7 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
     }
 
     private void loadData(){
-        interactor.getComments(currentSaleId)
+        interactor.getData(currentSaleId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<SaleComment>>() {
@@ -55,7 +55,10 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
                         e.printStackTrace();
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        if (objects.size() == 0) {
+                            getViewState().showCommentsEmpty();
+                        }
+                        getViewState().showSnackBar(e);
                     }
 
                     @Override
@@ -72,9 +75,73 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                 });
     }
 
+    public void sendComment(String author, String text) {
+        if (text.isEmpty()) {
+            getViewState().showCommentTextEmpty();
+            return;
+        } else {
+            getViewState().hideCommentTextError();
+        }
+        if (author.isEmpty()) {
+            getViewState().showCommentAuthorEmpty();
+            return;
+        } else {
+            getViewState().hideCommentAuthorError();
+        }
+        getViewState().clearFields();
+        SaleComment comment = new SaleComment(currentSaleId, author, "", Calendar.getInstance().getTimeInMillis(), text);
+        sendComment(comment);
+    }
+
+    private void sendComment(SaleComment comment) {
+        comment.setError(0);
+        comment.setErrorText(null);
+        comment.setTmpText(R.string.sending_comment);
+        objects.add(comment);
+        getViewState().showData();
+        interactor.sendComment(comment.getAuthor(), comment.getText(), Integer.parseInt(PreferencesManager.getInstance().getCity()), currentSaleId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SaleComment>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        comment.setError(ErrorManager.getErrorResource(e));
+                        getViewState().showData();
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(SaleComment commentResult) {
+                        if (commentResult != null){
+                            objects.remove(comment);
+                            objects.add(commentResult);
+                        } else {
+                            comment.setError(R.string.error_comment_no_sended);
+                        }
+                        getViewState().showData();
+                    }
+                });
+    }
+
+    public ArrayList<SaleComment> getObjects() {
+        return objects;
+    }
+
+    public void onRefresh() {
+        getViewState().refreshing(true);
+        loadData();
+    }
+
     @Override
     public void onItemClicked(View view, SaleComment item) {
-
+        if (item.getErrorText() != null || item.getError() != 0){
+            sendComment(item);
+        }
     }
 
     @Override
@@ -97,65 +164,4 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
 
     }
 
-    public void sendComment(String author, String text) {
-        if (text.isEmpty()) {
-            getViewState().showCommentTextEmpty();
-            return;
-        } else {
-            getViewState().hideCommentTextError();
-        }
-        if (author.isEmpty()) {
-            getViewState().showCommentAuthorEmpty();
-            return;
-        } else {
-            getViewState().hideCommentAuthorError();
-        }
-        SaleComment comment = new SaleComment(currentSaleId, author, "Только что", text, cityDAO.getWithId(PreferencesManager.getInstance().getCity()).getName());
-        comment.setTmpText(R.string.sending_comment);
-        objects.add(comment);
-        getViewState().showData();
-        /*interactor.sendComment(author, text, Integer.parseInt(PreferencesManager.getInstance().getCity()), currentSaleId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<SaleComment>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        comment.setError(ErrorManager.getErrorResource(e));
-                        getViewState().showData();
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(SaleComment commentResult) {
-                        if (commentResult != null){
-                            SaleComment exists = objects.get(objects.indexOf(commentResult));
-                            exists.setError();
-                        }
-                        if (commentResult.isResult()) {
-                            comment.setDate(commentResult.getDate());
-                            comment.setTime(commentResult.getTime());
-                            comment.setDateTime(commentResult.getDateTime());
-                            new SaleCommentDAO().updateOrAddToDB(comment);
-                            Collections.sort(sale.getComments(), new SaleCommentComparator());
-                        } else{
-                            comment.setErrorText(commentResult.getMessage());
-                        }
-                        getViewState().showComments(sale);
-                    }
-                });*/
-    }
-
-    public ArrayList<SaleComment> getObjects() {
-        return objects;
-    }
-
-    public void onRefresh() {
-        getViewState().refreshing(true);
-        loadData();
-    }
 }

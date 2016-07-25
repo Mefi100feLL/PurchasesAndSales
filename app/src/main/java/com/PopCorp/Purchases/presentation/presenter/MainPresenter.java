@@ -8,17 +8,17 @@ import com.arellomobile.mvp.MvpPresenter;
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
 
-    private int selectedDrawerItem = R.string.navigation_drawer_shops;
+    private long selectedDrawerItem = R.string.navigation_drawer_shops;
 
     public MainPresenter(){
         getViewState().createDrawer();
     }
 
-    public void setSelectedDrawerItem(int selectedDrawerItem) {
+    public void setSelectedDrawerItem(long selectedDrawerItem) {
         this.selectedDrawerItem = selectedDrawerItem;
     }
 
-    public int getSelectedDrawerItem() {
+    public long getSelectedDrawerItem() {
         return selectedDrawerItem;
     }
 }

@@ -23,5 +23,5 @@ public interface SampleDataView extends MvpView {
     void refreshing(boolean refresh);
 
     @StateStrategyType(SkipStrategy.class)
-    void showSnackBar(int errorRes);
+    void showSnackBar(Throwable e);
 }

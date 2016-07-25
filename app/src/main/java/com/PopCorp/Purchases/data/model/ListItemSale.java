@@ -9,14 +9,12 @@ public class ListItemSale implements Parcelable {
     private String image;
     private String periodStart;
     private String periodEnd;
-    private int countOfDependens;
 
-    public ListItemSale(long id, String image, String periodStart, String periodEnd, int countOfDependens) {
+    public ListItemSale(long id, String image, String periodStart, String periodEnd) {
         this.id = id;
         this.image = image;
         this.periodStart = periodStart;
         this.periodEnd = periodEnd;
-        this.countOfDependens = countOfDependens;
     }
 
     @Override
@@ -37,7 +35,6 @@ public class ListItemSale implements Parcelable {
         dest.writeString(image);
         dest.writeString(periodStart);
         dest.writeString(periodEnd);
-        dest.writeInt(countOfDependens);
     }
 
     public static final Creator<ListItemSale> CREATOR = new Creator<ListItemSale>() {
@@ -55,7 +52,6 @@ public class ListItemSale implements Parcelable {
         this.image = parcel.readString();
         this.periodStart = parcel.readString();
         this.periodEnd = parcel.readString();
-        this.countOfDependens = parcel.readInt();
     }
 
     public long getId() {
@@ -88,13 +84,5 @@ public class ListItemSale implements Parcelable {
 
     public void setPeriodEnd(String periodEnd) {
         this.periodEnd = periodEnd;
-    }
-
-    public int getCountOfDependens() {
-        return countOfDependens;
-    }
-
-    public void setCountOfDependens(int countOfDependens) {
-        this.countOfDependens = countOfDependens;
     }
 }

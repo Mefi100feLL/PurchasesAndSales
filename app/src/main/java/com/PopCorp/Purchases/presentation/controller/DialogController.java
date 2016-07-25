@@ -240,7 +240,7 @@ public class DialogController {
         builder.title(R.string.dialog_title_new_list);
         builder.autoDismiss(false);
         builder.customView(layout, false);
-        builder.positiveText(R.string.dialog_button_create);
+        builder.positiveText(R.string.dialog_button_edit);
         builder.negativeText(R.string.dialog_button_cancel);
 
         builder.onPositive((dialog, which) -> {

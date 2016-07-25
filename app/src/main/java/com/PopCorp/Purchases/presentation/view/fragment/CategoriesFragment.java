@@ -23,6 +23,7 @@ import com.PopCorp.Purchases.data.callback.DialogRegionsCallback;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
@@ -101,8 +102,8 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

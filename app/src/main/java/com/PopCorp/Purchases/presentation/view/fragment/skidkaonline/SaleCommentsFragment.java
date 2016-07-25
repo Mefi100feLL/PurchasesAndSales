@@ -27,10 +27,11 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
-import com.PopCorp.Purchases.presentation.presenter.factory.ViewPagerCommentsPresenterFactory;
-import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleCommentsParamsProvider;
+import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleCommentsPresenterFactory;
+import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleCommentsPresenter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.SaleCommentAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleCommentsView;
@@ -40,9 +41,9 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         implements View.OnClickListener,
         SaleChildCallback,
         SaleCommentsView,
-        SaleCommentsParamsProvider {
+        SaleParamsProvider {
 
-    @InjectPresenter(factory = ViewPagerCommentsPresenterFactory.class, presenterId = "SaleCommentPresenter")
+    @InjectPresenter(factory = SaleCommentsPresenterFactory.class, presenterId = "SaleCommentsPresenter")
     SaleCommentsPresenter presenter;
 
     private int saleId;
@@ -192,6 +193,11 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         });
     }
 
+    @Override
+    public void clearFields() {
+        commentAuthor.setText("");
+        commentText.setText("");
+    }
 
     @Override
     public void showProgress() {
@@ -225,7 +231,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 }

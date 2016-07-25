@@ -27,15 +27,22 @@ public class ListItemDecorator {
         if (!(object instanceof ListItemDecorator)) return false;
         ListItemDecorator decorator = (ListItemDecorator) object;
         boolean result = false;
-        if (header && decorator.isHeader()){
-            if (category != null && decorator.getCategory() != null) {
-                result = category.equals(decorator.getCategory());
-            } else if (category == null && decorator.getCategory() == null){
-                result = name.equals(decorator.getName());
-            }
-        } else if (!header && !decorator.isHeader()){
+        if (header && decorator.isHeader()) {
+            result = name.equals(decorator.getName());
+        } else if (!header && !decorator.isHeader()) {
             result = item.equals(decorator.getItem());
         }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        String result = "";
+        result += "name=" + name + ", ";
+        result += "header=" + header + ", ";
+        result += "buyed=" + buyed + ", ";
+        result += "category=" + category + ", ";
+        result += "item=" + item;
         return result;
     }
 
@@ -64,6 +71,9 @@ public class ListItemDecorator {
     }
 
     public boolean isBuyed() {
+        if (item != null) {
+            return item.isBuyed();
+        }
         return buyed;
     }
 
@@ -81,18 +91,18 @@ public class ListItemDecorator {
 
     public boolean contentEquals(ListItemDecorator decorator) {
         boolean result = Arrays.equals(getFields(), decorator.getFields());
-        if ((!header && !decorator.isHeader()) && result){
+        if ((!header && !decorator.isHeader()) && result) {
             result = Arrays.equals(getItemFields(), decorator.getItemFields());
         }
         return result;
     }
 
-    public String[] getFields(){
+    public String[] getFields() {
         String categoryId = "";
-        if (category != null){
+        if (category != null) {
             categoryId = String.valueOf(category.getId());
         }
-        return new String[] {
+        return new String[]{
                 name,
                 String.valueOf(header),
                 String.valueOf(buyed),
@@ -100,9 +110,9 @@ public class ListItemDecorator {
         };
     }
 
-    public String[] getItemFields(){
+    public String[] getItemFields() {
         String saleId = String.valueOf(item.getSale() != null ? item.getSale().getId() : "");
-        return new String[] {
+        return new String[]{
                 item.getName(),
                 item.getCountString(),
                 item.getEdizm(),

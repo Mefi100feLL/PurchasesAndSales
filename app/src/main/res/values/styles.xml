@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_color_dark</item>
@@ -21,10 +22,16 @@
     <style name="FilesTheme" parent="AppTheme">
     </style>
 
-    <style name="LoginTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/primary_color</item>
-        <item name="colorPrimaryDark">@color/primary_color_dark</item>
+    <style name="WhiteTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@android:color/white</item>
+        <item name="colorControlHighlight">@android:color/white</item>
+    </style>
+
+    <style name="ErrorTextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
 
@@ -41,10 +48,18 @@
         <item name="android:scrollbarStyle">outsideOverlay</item>
     </style>
 
+    <style name="RecyclerViewWithdFab" parent="RecyclerView">
+        <item name="android:paddingBottom">@dimen/padding_recycler_bottom_with_fab</item>
+    </style>
+
     <style name="RecyclerViewWithCards" parent="RecyclerView">
         <item name="android:background">@color/md_grey_200</item>
         <item name="android:paddingLeft">@dimen/padding_recycler_left</item>
         <item name="android:paddingRight">@dimen/padding_recycler_right</item>
+    </style>
+
+    <style name="RecyclerViewWithCardsAndFab" parent="RecyclerViewWithCards">
+        <item name="android:paddingBottom">@dimen/padding_recycler_bottom_with_fab</item>
     </style>
 
     <style name="PrimaryText" >
@@ -75,6 +90,13 @@
     <style name="EmptyText" parent="SecondaryText">
         <item name="android:gravity">center</item>
         <item name="android:drawablePadding">@dimen/padding_empty_drawable</item>
+    </style>
+
+    <style name="TotalText" parent="SecondaryText">
+        <item name="android:textColor">@color/primary_text_invert</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="InputDescText" parent="SecondaryText">

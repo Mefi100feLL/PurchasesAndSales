@@ -2,7 +2,7 @@ package com.PopCorp.Purchases.data.model;
 
 import java.math.BigDecimal;
 
-public class Product {
+public class Product implements ContentSame<Product> {
 
     private long id;
     private String name;
@@ -13,7 +13,6 @@ public class Product {
     private String shop;
     private String comment;
     private boolean favorite = false;
-    private boolean selected = false;
 
     public Product(long id, String name, String count, String edizm, String coast, ListItemCategory category, String shop, String comment, boolean favorite) {
         this.id = id;
@@ -25,6 +24,24 @@ public class Product {
         this.shop = shop;
         this.comment = comment;
         this.favorite = favorite;
+    }
+
+    @Override
+    public boolean equalsContent(Product object) {
+        if (equals(object)){
+            if (count.equals(object.getCount()) &&
+                    favorite == object.isFavorite()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof Product)) return false;
+        Product product = (Product) object;
+        return name.equals(product.getName());
     }
 
     public long getId() {
@@ -97,14 +114,6 @@ public class Product {
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
     }
 
     public String getCountString() {

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.skidkaonline.City;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingCityPresenter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.CityAdapter;
@@ -114,7 +115,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
 
     @Override
     public void showEmptySelectedCity() {
-        showSnackBar(R.string.notification_city_not_selected);
+        Snackbar.make(fab, R.string.notification_city_not_selected, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -134,8 +135,8 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(fab, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(fab, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

@@ -1,14 +1,11 @@
 package com.PopCorp.Purchases.presentation.presenter;
 
-import com.PopCorp.Purchases.domain.interactor.SaleInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 @InjectViewState
 public class SalePresenter extends MvpPresenter<SaleView> {
-
-    private SaleInteractor interactor = new SaleInteractor();
 
     private int currentSaleId = -1;
 

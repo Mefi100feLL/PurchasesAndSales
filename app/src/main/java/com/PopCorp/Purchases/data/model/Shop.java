@@ -27,7 +27,6 @@ public class Shop implements Parcelable {
 
     private boolean favorite = false;
 
-
     private static Set<Shop> shops = new HashSet<>();
 
     public static Shop create(int id, String name, String imageUrl, int region, boolean favorite, int countSales){

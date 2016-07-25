@@ -69,7 +69,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                         if (objects.size() == 0){
                             getViewState().showErrorLoadingSales(e);
                         } else{
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                            getViewState().showSnackBar(e);
                         }
                     }
 
@@ -97,9 +97,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
     }
 
     public void loadCategories() {
-        categoryInteractor.loadFromDB()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        categoryInteractor.getData()
                 .subscribe(new Observer<List<Category>>() {
                     @Override
                     public void onCompleted() {
@@ -108,7 +106,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                         getViewState().showCategoriesEmpty();
                     }

@@ -28,6 +28,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     public static final int REQUEST_CODE_FOR_SELECTING_CITY_ACTIVITY = 1;
+    public static final int REQUEST_CODE_FOR_SELECTING_PRODUCTS = 2;
 
     @InjectPresenter
     MainPresenter presenter;
@@ -85,14 +86,14 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
                         new PrimaryDrawerItem().withName(R.string.navigation_drawer_skidkaonline_sales).withIdentifier(R.string.navigation_drawer_skidkaonline_sales).withIcon(R.drawable.sale).withIconTintingEnabled(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.navigation_drawer_lists).withIdentifier(R.string.navigation_drawer_lists).withIcon(R.drawable.ic_dashboard_grey600_24dp).withIconTintingEnabled(true),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_all_products).withIdentifier(R.string.navigation_drawer_all_products).withIcon(R.drawable.ic_list_grey600_24dp).withIconTintingEnabled(true),
+                        //new PrimaryDrawerItem().withName(R.string.navigation_drawer_all_products).withIdentifier(R.string.navigation_drawer_all_products).withIcon(R.drawable.ic_list_grey600_24dp).withIconTintingEnabled(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.navigation_drawer_settings).withIdentifier(R.string.navigation_drawer_settings).withIcon(R.drawable.ic_settings_grey600_24dp).withIconTintingEnabled(true)
                 )
                 .withOnDrawerItemClickListener((view, position, iDrawerItem) -> {
                     presenter.setSelectedDrawerItem(iDrawerItem.getIdentifier());
                     Fragment fragment = null;
-                    switch (iDrawerItem.getIdentifier()){
+                    switch ((int) iDrawerItem.getIdentifier()){
                         case R.string.navigation_drawer_shops:
                             fragment = new ShopsFragment();
                             break;

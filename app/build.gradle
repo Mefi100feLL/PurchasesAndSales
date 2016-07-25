@@ -17,7 +17,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId "com.PopCorp.Purchases.Test"
@@ -49,7 +49,7 @@ android {
     }
 }
 
-ext.supportVersion="24.0.0"
+ext.supportVersion="24.1.1"
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -57,7 +57,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
 
-    compile('com.mikepenz:materialdrawer:4.6.4@aar') {
+    compile('com.mikepenz:materialdrawer:5.3.4@aar') {
         transitive = true
     }
     compile 'com.wdullaer:materialdatetimepicker:2.2.0'
@@ -68,11 +68,13 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.4.0'
     compile 'com.simplecityapps:recyclerview-fastscroll:1.0.9'
+    compile 'io.github.yavski:fab-speed-dial:1.0.4'
 
 
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.sothree.slidinguppanel:library:3.3.0'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
+    compile 'com.yalantis:ucrop:1.0.1'
 
 
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
@@ -88,7 +90,7 @@ dependencies {
     compile "com.android.support:gridlayout-v7:$supportVersion"
     compile "com.android.support:percent:$supportVersion"
 
-    compile 'com.google.android.gms:play-services-analytics:9.2.0'
+    compile 'com.google.android.gms:play-services-analytics:9.2.1'
 
     compile 'com.arello-mobile:moxy:0.4.3'
     compile 'com.arello-mobile:moxy-android:0.4.3'

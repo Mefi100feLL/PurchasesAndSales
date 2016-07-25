@@ -6,7 +6,9 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +24,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
-import com.PopCorp.Purchases.data.model.Sale;
-import com.PopCorp.Purchases.data.model.SaleComment;
+import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SaleCommentsPresenter;
@@ -35,11 +36,11 @@ import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsPr
 import com.PopCorp.Purchases.presentation.view.adapter.SaleCommentAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleCommentsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.mikepenz.materialdrawer.util.KeyboardUtil;
 
 public class SaleCommentsFragment extends MvpAppCompatFragment
         implements View.OnClickListener,
         SaleChildCallback,
-        RecyclerCallback<SaleComment>,
         SaleCommentsView,
         SaleParamsProvider {
 
@@ -50,14 +51,20 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
     private SaleMainCallback parent;
 
-    private SaleCommentAdapter commentAdapter;
-    private RecyclerView commentsRecycler;
     private EditText commentText;
     private Button commentAuthorSave;
     private EditText commentAuthor;
     private View commentTopStroke;
     private TextInputLayout commentAuthorLayout;
     private TextInputLayout commentTextLayout;
+
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefresh;
+    private View progressBar;
+    private EmptyView emptyView;
+
+    private SaleCommentAdapter adapter;
+    private KeyboardUtil keyboardUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +82,11 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         toolBar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolBar.setNavigationOnClickListener(this);
 
-        commentsRecycler = (RecyclerView) rootView.findViewById(R.id.recycler);
+        emptyView = new EmptyView(rootView);
+        progressBar = rootView.findViewById(R.id.progress);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+
         commentAuthor = (EditText) rootView.findViewById(R.id.comment_author);
         commentAuthorLayout = (TextInputLayout) rootView.findViewById(R.id.comment_author_layout);
         commentAuthorSave = (Button) rootView.findViewById(R.id.comment_save_author);
@@ -104,8 +115,27 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
             }
         });
+        keyboardUtil = new KeyboardUtil(getActivity(), (View) commentText.getParent());
+        commentText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                keyboardUtil.enable();
+            } else {
+                keyboardUtil.disable();
+            }
+        });
         commentSend.setBackgroundDrawable(createOvalSelector(ThemeManager.getInstance().getAccentColor()));
         commentSend.setOnClickListener(v -> presenter.sendComment(commentAuthor.getText().toString(), commentText.getText().toString()));
+
+        swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
+        swipeRefresh.setOnRefreshListener(presenter::onRefresh);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        recyclerView.setItemAnimator(itemAnimator);
+        adapter = new SaleCommentAdapter(getActivity(), presenter, presenter.getObjects());
+        recyclerView.setAdapter(adapter);
 
         return rootView;
     }
@@ -125,21 +155,6 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         stateListDrawable.addState(new int[]{-android.R.attr.state_pressed}, coloredCircle);
         stateListDrawable.addState(new int[]{android.R.attr.state_pressed}, darkerCircle);
         return stateListDrawable;
-    }
-
-    @Override
-    public void showComments(Sale sale) {
-        if (commentAdapter == null) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-            layoutManager.setStackFromEnd(true);
-            commentsRecycler.setLayoutManager(layoutManager);
-            RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-            commentsRecycler.setItemAnimator(itemAnimator);
-            commentAdapter = new SaleCommentAdapter(getActivity(), this, sale.getComments());
-            commentsRecycler.setAdapter(commentAdapter);
-        } else {
-            commentAdapter.update();
-        }
     }
 
     @Override
@@ -181,27 +196,51 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void onItemClicked(View view, SaleComment item) {
-
+    public void showCommentsEmpty() {
+        showError(R.string.empty_no_comments, R.drawable.ic_menu_gallery, R.string.button_back_to_sale, view -> {
+            onClick(null);
+        });
     }
 
     @Override
-    public void onItemLongClicked(View view, SaleComment item) {
-
+    public void clearFields() {
+        commentAuthor.setText("");
+        commentText.setText("");
     }
 
     @Override
-    public void onEmpty() {
-
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+        emptyView.hide();
     }
 
     @Override
-    public void onEmpty(int stringRes, int drawableRes, int buttonRes, View.OnClickListener listener) {
-
+    public void showData() {
+        adapter.update();
+        progressBar.setVisibility(View.INVISIBLE);
+        recyclerView.setVisibility(View.VISIBLE);
+        emptyView.hide();
     }
 
     @Override
-    public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
+    public void showError(String text, int drawableRes, int textButtonRes, View.OnClickListener listener) {
+        emptyView.showEmpty(text, drawableRes, textButtonRes, listener);
+    }
 
+    @Override
+    public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
+        emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void refreshing(boolean refresh) {
+        swipeRefresh.setRefreshing(refresh);
+        swipeRefresh.setEnabled(!refresh);
+    }
+
+    @Override
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 }

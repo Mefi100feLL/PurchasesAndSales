@@ -22,9 +22,10 @@ public class SharingListAsEmailBuilder implements SharingListBuilder {
     @Override
     public Intent getIntent(String name, String currency, List<ListItem> items) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        String uriText = "mailto:" + "?subject=" + Uri.encode(name) + "&body=" + Uri.encode(String.valueOf(getItems(items, currency)));
+        String uriText = "mailto:" + "?subject=" + Uri.encode(name) /*+ "&body=" + Uri.encode(String.valueOf(getItems(items, currency)))*/;
         Uri uri = Uri.parse(uriText);
         intent.setType("text/html");
+        intent.putExtra(Intent.EXTRA_TEXT, (String.valueOf(getItems(items, currency))));
         intent.setData(uri);
         try {
             File file = createFile(name, currency, items);
@@ -37,16 +38,16 @@ public class SharingListAsEmailBuilder implements SharingListBuilder {
     }
 
     private Spanned getItems(List<ListItem> items, String currency){
-        String result = "";
+        String result = "<html>";
         for (ListItem item : items){
             result += item.getName();
             result += item.getComment().isEmpty() ? " " : " (" + item.getComment() + ") ";
             result += item.getCountString() + " " + item.getEdizm() + " по " + item.getCoastString() + " " + currency;
             result += item.getShop().isEmpty() ? "" : " в " + item.getShop();
-            result += "\n";
+            result += "<br>";
         }
-        result += "Отправлено из приложения <a href='https://play.google.com/store/apps/details?id=com.PopCorp.Purchases'>Покупки по акциям</a>\n" +
-                "Если у Вас установлено данное приложение, нажмите на файл, чтобы загрузить список в приложение";
+        result += "<br>Отправлено из приложения <a href='https://play.google.com/store/apps/details?id=com.PopCorp.Purchases'>Покупки по акциям</a>.<br>" +
+                "Если у Вас установлено данное приложение, нажмите на файл, чтобы загрузить список в приложение</html>";
         return Html.fromHtml(result);
     }
 

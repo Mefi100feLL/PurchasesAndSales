@@ -50,7 +50,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                     }
 
@@ -87,7 +87,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                         if (objects.size() == 0) {
                             getViewState().showShopsEmpty();

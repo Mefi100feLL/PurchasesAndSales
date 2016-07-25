@@ -21,7 +21,7 @@ public class ShopsInteractor {
     public Observable<List<Shop>> loadFromNet(int regionId) {
         return netRepository.getData(regionId)
                 .map(shops -> {
-                    if (shops.size() != 0) {
+                    if (shops != null && shops.size() != 0) {
                         dbRepository.addAllShops(shops);
                     }
                     return shops;
@@ -48,5 +48,9 @@ public class ShopsInteractor {
                         }
                     }).materialize().observeOn(AndroidSchedulers.mainThread()).<List<Shop>>dematerialize();
                 });
+    }
+
+    public void remove(Shop shop) {
+        dbRepository.remove(shop);
     }
 }

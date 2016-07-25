@@ -44,7 +44,7 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
                         e.printStackTrace();
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                     }
 
                     @Override

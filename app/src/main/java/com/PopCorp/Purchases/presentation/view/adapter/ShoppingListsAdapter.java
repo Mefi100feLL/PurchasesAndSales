@@ -23,20 +23,18 @@ import java.util.List;
 
 public class ShoppingListsAdapter extends RecyclerView.Adapter<ShoppingListsAdapter.ViewHolder> {
 
-    private final Context context;
     private final ShoppingListCallback callback;
 
     private ArrayList<ShoppingList> objects;
     private final SortedList<ShoppingList> publishItems;
 
-    public ShoppingListsAdapter(Context context, ShoppingListCallback callback, ArrayList<ShoppingList> objects, Comparator<ShoppingList> comparator) {
-        this.context = context;
+    public ShoppingListsAdapter(ShoppingListCallback callback, ArrayList<ShoppingList> objects, Comparator<ShoppingList> comparator) {
         this.callback = callback;
         this.objects = objects;
         publishItems = new SortedList<>(ShoppingList.class, new SortedList.Callback<ShoppingList>() {
             @Override
             public boolean areContentsTheSame(ShoppingList oneItem, ShoppingList twoItem) {
-                return oneItem.equals(twoItem);
+                return oneItem.equalsContent(twoItem);
             }
 
             @Override

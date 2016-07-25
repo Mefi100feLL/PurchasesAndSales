@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.PopCorp.Purchases.data.db.DB;
 import com.PopCorp.Purchases.data.model.Sale;
+import com.PopCorp.Purchases.data.utils.DBList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,8 +60,8 @@ public class SaleDAO {
             KEY_SALE_CATEGORY + " integer, " +
             KEY_SALE_CATEGORY_TYPE + " integer, " +
             KEY_SALE_COUNT_COMMENTS + " integer, " +
-            KEY_SALE_PERIOD_BEGIN + " text, " +
-            KEY_SALE_PERIOD_FINISH + " text);";
+            KEY_SALE_PERIOD_BEGIN + " integer, " +
+            KEY_SALE_PERIOD_FINISH + " integer);";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,8 +86,8 @@ public class SaleDAO {
                 String.valueOf(sale.getCategoryId()),
                 String.valueOf(sale.getCategoryType()),
                 String.valueOf(sale.getCountComments()),
-                sale.getPeriodStart(),
-                sale.getPeriodEnd()
+                String.valueOf(sale.getPeriodStart()),
+                String.valueOf(sale.getPeriodEnd())
         };
     }
 
@@ -135,9 +136,9 @@ public class SaleDAO {
         Cursor cursor = db.getData(TABLE_SALES, COLUMNS_SALES, selection);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                result.add(getSale(cursor));
+                result.add(get(cursor));
                 while (cursor.moveToNext()) {
-                    result.add(getSale(cursor));
+                    result.add(get(cursor));
                 }
             }
             cursor.close();
@@ -145,13 +146,35 @@ public class SaleDAO {
         return result;
     }
 
-    private Sale getSale(Cursor cursor) {
+    public Sale getSale(int regionId, int saleId) {
+        Cursor cursor = db.getData(TABLE_SALES, COLUMNS_SALES, KEY_SALE_CITY_ID + "=" + regionId + " AND " + KEY_SALE_ID + "=" + saleId);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                return get(cursor);
+            }
+        }
+        return null;
+    }
+
+    public void addAllSales(List<Sale> sales) {
+        db.beginTransaction();
+        try {
+            for (Sale sale : sales) {
+                updateOrAddToDB(sale);
+            }
+            db.successFull();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    public Sale get(Cursor cursor) {
         Sale result = new Sale(
                 cursor.getInt(cursor.getColumnIndex(KEY_SALE_ID)),
                 cursor.getString(cursor.getColumnIndex(KEY_SALE_TITLE)),
                 cursor.getString(cursor.getColumnIndex(KEY_SALE_SUBTITLET)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_PERIOD_BEGIN)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_PERIOD_FINISH)),
+                cursor.getLong(cursor.getColumnIndex(KEY_SALE_PERIOD_BEGIN)),
+                cursor.getLong(cursor.getColumnIndex(KEY_SALE_PERIOD_FINISH)),
                 cursor.getString(cursor.getColumnIndex(KEY_SALE_COAST)),
                 cursor.getString(cursor.getColumnIndex(KEY_SALE_QUANTITY)),
                 cursor.getString(cursor.getColumnIndex(KEY_SALE_COAST_FOR_QUANTITY)),
@@ -170,25 +193,18 @@ public class SaleDAO {
         return result;
     }
 
-    public Sale getSale(int regionId, int saleId) {
-        Cursor cursor = db.getData(TABLE_SALES, COLUMNS_SALES, KEY_SALE_CITY_ID + "=" + regionId + " AND " + KEY_SALE_ID + "=" + saleId);
+    public List<Sale> getForShop(int shopId) {
+        ArrayList<Sale> result = new ArrayList<>();
+        Cursor cursor = db.getData(TABLE_SALES, COLUMNS_SALES, KEY_SALE_SHOP + "=" + shopId);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                return getSale(cursor);
+                result.add(get(cursor));
+                while (cursor.moveToNext()) {
+                    result.add(get(cursor));
+                }
             }
+            cursor.close();
         }
-        return null;
-    }
-
-    public void addAllSales(List<Sale> sales) {
-        db.beginTransaction();
-        try {
-            for (Sale sale : sales) {
-                updateOrAddToDB(sale);
-            }
-            db.successFull();
-        } finally {
-            db.endTransaction();
-        }
+        return result;
     }
 }

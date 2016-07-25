@@ -4,12 +4,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.callback.BackPressedCallback;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.ZoomOutPageTransformer;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
@@ -34,7 +35,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS | WindowManager.LayoutParams.FLAG_FULLSCREEN);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(getResources().getColor(android.R.color.transparent));
         }
@@ -52,7 +53,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
         }
     }
 
-    public class SampleFragmentPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
+    public class SampleFragmentPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener {
 
         public SampleFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -93,37 +94,14 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
     @Override
     public void onBackPressed() {
-        /*FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         for (Fragment frag : fm.getFragments()) {
-            if (frag.isVisible()) {
-                FragmentManager childFm = frag.getChildFragmentManager();
-                if (childFm.getBackStackEntryCount() > 0) {
-                    childFm.popBackStack();
+            if (frag != null && frag.isVisible()) {
+                if (((BackPressedCallback) frag).onBackPressed()){
                     return;
                 }
             }
-        }*/
+        }
         super.onBackPressed();
-        /*hideFab(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                viewPager.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent();
-                intent.putExtra(CURRENT_SALE, String.valueOf(sales.get(viewPager.getCurrentItem()).getId()));
-                intent.putExtra(ARRAY_SALES, getIntent().getStringArrayListExtra(ARRAY_SALES));
-                setResult(RESULT_OK, intent);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        super.onBackPressed();*/
     }
 }

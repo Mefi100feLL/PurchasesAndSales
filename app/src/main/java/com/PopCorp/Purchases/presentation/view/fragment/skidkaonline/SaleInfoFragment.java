@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -7,17 +8,18 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
-import com.PopCorp.Purchases.data.model.skidkaonline.SaleComment;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
-import com.PopCorp.Purchases.presentation.presenter.factory.ViewPagerSkidkaonlinePresenterFactory;
-import com.PopCorp.Purchases.presentation.presenter.params.provider.SkidkaonlineSaleParamsProvider;
-import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SalePresenter;
-import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleView;
+import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleInfoPresenterFactory;
+import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
+import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleInfoPresenter;
+import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
+import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleInfoView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -29,17 +31,16 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
-import java.util.List;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
-        implements  Toolbar.OnMenuItemClickListener,
+        implements Toolbar.OnMenuItemClickListener,
         SaleChildCallback,
         View.OnClickListener,
-        SaleView,
-        SkidkaonlineSaleParamsProvider {
+        SaleInfoView,
+        SaleParamsProvider {
 
-    @InjectPresenter(factory = ViewPagerSkidkaonlinePresenterFactory.class, presenterId = "SalePresenter")
-    SalePresenter presenter;
+    @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = "SaleInfoPresenter")
+    SaleInfoPresenter presenter;
 
     private int saleId;
 
@@ -48,6 +49,9 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private CircularProgressView progressView;
     private View progressLayout;
     private SubsamplingScaleImageView image;
+    private ImageView comments;
+    private ImageView sendToList;
+    private ImageView cropImage;
 
     ImageLoader imageLoader = ImageLoader.getInstance();
     DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -56,7 +60,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             .considerExifParams(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
-
 
 
     @Override
@@ -79,8 +82,21 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
+        comments = (ImageView) rootView.findViewById(R.id.comments);
+        sendToList = (ImageView) rootView.findViewById(R.id.send_to_list);
+        cropImage = (ImageView) rootView.findViewById(R.id.crop);
+
+        comments.setOnClickListener(view -> parent.showComments());
+        sendToList.setOnClickListener(view -> {});
+        cropImage.setOnClickListener(view -> openCropActivity());
 
         return rootView;
+    }
+
+    private void openCropActivity() {
+        Intent intent = new Intent(getActivity(), CropActivity.class);
+        intent.putExtra(CropActivity.CURRENT_FILE_NAME, ImageLoader.getInstance().getDiskCache().get(presenter.getSale().getImageBig()).getAbsolutePath());
+        startActivity(intent);
     }
 
     @Override
@@ -155,16 +171,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         return String.valueOf(saleId);
     }
 
-    @Override
-    public void showFragmentComments(Sale sale) {
-
-    }
-
-    @Override
-    public void showFragmentInfo(Sale sale) {
-
-    }
-
     private void loadBigImage(Sale sale) {
         imageLoader.loadImage(sale.getImageBig(), null, options, new ImageLoadingListener() {
             @Override
@@ -194,13 +200,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void showComments(List<SaleComment> comments) {
-
-    }
-
-    @Override
     public void showInfo(Sale sale) {
-
         image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         image.setMaxScale(getResources().getDimension(R.dimen.image_maximum_scale));
 

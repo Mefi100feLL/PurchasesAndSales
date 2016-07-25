@@ -108,4 +108,8 @@ public class SameSaleDAO {
             updateOrAddToDB(sameSale);
         }
     }
+
+    public void removeForSale(int saleId) {
+        db.deleteRows(TABLE_SALES_SAMES, KEY_SAME_PARENT_ID + "=" + saleId);
+    }
 }

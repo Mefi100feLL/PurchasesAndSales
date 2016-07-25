@@ -26,6 +26,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
 import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
+import com.PopCorp.Purchases.presentation.view.activity.SameSaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SameSaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleInfoView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -34,6 +35,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
@@ -69,6 +71,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     private View sameSalesLayout;
     private RecyclerView sameSalesRecycler;
+
+    private SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,12 +168,12 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             coastForQuantity.setText(sale.getCoastForQuantity());
         }
 
-        if (sale.getPeriodStart().isEmpty() && sale.getPeriodEnd().isEmpty()) {
+        if (sale.getPeriodStart() == 0  && sale.getPeriodEnd() == 0) {
             periodLayout.setVisibility(View.GONE);
         } else {
             periodLayout.setVisibility(View.VISIBLE);
-            String periodString = sale.getPeriodStart();
-            if (!sale.getPeriodStart().equals(sale.getPeriodEnd())) {
+            String periodString = format.format(new Date(sale.getPeriodStart()));
+            if (sale.getPeriodStart() != sale.getPeriodEnd()) {
                 periodString += " - " + sale.getPeriodEnd();
             }
             period.setText(periodString);
@@ -207,9 +211,15 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         }
     }
 
+    public void openSameSale(View view, int saleId) {
+        Intent intent = new Intent(getActivity(), SameSaleActivity.class);
+        intent.putExtra(SameSaleActivity.CURRENT_SALE, String.valueOf(saleId));
+        startActivity(intent);
+    }
+
     @Override
     public void onItemClicked(View view, SameSale item) {
-        parent.openSameSale(view, item.getSaleId());
+        openSameSale(view, item.getSaleId());
     }
 
     @Override
@@ -266,20 +276,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         } else {
             string = string.replace(" (comment)", "");
         }
-        String periodBegin;
-        try {
-            periodBegin = format.format(parser.parse(sale.getPeriodStart()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            periodBegin = sale.getPeriodStart();
-        }
-        String periodFinish;
-        try {
-            periodFinish = format.format(parser.parse(sale.getPeriodEnd()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            periodFinish = sale.getPeriodEnd();
-        }
+        String periodBegin = format.format(sale.getPeriodStart());
+        String periodFinish = format.format(sale.getPeriodEnd());
         string = string.replace("period", periodBegin.equals(periodFinish) ? periodBegin : "c " + periodBegin + " по " + periodFinish);
         string = string.replace("coast", sale.getCoast());
 

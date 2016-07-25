@@ -2,6 +2,8 @@ package com.PopCorp.Purchases.presentation.view.moxy;
 
 import com.PopCorp.Purchases.data.model.ShoppingList;
 
+import java.util.ArrayList;
+
 public interface ShoppingListsView extends SampleDataView {
     void showEmptyLists();
 
@@ -16,4 +18,6 @@ public interface ShoppingListsView extends SampleDataView {
     void shareListAsText(ShoppingList list);
 
     void showRemovedList(ShoppingList list);
+
+    void showRemovedLists(ArrayList<ShoppingList> removedLists);
 }

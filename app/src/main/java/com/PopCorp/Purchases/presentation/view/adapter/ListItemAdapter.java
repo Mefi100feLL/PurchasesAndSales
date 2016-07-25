@@ -19,8 +19,6 @@ import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
-import com.PopCorp.Purchases.presentation.decorator.SaleDecorator;
-import com.PopCorp.Purchases.presentation.decorator.SaleShopDecorator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,7 +45,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         publishItems = new SortedList<>(ListItemDecorator.class, new SortedList.Callback<ListItemDecorator>() {
             @Override
             public boolean areContentsTheSame(ListItemDecorator oneItem, ListItemDecorator twoItem) {
-                return oneItem.contentEquals(twoItem);
+                return false;
             }
 
             @Override
@@ -192,7 +190,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         String total = item.getCount().multiply(item.getCoast()).toString();
 
         holder.comment.setVisibility(item.getComment().isEmpty() && item.getShop().isEmpty() ? View.GONE : View.VISIBLE);
-        holder.totalTwo.setVisibility(item.getShop().isEmpty() ? View.GONE : View.VISIBLE);
+        holder.totalTwo.setVisibility(item.getComment().isEmpty() && item.getShop().isEmpty() ? View.GONE : View.VISIBLE);
         holder.totalOne.setVisibility(item.getComment().isEmpty() && item.getShop().isEmpty() ? View.VISIBLE : View.GONE);
         String totalString = context.getString(R.string.total).replace("total", total).replace("currency", currency);
         holder.totalOne.setText(totalString);
@@ -277,7 +275,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                     return results;
                 } else {
                     for (ListItem item : objects) {
-                        if (item.getShop().equals(constraint)) {
+                        if (item.getShop().equals(constraint) || (!PreferencesManager.getInstance().isFilterListOnlyProductsOfShop() && item.getShop().isEmpty())) {
                             FilteredArrayNames.add(item);
                         }
                     }
@@ -292,9 +290,19 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         return filter;
     }
 
+    public void onItemBuyed(ListItem item){
+        ListItemDecorator decorator = new ListItemDecorator(item.getName(), false, item, item.isBuyed(), item.getCategory());
+        int index = publishItems.indexOf(decorator);
+        item.setBuyed(!item.isBuyed());
+        publishItems.updateItemAt(index, decorator);
+        publishItems.recalculatePositionOfItemAt(index);
+        recalculateHeaders();
+    }
+
     private void update(List<ListItem> newItems) {
         publishItems.beginBatchedUpdates();
         ArrayList<ListItemDecorator> arrayForRemove = new ArrayList<>();
+
         for (ListItem item : newItems) {
             boolean finded = false;
             for (int i = 0; i < publishItems.size(); i++) {
@@ -309,7 +317,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                     finded = true;
                     ListItemDecorator updatedDecorator = new ListItemDecorator(item.getName(), false, item, item.isBuyed(), item.getCategory());
                     publishItems.updateItemAt(i, updatedDecorator);
-                    publishItems.recalculatePositionOfItemAt(i);
                 }
             }
             if (!finded) {
@@ -320,7 +327,12 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         for (ListItemDecorator decorator : arrayForRemove) {
             publishItems.remove(decorator);
         }
+        recalculateHeaders();
+        publishItems.endBatchedUpdates();
+    }
 
+    private void recalculateHeaders() {
+        ArrayList<ListItemDecorator> arrayForRemove = new ArrayList<>();
         ArrayList<ListItemDecorator> headers = new ArrayList<>();
         if (PreferencesManager.getInstance().showCategories()){
             for (int i = 0; i < publishItems.size(); i++) {
@@ -352,10 +364,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             int index = publishItems.indexOf(decorator);
             if (index == SortedList.INVALID_POSITION) {
                 publishItems.add(decorator);
-            }/* else {
-                publishItems.updateItemAt(index, decorator);
-                //publishItems.recalculatePositionOfItemAt(index);
-            }*/
+            }
         }
         arrayForRemove.clear();
         for (int i = 0; i < publishItems.size(); i++) {
@@ -367,7 +376,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         for (ListItemDecorator decorator : arrayForRemove) {
             publishItems.remove(decorator);
         }
-        publishItems.endBatchedUpdates();
     }
 
     public void updateAll(){

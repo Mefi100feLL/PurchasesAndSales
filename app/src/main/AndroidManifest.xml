@@ -71,6 +71,7 @@
 
         <activity
             android:name=".presentation.view.activity.ShoppingListActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label=""/>
 
         <activity
@@ -87,6 +88,15 @@
 
         <activity
             android:name=".presentation.view.activity.skidkaonline.SaleActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:label=""/>
+
+        <activity
+            android:name=".presentation.view.activity.skidkaonline.CropActivity"
+            android:label=""/>
+
+        <activity
+            android:name=".presentation.view.activity.ProductsActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:label=""/>
     </application>

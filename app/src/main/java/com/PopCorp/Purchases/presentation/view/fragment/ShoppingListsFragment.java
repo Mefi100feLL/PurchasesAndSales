@@ -22,6 +22,7 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.ShoppingListCallback;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.sharing.SharingListBuilderFactory;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
@@ -33,6 +34,7 @@ import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public class ShoppingListsFragment extends MvpAppCompatFragment implements ShoppingListsView, ShoppingListCallback {
 
@@ -73,7 +75,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        adapter = new ShoppingListsAdapter(getActivity(), this, presenter.getObjects(), PreferencesManager.getInstance().getShoppingListComparator());
+        adapter = new ShoppingListsAdapter(this, presenter.getObjects(), PreferencesManager.getInstance().getShoppingListComparator());
         recyclerView.setAdapter(adapter);
 
         fab.setOnClickListener(v -> presenter.createNewList());
@@ -82,8 +84,8 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(fab, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(fab, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -211,7 +213,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         Intent intent = SharingListBuilderFactory.getBuilder(0).getIntent(list.getName(), list.getCurrency(), list.getItems());
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
         }
     }
@@ -221,7 +223,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         Intent intent = SharingListBuilderFactory.getBuilder(1).getIntent(list.getName(), list.getCurrency(), list.getItems());
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
         }
     }
@@ -231,7 +233,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         Intent intent = SharingListBuilderFactory.getBuilder(2).getIntent(list.getName(), list.getCurrency(), list.getItems());
         try {
             startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
         }
     }
@@ -241,6 +243,15 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         Snackbar.make(fab, getString(R.string.notification_list_removed).replace("name", list.getName()), Snackbar.LENGTH_LONG)
                 .setAction(R.string.action_undo, v -> {
                     presenter.returnList(list);
+                })
+                .show();
+    }
+
+    @Override
+    public void showRemovedLists(ArrayList<ShoppingList> removedLists) {
+        Snackbar.make(fab, getString(R.string.notification_lists_removed).replace("count", String.valueOf(removedLists.size())), Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_undo, v -> {
+                    presenter.returnLists(removedLists);
                 })
                 .show();
     }
@@ -273,15 +284,15 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
                 case R.id.action_send: {
                     if (list.getItems().size() > 0) {
                         DialogController.showDialogForSendingList(getActivity(), list, presenter);
-                    } else{
+                    } else {
                         showToast(R.string.notification_list_empty);
                     }
                     return true;
                 }
-                case R.id.action_alarm: {
+                /*case R.id.action_alarm: {
                     DialogController.showDialogForAlarm(getActivity(), list, presenter);
                     return true;
-                }
+                }*/
                 default:
                     return false;
             }

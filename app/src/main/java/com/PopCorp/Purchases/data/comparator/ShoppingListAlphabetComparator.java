@@ -8,6 +8,9 @@ public class ShoppingListAlphabetComparator implements Comparator<ShoppingList> 
 
     @Override
     public int compare(ShoppingList lhs, ShoppingList rhs) {
+        if (lhs.getId() == rhs.getId()){
+            return 0;
+        }
         int result = lhs.getName().compareToIgnoreCase(rhs.getName());
         if (result == 0){
             if (lhs.getId() > rhs.getId()){

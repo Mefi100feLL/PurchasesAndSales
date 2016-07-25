@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 @InjectViewState
 public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> implements RecyclerCallback<Sale> {
@@ -66,7 +64,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                         if (objects.size() == 0){
                             getViewState().showErrorLoadingSales(e);
                         } else{
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                            getViewState().showSnackBar(e);
                         }
                     }
 
@@ -95,8 +93,6 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
     public void loadShops() {
         shopsInteractor.getData(Integer.valueOf(PreferencesManager.getInstance().getRegionId()))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Shop>>() {
                     @Override
                     public void onCompleted() {
@@ -105,7 +101,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                         getViewState().showShopsEmpty();
                     }

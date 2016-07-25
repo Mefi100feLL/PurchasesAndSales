@@ -1,21 +1,21 @@
 package com.PopCorp.Purchases.presentation.presenter;
 
+import android.view.View;
+
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.comparator.SaleCommentComparator;
+import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.dao.SaleCommentDAO;
 import com.PopCorp.Purchases.data.dto.CommentResult;
-import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.SaleComment;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.SaleCommentInteractor;
-import com.PopCorp.Purchases.domain.interactor.SaleInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleCommentsView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.List;
 
 import rx.Observer;
@@ -23,13 +23,17 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> {
+public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implements RecyclerCallback<SaleComment> {
 
     private SaleCommentInteractor interactor = new SaleCommentInteractor();
 
     private int currentSaleId = -1;
 
     private ArrayList<SaleComment> objects = new ArrayList<>();
+
+    public SaleCommentsPresenter(){
+        getViewState().showProgress();
+    }
 
     public void setSale(int saleId) {
         if (currentSaleId == -1) {
@@ -48,17 +52,24 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        getViewState().refreshing(false);
+                        e.printStackTrace();
+                        getViewState().showSnackBar(e);
                     }
 
                     @Override
                     public void onNext(List<SaleComment> comments) {
-                        /*sale = result;
-                        getViewState().showComments(sale);*/
+                        getViewState().refreshing(false);
+                        if (comments.size() == 0) {
+                            getViewState().showCommentsEmpty();
+                        } else {
+                            objects.clear();
+                            objects.addAll(comments);
+                            getViewState().showData();
+                        }
                     }
                 });
     }
-
 
     public void sendComment(String author, String text) {
         if (text.isEmpty()) {
@@ -73,11 +84,19 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> {
         } else {
             getViewState().hideCommentAuthorError();
         }
-        SaleComment comment = new SaleComment(sale.getId(), author, "", "", "", text, 0);
+        getViewState().clearFields();
+        Calendar dateTime = Calendar.getInstance();
+        SaleComment comment = new SaleComment(currentSaleId, author, "", text, dateTime.getTimeInMillis());
+        sendComment(comment);
+    }
+
+    private void sendComment(SaleComment comment){
+        comment.setError(0);
+        comment.setErrorText(null);
         comment.setTmpText(R.string.sending_comment);
-        sale.getComments().add(comment);
-        getViewState().showComments(sale);
-        interactor.sendComment(author, "", text, sale.getCityId(), sale.getId())
+        objects.add(comment);
+        getViewState().showData();
+        interactor.sendComment(comment.getAuthor(), "", comment.getText(), Integer.parseInt(PreferencesManager.getInstance().getRegionId()), currentSaleId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<CommentResult>() {
@@ -89,27 +108,59 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> {
                     @Override
                     public void onError(Throwable e) {
                         comment.setError(ErrorManager.getErrorResource(e));
-                        getViewState().showComments(sale);
+                        getViewState().showData();
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(CommentResult commentResult) {
                         if (commentResult.isResult()) {
-                            comment.setDate(commentResult.getDate());
-                            comment.setTime(commentResult.getTime());
                             comment.setDateTime(commentResult.getDateTime());
+                            comment.setError(0);
+                            comment.setErrorText(null);
+                            comment.setTmpText(0);
                             new SaleCommentDAO().updateOrAddToDB(comment);
-                            Collections.sort(sale.getComments(), new SaleCommentComparator());
                         } else{
                             comment.setErrorText(commentResult.getMessage());
                         }
-                        getViewState().showComments(sale);
+                        getViewState().showData();
                     }
                 });
     }
 
-    public Sale getSale() {
-        return sale;
+    public ArrayList<SaleComment> getObjects() {
+        return objects;
+    }
+
+    public void onRefresh() {
+        getViewState().showProgress();
+        loadData();
+    }
+
+    @Override
+    public void onItemClicked(View view, SaleComment item) {
+        if (item.getErrorText() != null || item.getError() != 0){
+            sendComment(item);
+        }
+    }
+
+    @Override
+    public void onItemLongClicked(View view, SaleComment item) {
+
+    }
+
+    @Override
+    public void onEmpty() {
+
+    }
+
+    @Override
+    public void onEmpty(int stringRes, int drawableRes, int buttonRes, View.OnClickListener listener) {
+
+    }
+
+    @Override
+    public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
+
     }
 }

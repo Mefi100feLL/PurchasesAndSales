@@ -130,4 +130,10 @@ public class ListItemDAO {
     public boolean existsWithName(long listId, String name) {
         return db.getData(TABLE_ITEMS, KEY_ITEMS_LIST_ID + "=" + listId + " AND " + KEY_ITEMS_NAME + "='" + name + "'").moveToNext();
     }
+
+    public void addAllItems(List<ListItem> items) {
+        for (ListItem item : items){
+            updateOrAddToDB(item);
+        }
+    }
 }

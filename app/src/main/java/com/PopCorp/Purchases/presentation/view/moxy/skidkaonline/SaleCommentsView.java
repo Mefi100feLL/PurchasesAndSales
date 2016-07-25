@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.view.moxy.skidkaonline;
 
 import com.PopCorp.Purchases.presentation.view.moxy.SampleDataView;
 import com.PopCorp.Purchases.presentation.viewstate.strategy.GroupSingleStrategy;
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface SaleCommentsView extends SampleDataView {
@@ -18,4 +19,6 @@ public interface SaleCommentsView extends SampleDataView {
 
     void showCommentsEmpty();
 
+    @StateStrategyType(SkipStrategy.class)
+    void clearFields();
 }

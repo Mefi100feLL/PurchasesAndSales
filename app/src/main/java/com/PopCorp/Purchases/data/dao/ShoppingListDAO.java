@@ -3,6 +3,7 @@ package com.PopCorp.Purchases.data.dao;
 import android.database.Cursor;
 
 import com.PopCorp.Purchases.data.db.DB;
+import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 
 import java.util.ArrayList;
@@ -44,7 +45,12 @@ public class ShoppingListDAO {
         };
         int countUpdated = db.update(TABLE_LISTS, COLUMNS_LISTS, DB.KEY_ID + "=" + list.getId(), values);
         if (countUpdated == 0) {
-            return db.addRec(TABLE_LISTS, COLUMNS_LISTS, values);
+            long listId = db.addRec(TABLE_LISTS, COLUMNS_LISTS, values);
+            for (ListItem item : list.getItems()){
+                item.setListId(listId);
+            }
+            listItemDAO.addAllItems(list.getItems());
+            return listId;
         }
         return countUpdated;
     }

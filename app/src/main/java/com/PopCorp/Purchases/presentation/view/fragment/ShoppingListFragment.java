@@ -3,7 +3,8 @@ package com.PopCorp.Purchases.presentation.view.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Parcelable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,24 +18,32 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.ShoppingListPresenter;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
+import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
+import com.PopCorp.Purchases.presentation.view.activity.ProductsActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListView;
 import com.afollestad.materialcab.MaterialCab;
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.mikepenz.materialize.color.Material;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+
+import io.github.yavski.fabspeeddial.FabSpeedDial;
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 public class ShoppingListFragment extends MvpAppCompatFragment implements ShoppingListView, MaterialCab.Callback {
 
@@ -49,11 +58,18 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     private RecyclerView recyclerView;
     private View progressBar;
     private EmptyView emptyView;
+    private FloatingActionButton fab;
+    private LinearLayout totallayout;
+    private CoordinatorLayout snackbarlayout;
+    private TextView totalDesc;
+    private TextView total;
+    private TextView totalBuyedDesc;
+    private TextView totalBuyed;
 
     private ListItemAdapter adapter;
 
     private MaterialCab actionMode;
-    private FloatingActionButton fab;
+    private Menu menu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +94,12 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        snackbarlayout = (CoordinatorLayout) rootView.findViewById(R.id.snackbar_layout);
+        totallayout = (LinearLayout) rootView.findViewById(R.id.total_layout);
+        total = (TextView) rootView.findViewById(R.id.total);
+        totalDesc = (TextView) rootView.findViewById(R.id.total_desc);
+        totalBuyed = (TextView) rootView.findViewById(R.id.total_buyed);
+        totalBuyedDesc = (TextView) rootView.findViewById(R.id.total_buyed_desc);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
@@ -85,8 +107,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
 
-
-        fab.setOnClickListener(v -> showInputFragment(null));
+        fab.setOnClickListener(view -> showInputFragment(null));
 
         return rootView;
     }
@@ -100,9 +121,15 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
     }
 
+    private void showSelectingProducts() {
+        Intent intent = new Intent(getActivity(), ProductsActivity.class);
+        intent.putParcelableArrayListExtra(SelectingProductsFragment.LISTITEMS, (ArrayList<? extends Parcelable>) presenter.getObjects());
+        startActivityForResult(intent, MainActivity.REQUEST_CODE_FOR_SELECTING_PRODUCTS);
+    }
+
     @Override
     public void showItemsRemoved(ArrayList<ListItem> itemsForRemove) {
-        Snackbar.make(fab, getString(R.string.notification_items_removed).replace("count", String.valueOf(itemsForRemove.size())), Snackbar.LENGTH_LONG)
+        Snackbar.make(snackbarlayout, getString(R.string.notification_items_removed).replace("count", String.valueOf(itemsForRemove.size())), Snackbar.LENGTH_LONG)
                 .setAction(R.string.action_undo, v -> {
                     presenter.onItemsRerurned(itemsForRemove.toArray(new ListItem[itemsForRemove.size()]));
                 }).show();
@@ -110,15 +137,10 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void showItemRemoved(ListItem listItem) {
-        Snackbar.make(fab, getString(R.string.notification_item_removed).replace("name", listItem.getName()), Snackbar.LENGTH_LONG)
+        Snackbar.make(snackbarlayout, getString(R.string.notification_item_removed).replace("name", listItem.getName()), Snackbar.LENGTH_LONG)
                 .setAction(R.string.action_undo, v -> {
                     presenter.onItemsRerurned(listItem);
                 }).show();
-    }
-
-    @Override
-    public void updateAllItems() {
-        adapter.updateAll();
     }
 
     @Override
@@ -133,13 +155,70 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void updateCurrency(String currency) {
-        adapter.setCurrency(currency);
-        adapter.updateAll();
+        if (adapter != null) {
+            adapter.setCurrency(currency);
+            adapter.updateAll();
+        }
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(fab, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showErrorLoadingList() {
+        showError(R.string.error_loading_list, R.drawable.ic_menu_gallery, R.string.button_exit, view -> {
+            finish();
+        });
+    }
+
+    @Override
+    public void showBuyedTotals(int countBuyed, BigDecimal buyed) {
+        totalBuyedDesc.setText(getString(R.string.total_buyed_items).replace("count", String.valueOf(countBuyed)));
+        totalBuyed.setText(buyed.toString() + " " + presenter.getCurrency());
+    }
+
+    @Override
+    public void showTotals(int size, BigDecimal total) {
+        totalDesc.setText(getString(R.string.total_items).replace("count", String.valueOf(size)));
+        this.total.setText(total.toString() + " " + presenter.getCurrency());
+    }
+
+    @Override
+    public void hideShopsFilter() {
+        recyclerView.post(() -> menu.findItem(R.id.action_shop).setVisible(false));
+    }
+
+    @Override
+    public void showShopsFilter(ArrayList<String> shops, String filter) {
+        recyclerView.post(() -> {
+            menu.findItem(R.id.action_shop).setVisible(true);
+            Menu subMenu = menu.findItem(R.id.action_shop).getSubMenu();
+            subMenu.clear();
+            shops.add(0, getString(R.string.menu_item_all_shops));
+            for (String key : shops) {
+                MenuItem item = subMenu.add(R.id.action_shop_group, shops.indexOf(key), shops.indexOf(key), key).setCheckable(true);
+                if (key.equals(filter) || (filter.isEmpty() && shops.indexOf(key) == 0)) {
+                    item.setChecked(true);
+                }
+            }
+            subMenu.setGroupCheckable(R.id.action_shop_group, true, true);
+        });
+    }
+
+    @Override
+    public void showEmptyItems() {
+        showError(R.string.empty_no_listitems, R.drawable.ic_menu_gallery, R.string.button_add, view -> {
+            showSelectingProducts();
+        });
+    }
+
+    @Override
+    public void onItemBuyedChanged(ListItem item) {
+        if (adapter != null) {
+            adapter.onItemBuyed(item);
+        }
+    }
+
+    @Override
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(snackbarlayout, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -183,13 +262,24 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        this.menu = menu;
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        if (item.getGroupId() == R.id.action_shop_group) {
+            presenter.onShopFilter(item.getItemId());
+            item.setChecked(true);
+            return true;
+        }
+        switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
                 break;
-            case R.id.action_shop:
-
+            case R.id.action_select_from_products:
+                showSelectingProducts();
                 break;
             case R.id.action_remove_buyed:
                 presenter.removeBuyed();
@@ -203,9 +293,9 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
             case R.id.action_send:
                 DialogController.showDialogForSendingList(getActivity(), presenter.getList(), presenter);
                 break;
-            case R.id.action_alarm:
+            /*case R.id.action_alarm:
                 DialogController.showDialogForAlarm(getActivity(), presenter.getList(), presenter);
-                break;
+                break;*/
         }
         return true;
     }
@@ -223,27 +313,33 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void showTitle(String title) {
-        toolBar.setTitle(title);
+        recyclerView.post(() -> toolBar.setTitle(title));
     }
 
     @Override
     public void filter(String filter) {
-        adapter.getFilter().filter(filter);
+        if (adapter != null) {
+            adapter.getFilter().filter(filter);
+        }
     }
 
     @Override
     public void changeItemInActionMode(int count, ListItem item) {
-        actionMode.setTitle(String.valueOf(count));
-        if (count == 1) {
-            actionMode.getMenu().findItem(R.id.action_edit).setVisible(true);
-        } else {
-            actionMode.getMenu().findItem(R.id.action_edit).setVisible(false);
+        if (actionMode != null) {
+            actionMode.setTitle(String.valueOf(count));
+            if (count == 1) {
+                actionMode.getMenu().findItem(R.id.action_edit).setVisible(true);
+            } else {
+                actionMode.getMenu().findItem(R.id.action_edit).setVisible(false);
+            }
         }
     }
 
     @Override
     public void finishActionMode() {
-        actionMode.finish();
+        if (actionMode != null && actionMode.isActive()) {
+            actionMode.finish();
+        }
     }
 
     @Override
@@ -252,9 +348,10 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
                 .setMenu(R.menu.listitem_popup)
                 .setPopupMenuTheme(R.style.ThemeOverlay_AppCompat_Light)
                 .setContentInsetStartRes(R.dimen.mcab_default_content_inset)
-                .setBackgroundColorRes(R.color.primary_color_dark)
+                .setBackgroundColorRes(R.color.md_grey_700)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)
                 .start(this);
+        actionMode.getToolbar().setNavigationOnClickListener(view -> presenter.closeActionMode());
     }
 
     @Override
@@ -262,9 +359,12 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
                 ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
-                if (item != null){
+                if (item != null) {
                     presenter.onItemsRerurned(item);
                 }
+            }
+            if (requestCode == MainActivity.REQUEST_CODE_FOR_SELECTING_PRODUCTS) {
+                presenter.addFromProducts(data.getParcelableArrayListExtra(SelectingProductsFragment.LISTITEMS));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -273,16 +373,13 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public boolean onCabCreated(MaterialCab cab, Menu menu) {
         cab.setTitle("1");
+        totallayout.setBackgroundColor(getResources().getColor(R.color.md_grey_700));
         return true;
     }
 
     @Override
     public boolean onCabItemClicked(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home: {
-                presenter.closeActionMode();
-                break;
-            }
             case R.id.action_edit: {
                 presenter.editItem();
                 break;
@@ -312,6 +409,16 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public boolean onCabFinished(MaterialCab cab) {
+        //presenter.clearSelectedItems();
+        totallayout.setBackgroundColor(ThemeManager.getInstance().getPrimaryColor());
         return true;
+    }
+
+    public boolean onBackPressed() {
+        if (actionMode != null && actionMode.isActive()) {
+            presenter.closeActionMode();
+            return true;
+        }
+        return false;
     }
 }

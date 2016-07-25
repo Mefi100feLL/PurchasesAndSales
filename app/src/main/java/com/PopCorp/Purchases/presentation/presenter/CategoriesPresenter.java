@@ -5,7 +5,6 @@ import android.view.View;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
-import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.CategoryInteractor;
 import com.PopCorp.Purchases.domain.interactor.RegionInteractor;
@@ -53,7 +52,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                         loadFromNetwork();
                     }
@@ -91,7 +90,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                         if (objects.size() == 0) {
                             getViewState().showCategoriesEmpty();
@@ -188,7 +187,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                     }
 

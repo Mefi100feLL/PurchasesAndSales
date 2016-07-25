@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.data.repository.net;
 
+import com.PopCorp.Purchases.data.dto.UniversalDTO;
 import com.PopCorp.Purchases.data.model.SaleComment;
 import com.PopCorp.Purchases.data.net.API;
 import com.PopCorp.Purchases.data.net.APIFactory;
@@ -15,6 +16,7 @@ public class SaleCommentNetRepository implements SaleCommentRepository {
 
     @Override
     public Observable<List<SaleComment>> getData(int saleId) {
-        return api.getComments(saleId);
+        return api.getComments(saleId)
+                .flatMap(UniversalDTO::getData);
     }
 }

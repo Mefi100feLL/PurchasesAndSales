@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.ShopsPresenter;
@@ -101,8 +102,8 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

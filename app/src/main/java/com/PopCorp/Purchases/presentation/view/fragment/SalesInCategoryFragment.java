@@ -233,8 +233,8 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

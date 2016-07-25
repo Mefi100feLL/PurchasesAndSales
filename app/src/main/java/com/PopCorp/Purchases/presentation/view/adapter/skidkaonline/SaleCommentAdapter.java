@@ -13,8 +13,11 @@ import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.skidkaonline.SaleCommentComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.SaleComment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.ViewHolder>{
 
@@ -73,7 +76,6 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
 
         public final View view;
         public final TextView author;
-        public final TextView whom;
         public final TextView text;
         public final TextView dateTime;
         public final TextView tmpText;
@@ -83,7 +85,6 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
             super(view);
             this.view = view;
             author = (TextView) view.findViewById(R.id.author);
-            whom = (TextView) view.findViewById(R.id.whom);
             text = (TextView) view.findViewById(R.id.text);
             dateTime = (TextView) view.findViewById(R.id.date_time);
             tmpText = (TextView) view.findViewById(R.id.tmp_text);
@@ -113,33 +114,38 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
     public void onBindViewHolder(final ViewHolder holder, int position) {
         SaleComment saleComment = publishItems.get(position);
 
-        holder.author.setText(saleComment.getUserName());
-        /*if (!saleComment.getWhom().isEmpty()){
-            holder.whom.setVisibility(View.VISIBLE);
-            holder.whom.setText(context.getString(R.string.whom).replace("name", saleComment.getWhom()));
-        } else{
-            holder.whom.setVisibility(View.GONE);
-        }*/
-
-        holder.whom.setVisibility(View.GONE);
+        holder.author.setText(saleComment.getAuthor());
 
         if (saleComment.getErrorText() != null || saleComment.getError() != 0 || saleComment.getTmpText() != 0){
             String tmpText = "";
             if (saleComment.getErrorText() != null){
-                tmpText = saleComment.getErrorText();
-                holder.dateTime.setTextColor(context.getResources().getColor(R.color.md_red_500));
+                tmpText = saleComment.getErrorText() + context.getString(R.string.error_touch_for_retry);
+                holder.tmpText.setTextColor(context.getResources().getColor(R.color.md_red_500));
             } else if (saleComment.getError() != 0){
-                tmpText = context.getString(saleComment.getError());
-                holder.dateTime.setTextColor(context.getResources().getColor(R.color.md_red_500));
+                tmpText = context.getString(saleComment.getError()) + context.getString(R.string.error_touch_for_retry);
+                holder.tmpText.setTextColor(context.getResources().getColor(R.color.md_red_500));
             } else if (saleComment.getTmpText() != 0){
                 tmpText = context.getString(saleComment.getTmpText());
-                holder.dateTime.setTextColor(context.getResources().getColor(R.color.secondary_text));
+                holder.tmpText.setTextColor(context.getResources().getColor(R.color.secondary_text));
             }
             holder.tmpText.setText(tmpText);
             holder.dateTime.setVisibility(View.GONE);
             holder.tmpText.setVisibility(View.VISIBLE);
         } else{
-            holder.dateTime.setText(saleComment.getCreatedTime());
+            String dateText = "";
+            if (saleComment.getDateTime() != 0) {
+                Calendar today = Calendar.getInstance();
+                Calendar dateTime = Calendar.getInstance();
+                dateTime.setTimeInMillis(saleComment.getDateTime());
+                SimpleDateFormat format;
+                if (today.get(Calendar.YEAR) == dateTime.get(Calendar.YEAR)){
+                    format = new SimpleDateFormat("d MMMM, HH:mm", new Locale("ru"));
+                } else{
+                    format = new SimpleDateFormat("d MMM yyyy, HH:mm", new Locale("ru"));
+                }
+                dateText = format.format(dateTime.getTime());
+            }
+            holder.dateTime.setText(dateText);
             holder.dateTime.setVisibility(View.VISIBLE);
             holder.tmpText.setVisibility(View.GONE);
         }
@@ -151,7 +157,7 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_skidkaonline_comment, parent, false);
         return new ViewHolder(v);
     }
 

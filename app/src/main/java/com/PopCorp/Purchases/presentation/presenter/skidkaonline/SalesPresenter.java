@@ -49,7 +49,7 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
                         if (objects.size() == 0){
                             getViewState().showErrorLoadingSales(e);
                         } else{
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                            getViewState().showSnackBar(e);
                         }
                     }
 

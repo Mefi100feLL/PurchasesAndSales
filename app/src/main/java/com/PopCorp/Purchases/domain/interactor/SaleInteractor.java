@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.domain.interactor;
 
-import com.PopCorp.Purchases.data.dto.CommentResult;
+import com.PopCorp.Purchases.data.dao.CategoryDAO;
+import com.PopCorp.Purchases.data.dao.ShopDAO;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.repository.db.SaleDBRepository;
 import com.PopCorp.Purchases.data.repository.net.SaleNetRepository;
@@ -45,24 +46,6 @@ public class SaleInteractor {
                 });
     }
 
-    /*public Observable<CommentResult> sendComment(String author, String whom, String text, int regionId, int saleId){
-        return netRepository.sendComment(author, whom, text, regionId, saleId);
-    }*/
-
-    public Observable<CommentResult> sendComment(String author, String whom, String text, int regionId, int saleId){
-        return Observable.create(new Observable.OnSubscribe<CommentResult>() {
-            @Override
-            public void call(Subscriber<? super CommentResult> subscriber) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                subscriber.onNext(new CommentResult(false, "Error", "", "", 0));
-            }
-        });
-    }
-
     public Observable<Sale> getSale(int cityId, int saleId){
         return dbRepository.getSale(cityId, saleId)
                 .flatMap(sale -> {
@@ -76,6 +59,8 @@ public class SaleInteractor {
     private Observable<Sale> getSaleFromNet(int cityId, int saleId){
         return netRepository.getSale(cityId, saleId)
                 .flatMap(sale -> {
+                    sale.setCategory(new CategoryDAO().getCategory(sale.getCategoryId(), sale.getCategoryType()));
+                    sale.setShop(new ShopDAO().getShop(sale));
                     dbRepository.addSale(sale);
                     return Observable.just(sale);
                 });

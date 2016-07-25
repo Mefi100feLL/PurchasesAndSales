@@ -7,35 +7,35 @@ public class SaleComment {
     @SerializedName("saleId")
     private int saleId;
 
-    @SerializedName("userName")
-    private String userName;
+    @SerializedName("author")
+    private String author;
 
-    @SerializedName("createdTime")
-    private String createdTime;
+    @SerializedName("whom")
+    private String whom;
+
+    @SerializedName("dateTime")
+    private long dateTime;
 
     @SerializedName("text")
     private String text;
-
-    @SerializedName("cityName")
-    private String cityName;
 
     private int tmpText;
     private int error;
     private String errorText;
 
-    public SaleComment(int saleId, String userName, String createdTime, String text, String cityName) {
+    public SaleComment(int saleId, String author, String whom, long dateTime, String text) {
         this.saleId = saleId;
-        this.userName = userName;
-        this.createdTime = createdTime;
+        this.author = author;
+        this.whom = whom;
+        this.dateTime = dateTime;
         this.text = text;
-        this.cityName = cityName;
     }
 
     @Override
     public boolean equals(Object object) {
         if (!(object instanceof SaleComment)) return false;
         SaleComment comment = (SaleComment) object;
-        return saleId == comment.getSaleId() && userName.equals(comment.getUserName()) && cityName.equals(comment.getCityName()) && text.equals(comment.getText());
+        return saleId == comment.getSaleId() && author.equals(comment.getAuthor()) && dateTime == comment.getDateTime();
     }
 
     public int getSaleId() {
@@ -46,20 +46,12 @@ public class SaleComment {
         this.saleId = saleId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(String createdTime) {
-        this.createdTime = createdTime;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getText() {
@@ -68,14 +60,6 @@ public class SaleComment {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
     }
 
     public int getTmpText() {
@@ -100,5 +84,21 @@ public class SaleComment {
 
     public void setErrorText(String errorText) {
         this.errorText = errorText;
+    }
+
+    public long getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(long dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public String getWhom() {
+        return whom;
+    }
+
+    public void setWhom(String whom) {
+        this.whom = whom;
     }
 }

@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.math.BigDecimal;
 
-public class ListItem implements Parcelable {
+public class ListItem implements Parcelable, ContentSame<ListItem> {
 
     private long id;
     private long listId;
@@ -36,10 +36,49 @@ public class ListItem implements Parcelable {
     }
 
     @Override
+    public String toString(){
+        String result = "";
+        /*result += "id=" + id + ", ";
+        result += "listId=" + listId + ", ";*/
+        result += "name=" + name + ", ";
+        /*result += "count=" + count + ", ";
+        result += "edizm=" + edizm + ", ";
+        result += "coast=" + coast + ", ";*/
+        result += "category=" + category + ", ";
+        /*result += "shop=" + shop + ", ";
+        result += "comment=" + comment + ", ";*/
+        result += "buyed=" + buyed + ", ";
+        /*result += "important=" + important;*/
+        return result;
+    }
+
+    @Override
+    public boolean equalsContent(ListItem object) {
+        if (equals(object)) {
+            if (name.equals(object.getName()) &&
+                    count.equals(object.getCount()) &&
+                    edizm.equals(object.getEdizm()) &&
+                    coast.equals(object.getCoast()) &&
+                    category.equals(object.getCategory()) &&
+                    shop.equals(object.getShop()) &&
+                    comment.equals(object.getComment()) &&
+                    buyed == object.isBuyed() &&
+                    important == object.isImportant()) {
+                if (sale != null && object.getSale() != null){
+                    if (sale.equals(object.getSale())){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (!(object instanceof ListItem)) return false;
         ListItem item = (ListItem) object;
-        return id == item.getId();
+        return name.equals(item.getName());
     }
 
     @Override
@@ -199,4 +238,5 @@ public class ListItem implements Parcelable {
     public void setCoast(String coast) {
         this.coast = new BigDecimal(coast);
     }
+
 }

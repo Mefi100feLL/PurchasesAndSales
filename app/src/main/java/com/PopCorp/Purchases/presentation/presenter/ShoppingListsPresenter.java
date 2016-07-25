@@ -4,7 +4,6 @@ import com.PopCorp.Purchases.data.callback.AlarmListCallback;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.ShareListCallback;
 import com.PopCorp.Purchases.data.model.ShoppingList;
-import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListsView;
 import com.arellomobile.mvp.InjectViewState;
@@ -42,15 +41,33 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(List<ShoppingList> shoppingLists) {
                         if (shoppingLists.size() > 0) {
-                            objects.clear();
-                            objects.addAll(shoppingLists);
+                            for (ShoppingList list : shoppingLists){
+                                if (!objects.contains(list)){
+                                    objects.add(list);
+                                } else{
+                                    objects.remove(list);
+                                    objects.add(list);
+                                }
+                            }
+                            ArrayList<ShoppingList> removedLists = new ArrayList<>();
+                            for (ShoppingList list : objects){
+                                if (!shoppingLists.contains(list)){
+                                    removedLists.add(list);
+                                }
+                            }
+                            objects.removeAll(removedLists);
+                            if (removedLists.size() == 1) {
+                                getViewState().showRemovedList(removedLists.get(0));
+                            } else if (removedLists.size() > 1){
+                                getViewState().showRemovedLists(removedLists);
+                            }
                             getViewState().showData();
                         } else {
                             getViewState().showEmptyLists();
@@ -126,6 +143,14 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
     public void returnList(ShoppingList list) {
         objects.add(list);
         interactor.addNewShoppingList(list);
+        getViewState().showData();
+    }
+
+    public void returnLists(ArrayList<ShoppingList> removedLists) {
+        objects.addAll(removedLists);
+        for (ShoppingList list : removedLists) {
+            interactor.addNewShoppingList(list);
+        }
         getViewState().showData();
     }
 }

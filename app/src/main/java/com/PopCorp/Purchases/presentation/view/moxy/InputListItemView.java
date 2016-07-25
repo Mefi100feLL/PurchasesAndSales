@@ -14,7 +14,6 @@ import java.util.List;
 @StateStrategyType(SkipStrategy.class)
 public interface InputListItemView extends MvpView {
 
-    void setFields(ListItem item);
     void setFields(Product product);
 
     @StateStrategyType(AddToEndSingleStrategy.class)

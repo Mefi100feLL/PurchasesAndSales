@@ -151,7 +151,7 @@
     <string name="snackbar_undo">Отмена</string>
     <string name="listitem_shop">в shop</string>
     <string name="listitem_count">count edizm по coast currency shop</string>
-    <string name="checkbox_listitem_important">Важное</string>
+    <string name="checkbox_listitem_important">Купить обязательно</string>
     <string name="string_no_shop">Нет магазина</string>
     <string name="comments">Комментарии</string>
     <string name="same_sales">Похожие акции</string>
@@ -233,6 +233,36 @@
     <string name="empty_comments_for_sale">Нет комментариев к акции</string>
     <string name="button_close">Закрыть</string>
     <string name="button_back_to_sale">К акции</string>
+    <string name="empty_no_comments">Нет комментариев к данной акции</string>
+    <string name="error_touch_for_retry">\nНажмите, чтобы попробовать отправить еще раз</string>
+    <string name="error_comment_no_sended">Ошибка при отправке комментария</string>
+    <string name="dialog_button_edit">Изменить</string>
+    <string name="error_can_not_crop_image">Не получилось обрезать картинку</string>
+    <string name="error_loading_list">Ошибка при загрузке списка</string>
+    <string name="notification_lists_removed">Удалено списков: count</string>
+    <string name="total_buyed_items">Итого куплено - count, на:</string>
+    <string name="total_items">Итого товаров - count, на:</string>
+    <string name="menu_item_all_shops">Все магазины</string>
+    <string name="hint_shop_name">Наименование магазина</string>
+    <string name="dialog_title_new_shop">Новый магазин</string>
+    <string name="error_enter_shop_name">Введите наименование магазина</string>
+    <string name="error_shop_already_exists">Такой магазин уже есть</string>
+    <string name="title_selecting_products">Выбор товаров</string>
+    <string name="spinner_all_products">Все товары</string>
+    <string name="spinner_favorite_products">Избранные</string>
+    <string name="action_sorte">Сортировать</string>
+    <string name="action_sort_by_alphabet">по алфавиту</string>
+    <string name="action_sort_by_category">по категориям</string>
+    <string name="header_no_category">Нет категории</string>
+    <string name="empty_no_products">Нет товаров</string>
+    <string name="button_back_to_list">К списку покупок</string>
+    <string name="empty_no_favorite_products">Нет избранных товаров\nТовар становится избранным, если был хоть раз добавлен в список покупок</string>
+    <string name="button_all_products">Все товары</string>
+    <string name="empty_no_finded_products">Нет товаров по запросу \"query\"</string>
+    <string name="empty_no_listitems">Нет товаров в списке\nТовар можно добавить вручную или выбрать несколько из списка</string>
+    <string name="button_add">Добавить</string>
+    <string name="action_select_from_products">Выбрать из списка</string>
+    <string name="action_create_listitem">Ввести вручную</string>
 
 
 </resources>

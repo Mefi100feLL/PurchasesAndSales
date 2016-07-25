@@ -17,8 +17,8 @@ public class SaleCommentComparator implements Comparator<SaleComment> {
         if (result == 0 && !lhs.getAuthor().equals(rhs.getAuthor())) {
             result = lhs.getAuthor().compareToIgnoreCase(rhs.getAuthor());
         }
-        if (result == 0 && !lhs.getAuthor().equals(rhs.getAuthor())) {
-            result = lhs.getAuthor().compareToIgnoreCase(rhs.getAuthor());
+        if (result == 0 && !lhs.getText().equals(rhs.getText())) {
+            result = lhs.getText().compareToIgnoreCase(rhs.getText());
         }
         return result;
     }

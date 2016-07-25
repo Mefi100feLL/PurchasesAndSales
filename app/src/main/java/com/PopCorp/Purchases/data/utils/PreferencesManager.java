@@ -317,12 +317,13 @@ public class PreferencesManager {
         editor.putString(PREFS_DEF_EDIZM, value).commit();
     }
 
-    public Set<String> getShopes() {
-        return sPref.getStringSet(PREFS_SHOPES, new LinkedHashSet<String>());
+    public Set<String> getShops() {
+        return sPref.getStringSet(PREFS_SHOPES, new LinkedHashSet<>());
     }
 
-    public void putShopes(Set<String> value) {
-        editor.putStringSet(PREFS_SHOPES, value).commit();
+    public void putShopes(ArrayList<String> shops) {
+        Set<String> set = new LinkedHashSet<>(shops);
+        editor.putStringSet(PREFS_SHOPES, set).commit();
     }
 
     public String getCurrentSortingList() {
@@ -331,6 +332,10 @@ public class PreferencesManager {
 
     public String getCurrentFilteringList() {
         return sPref.getString(PreferencesManager.PREFS_FILTER_LIST, context.getString(R.string.prefs_filter_list_default_one));
+    }
+
+    public boolean isFilterListOnlyProductsOfShop(){
+        return getCurrentFilteringList().equals(context.getString(R.string.prefs_filter_list_default_one));
     }
 
     public void putCurrentCurrency(String selectedCurrency) {
