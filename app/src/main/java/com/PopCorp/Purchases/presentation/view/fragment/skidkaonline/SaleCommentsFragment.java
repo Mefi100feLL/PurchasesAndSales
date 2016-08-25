@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleCommentsPresenterFactory;
@@ -76,7 +77,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_skidkaonline_sale_comments, container, false);
 
-        Toolbar toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolBar.setTitle(getString(R.string.comments));
         toolBar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolBar.setNavigationOnClickListener(this);
@@ -129,6 +130,13 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         recyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     private void hideKeyboard() {
@@ -222,6 +230,11 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     @Override
     public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
         emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+
     }
 
     @Override

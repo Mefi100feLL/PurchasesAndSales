@@ -22,6 +22,7 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.skidkaonline.City;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingCityPresenter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.CityAdapter;
@@ -84,6 +85,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     public void onResume() {
         super.onResume();
         toolBar.setTitle(R.string.title_selecting_city);
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
@@ -111,6 +113,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     @Override
     public void setSelectedCity(City selectedCity) {
         adapter.setSelectedCity(selectedCity);
+        fab.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -132,6 +135,11 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     @Override
     public void hideFastScroll() {
         recyclerView.setAutoHideDelay(0);
+    }
+
+    @Override
+    public void finish() {
+        getActivity().finish();
     }
 
     @Override
@@ -161,6 +169,13 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     @Override
     public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
         emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), ErrorManager.getErrorButtonTextResource(e), view -> {
+            presenter.onErrorButtonClicked(e);
+        });
     }
 
     @Override

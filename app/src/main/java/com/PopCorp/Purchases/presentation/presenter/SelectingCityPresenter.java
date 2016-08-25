@@ -4,7 +4,6 @@ import android.view.View;
 
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.skidkaonline.City;
-import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.skidkaonline.CityInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.SelectingCityView;
@@ -14,6 +13,7 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
 
 @InjectViewState
@@ -44,7 +44,11 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
                         e.printStackTrace();
-                        getViewState().showSnackBar(e);
+                        if (objects.size() == 0){
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
+                        }
                     }
 
                     @Override
@@ -133,6 +137,15 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
             getViewState().showFastScroll();
         } else {
             getViewState().hideFastScroll();
+        }
+    }
+
+    public void onErrorButtonClicked(Throwable e) {
+        if (e instanceof HttpException) {
+            getViewState().finish();
+        } else {
+            getViewState().showProgress();
+            loadData();
         }
     }
 }

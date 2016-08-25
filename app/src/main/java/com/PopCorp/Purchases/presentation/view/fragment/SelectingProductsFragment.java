@@ -26,6 +26,7 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingProductsPresenter;
 import com.PopCorp.Purchases.presentation.view.adapter.SelectingProductsAdapter;
@@ -113,6 +114,7 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
     public void onResume() {
         super.onResume();
         toolBar.setTitle("");
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
@@ -148,6 +150,11 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
     @Override
     public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
         emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+
     }
 
     @Override

@@ -5,26 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="8dp">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </android.support.design.widget.AppBarLayout>
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="8dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/app_bar">
+        android:layout_below="@id/toolbar">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh"
@@ -53,7 +46,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_bar"
+        android:layout_below="@id/toolbar"
         android:src="@drawable/shadow_top"
         android:visibility="@integer/visibility_toolbar_show_image"/>
 
@@ -68,7 +61,8 @@
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
-            android:src="@drawable/ic_check_white_24dp"/>
+            android:src="@drawable/ic_check_white_24dp"
+            android:visibility="gone"/>
     </android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>

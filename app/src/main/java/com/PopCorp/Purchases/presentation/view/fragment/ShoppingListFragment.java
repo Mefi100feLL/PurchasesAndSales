@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.view.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.CoordinatorLayout;
@@ -41,9 +42,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-
-import io.github.yavski.fabspeeddial.FabSpeedDial;
-import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter;
 
 public class ShoppingListFragment extends MvpAppCompatFragment implements ShoppingListView, MaterialCab.Callback {
 
@@ -113,10 +111,15 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+    }
+
+    @Override
     public void showInputFragment(ListItem listItem) {
         Intent intent = new Intent(getActivity(), InputListItemActivity.class);
-        intent.putExtra(InputListItemFragment.CURRENT_LIST, presenter.getList().getId());
-        intent.putExtra(InputListItemFragment.CURRENT_CURRENCY, presenter.getList().getCurrency());
+        intent.putExtra(InputListItemFragment.CURRENT_LISTS, presenter.getList().getId());
         intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, listItem);
         startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
     }
@@ -205,7 +208,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void showEmptyItems() {
         showError(R.string.empty_no_listitems, R.drawable.ic_menu_gallery, R.string.button_add, view -> {
-            showSelectingProducts();
+            showInputFragment(null);
         });
     }
 
@@ -248,6 +251,11 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
         emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+
     }
 
     @Override
@@ -374,6 +382,9 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public boolean onCabCreated(MaterialCab cab, Menu menu) {
         cab.setTitle("1");
         totallayout.setBackgroundColor(getResources().getColor(R.color.md_grey_700));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.md_grey_700));
+        }
         return true;
     }
 
@@ -411,6 +422,9 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public boolean onCabFinished(MaterialCab cab) {
         //presenter.clearSelectedItems();
         totallayout.setBackgroundColor(ThemeManager.getInstance().getPrimaryColor());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().getWindow().setStatusBarColor(getResources().getColor(ThemeManager.getInstance().getPrimaryDarkColorRes()));
+        }
         return true;
     }
 

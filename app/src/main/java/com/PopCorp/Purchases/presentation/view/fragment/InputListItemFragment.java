@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.presentation.presenter.InputListItemPresenter;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemCategoriesAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.InputListItemView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,9 +36,8 @@ import java.util.List;
 
 public class InputListItemFragment extends MvpAppCompatFragment implements InputListItemView {
 
-    public static final String CURRENT_LIST = "current_list";
+    public static final String CURRENT_LISTS = "current_list";
     public static final String CURRENT_LISTITEM = "current_listitem";
-    public static final String CURRENT_CURRENCY = "current_currency";
 
     @InjectPresenter
     InputListItemPresenter presenter;
@@ -58,12 +58,26 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
 
     private ArrayAdapter<String> adapterUnits;
     private ArrayAdapter<String> productsAdapter;
+    private Toolbar toolbar;
+
+    private View saleLayout;
+    private ImageView saleImage;
+    private TextView salePeriod;
+
+    public static InputListItemFragment create(ListItem item, long[] listIds){
+        InputListItemFragment result = new InputListItemFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(InputListItemFragment.CURRENT_LISTITEM, item);
+        args.putLongArray(InputListItemFragment.CURRENT_LISTS, listIds);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.setItem(getArguments().getParcelable(CURRENT_LISTITEM));
-        presenter.setListId(getArguments().getLong(CURRENT_LIST, -1));
+        presenter.setListsIds(getArguments().getLongArray(CURRENT_LISTS));
     }
 
     @Override
@@ -71,7 +85,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         View rootView = inflater.inflate(R.layout.fragment_listitem_input, container, false);
         setHasOptionsMenu(true);
         
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
@@ -88,6 +102,10 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         shopSpinner = (Spinner) rootView.findViewById(R.id.listitem_shop);
         categorySpinner = (Spinner) rootView.findViewById(R.id.listitem_category);
         comment = (EditText) rootView.findViewById(R.id.listitem_comment);
+        saleLayout = rootView.findViewById(R.id.sale_layout);
+        saleImage = (ImageView) rootView.findViewById(R.id.sale_image);
+        salePeriod = (TextView) rootView.findViewById(R.id.sale_period);
+
         minus.setOnClickListener(v -> {
             if (count.getText().toString().isEmpty()){
                 count.setText("1");
@@ -113,6 +131,12 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         setFields();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolbar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     private void onFabClicked() {
@@ -244,6 +268,13 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
                 categorySpinner.setSelection(presenter.getCategories().indexOf(item.getCategory()));
             }
             comment.setText(item.getComment());
+            if (item.getSale() != null){
+                saleLayout.setVisibility(View.VISIBLE);
+                ImageLoader.getInstance().displayImage(item.getSale().getImage(), saleImage);
+                salePeriod.setText(item.getSale().getPeriodStart() + " - " + item.getSale().getPeriodEnd());
+            } else {
+                saleLayout.setVisibility(View.GONE);
+            }
         }
     }
 

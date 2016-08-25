@@ -110,6 +110,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
     public void onResume() {
         super.onResume();
         toolBar.setTitle("");
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
@@ -134,6 +135,11 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
     @Override
     public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
         emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+
     }
 
     @Override

@@ -18,6 +18,8 @@ public interface SampleDataView extends MvpView {
     void showError(String text, int drawableRes, int textButtonRes, View.OnClickListener listener);
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener);
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
+    void showError(Throwable e);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void refreshing(boolean refresh);

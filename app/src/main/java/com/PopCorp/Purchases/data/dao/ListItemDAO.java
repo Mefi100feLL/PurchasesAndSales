@@ -58,7 +58,7 @@ public class ListItemDAO {
     private ListItemSaleDAO saleDAO = new ListItemSaleDAO();
 
     public long updateOrAddToDB(ListItem item) {
-        String saleId = item.getSale() != null ? String.valueOf(item.getSale().getId()) : "0";
+        String saleId = item.getSale() != null ? String.valueOf(item.getSale().getId()) : "-1";
         String[] values = new String[]{
                 String.valueOf(item.getListId()),
                 item.getName(),

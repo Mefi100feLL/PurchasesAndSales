@@ -226,7 +226,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
             itemsInteractor.removeItem(item);
         }
         calculateTotals();
-        closeActionMode();
+        calculateShops();
         closeActionMode();
     }
 
@@ -247,11 +247,12 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
             for (ListItem item : itemsForRemove) {
                 itemsInteractor.removeItem(item);
             }
+            calculateShops();
+            calculateTotals();
             getViewState().filter(currentFilter);
         } else {
             getViewState().showNothingRemoving();
         }
-        calculateTotals();
     }
 
     @Override

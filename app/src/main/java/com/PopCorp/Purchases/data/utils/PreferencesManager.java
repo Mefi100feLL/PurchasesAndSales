@@ -64,6 +64,7 @@ public class PreferencesManager {
     public static final String PREFS_THEME = "theme";
     public static final String PREFS_DIALOG_THEME = "dialog_theme";
     public static final String PREFS_HEADER = "header";
+    private static final String PREFS_AUTHOR_COMMENT = "author_comment";
 
     private Context context;
     private SharedPreferences sPref;
@@ -372,5 +373,13 @@ public class PreferencesManager {
             result = new ListItemDecoratorBuyedComparator(result);
         }
         return result;
+    }
+
+    public void putAuthorComment(String author) {
+        editor.putString(PREFS_AUTHOR_COMMENT, author).commit();
+    }
+
+    public String getAuthorCOmment(){
+        return sPref.getString(PREFS_AUTHOR_COMMENT, "");
     }
 }

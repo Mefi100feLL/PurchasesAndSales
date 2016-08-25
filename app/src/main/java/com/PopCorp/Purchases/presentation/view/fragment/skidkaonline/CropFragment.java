@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.CropPresenter;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
@@ -34,13 +35,16 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
     private ImageView image;
     private View progressBar;
     private FloatingActionButton fab;
+    private Toolbar toolBar;
+    private View rotateSkip;
+    private View scaleSkip;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_crop, container, false);
         setHasOptionsMenu(true);
 
-        Toolbar toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
         AppCompatActivity activity = ((AppCompatActivity) getActivity());
         activity.setSupportActionBar(toolBar);
         if (activity.getSupportActionBar() != null) {
@@ -53,6 +57,18 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
         progressBar = rootView.findViewById(R.id.progress);
 
         cropView.setTargetAspectRatio(1);
+        rotateSkip = rootView.findViewById(R.id.rotate_skip);
+        scaleSkip = rootView.findViewById(R.id.scale_skip);
+
+        rotateSkip.setOnClickListener(view -> {
+            cropView.postRotate(-cropView.getCurrentAngle());
+            cropView.setImageToWrapCropBounds();
+        });
+
+        scaleSkip.setOnClickListener(view -> {
+            cropView.zoomOutImage(cropView.getMinScale());
+            cropView.setImageToWrapCropBounds();
+        });
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> cropImageAndSaveInFile());
@@ -65,6 +81,12 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     private void cropImageAndSaveInFile() {

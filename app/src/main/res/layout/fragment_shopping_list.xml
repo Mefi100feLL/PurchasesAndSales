@@ -5,32 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+    <FrameLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="8dp">
+        android:layout_height="wrap_content">
 
-        <FrameLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="?attr/actionBarSize"
+            style="@style/ToolbarStyle"
+            app:contentInsetStart="@dimen/mcab_default_content_inset"/>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:contentInsetStart="@dimen/mcab_default_content_inset"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        <ViewStub
+            android:id="@+id/cab_stub"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"/>
+    </FrameLayout>
 
-            <ViewStub
-                android:id="@+id/cab_stub"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"/>
-        </FrameLayout>
-
-    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/total_layout"
@@ -60,9 +52,9 @@
                 style="@style/TotalText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_weight="2"
-                android:gravity="right"
-                android:layout_marginLeft="16dp"/>
+                android:gravity="right"/>
         </LinearLayout>
 
         <LinearLayout
@@ -82,9 +74,9 @@
                 style="@style/TotalText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_weight="2"
-                android:gravity="right"
-                android:layout_marginLeft="16dp"/>
+                android:gravity="right"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -111,8 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/app_bar"
-            android:src="@drawable/shadow_top"
-            android:visibility="@integer/visibility_toolbar_show_image"/>
+            android:src="@drawable/shadow_top"/>
     </FrameLayout>
 
     <ImageView

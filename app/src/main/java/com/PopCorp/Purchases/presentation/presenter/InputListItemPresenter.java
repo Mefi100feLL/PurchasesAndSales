@@ -24,10 +24,10 @@ public class InputListItemPresenter extends MvpPresenter<InputListItemView> {
     private ProductInteractor productInteractor = new ProductInteractor();
 
     private ListItem item;
-    private long listId;
 
     private List<ListItemCategory> categories;
     private List<Product> products = new ArrayList<>();
+    private long[] listsIds;
 
     public InputListItemPresenter(){
         ListItemCategoryDAO categoryDAO = new ListItemCategoryDAO();
@@ -78,17 +78,19 @@ public class InputListItemPresenter extends MvpPresenter<InputListItemView> {
             getViewState().showNameEmpty();
             return;
         }
-        if ((item != null && !name.equals(item.getName())) || item == null){
-            if (interactor.existsWithName(listId, name)){
-                getViewState().showListItemWithNameExists();
-                return;
+        if (item == null || (item.getId() == -1) || (!name.equals(item.getName()))){
+            for (long listId : listsIds) {
+                if (interactor.existsWithName(listId, name)) {
+                    getViewState().showListItemWithNameExists();
+                    return;
+                }
             }
         }
         getViewState().hideNameError();
         count = count.isEmpty() ? "0" : count;
         coast = coast.isEmpty() ? "0" : coast;
         if (item == null) {
-            item = new ListItem(-1, listId, name, count, unit, coast, categories.get(category), shop, comment, false, important, null);
+            item = new ListItem(-1, -1, name, count, unit, coast, categories.get(category), shop, comment, false, important, null);
         } else {
             item.setName(name);
             item.setCount(count);
@@ -100,10 +102,6 @@ public class InputListItemPresenter extends MvpPresenter<InputListItemView> {
             item.setImportant(important);
         }
         getViewState().returnItemAndClose(item);
-    }
-
-    public void setListId(long listId) {
-        this.listId = listId;
     }
 
     public void onProductSelected(String name) {
@@ -119,5 +117,9 @@ public class InputListItemPresenter extends MvpPresenter<InputListItemView> {
 
     public ListItem getItem() {
         return item;
+    }
+
+    public void setListsIds(long[] listsIds) {
+        this.listsIds = listsIds;
     }
 }

@@ -84,6 +84,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     public void onResume() {
         super.onResume();
         toolBar.setTitle(R.string.navigation_drawer_settings);
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override

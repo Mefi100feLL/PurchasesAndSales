@@ -19,6 +19,7 @@ import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -223,9 +224,13 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             holder.image.setAlpha(1f);
         }
 
-        ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
-        coloredCircle.getPaint().setColor(item.getCategory().getColor());
-        holder.image.setBackgroundDrawable(coloredCircle);
+        if (item.getSale() != null){
+            ImageLoader.getInstance().displayImage(item.getSale().getImage(), holder.image);
+        } else {
+            ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
+            coloredCircle.getPaint().setColor(item.getCategory().getColor());
+            holder.image.setBackgroundDrawable(coloredCircle);
+        }
 
         if (selectedItems.contains(item)) {
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);

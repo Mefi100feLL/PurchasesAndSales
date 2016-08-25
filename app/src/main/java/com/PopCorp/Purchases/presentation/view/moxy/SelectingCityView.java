@@ -30,4 +30,5 @@ public interface SelectingCityView extends SampleDataView {
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "fastScroll")
     void hideFastScroll();
 
+    void finish();
 }

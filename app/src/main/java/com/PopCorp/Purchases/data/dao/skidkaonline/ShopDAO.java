@@ -5,6 +5,7 @@ import android.database.Cursor;
 import com.PopCorp.Purchases.data.db.DB;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 
+import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,5 +145,17 @@ public class ShopDAO {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public Shop getWithUrl(String shopUrl, int cityId) {
+        Shop result = null;
+        Cursor cursor = db.getData(TABLE_SHOPES, COLUMNS_SHOPES, KEY_SHOP_CITY_ID + "=" + cityId + " AND " + KEY_SHOP_URL + "='" + shopUrl + "'");
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                result = getShop(cursor);
+            }
+            cursor.close();
+        }
+        return result;
     }
 }

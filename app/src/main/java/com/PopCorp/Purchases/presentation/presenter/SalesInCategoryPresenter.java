@@ -153,7 +153,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
     @Override
     public void onItemClicked(View view, Sale item) {
-
+        getViewState().showSales(view, item);
     }
 
     @Override

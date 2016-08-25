@@ -1,8 +1,11 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,23 +22,30 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
+import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.SameSale;
+import com.PopCorp.Purchases.data.model.ShoppingList;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
+import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
 import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
+import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SameSaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SameSaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleInfoView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
@@ -46,6 +56,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         SaleInfoView,
         SaleParamsProvider {
 
+    private static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
+
     @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = "SaleInfoPresenter")
     SaleInfoPresenter presenter;
 
@@ -53,6 +65,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     private SaleMainCallback parent;
 
+    private Toolbar toolBar;
     private ImageView image;
     private TextView title;
     private TextView subTitle;
@@ -73,6 +86,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private RecyclerView sameSalesRecycler;
 
     private SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
+    private FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,7 +99,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sale_info, container, false);
 
-        Toolbar toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolBar.inflateMenu(R.menu.sale);
         toolBar.setOnMenuItemClickListener(this);
@@ -117,9 +131,17 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         sameSalesRecycler = (RecyclerView) rootView.findViewById(R.id.same_sales_recycler);
         sameSalesLayout = rootView.findViewById(R.id.same_sales_layout);
 
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(v -> presenter.loadShoppingLists());
+
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+    }
 
     @Override
     public void showInfo(Sale sale) {
@@ -168,13 +190,13 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             coastForQuantity.setText(sale.getCoastForQuantity());
         }
 
-        if (sale.getPeriodStart() == 0  && sale.getPeriodEnd() == 0) {
+        if (sale.getPeriodStart() == 0 && sale.getPeriodEnd() == 0) {
             periodLayout.setVisibility(View.GONE);
         } else {
             periodLayout.setVisibility(View.VISIBLE);
             String periodString = format.format(new Date(sale.getPeriodStart()));
             if (sale.getPeriodStart() != sale.getPeriodEnd()) {
-                periodString += " - " + sale.getPeriodEnd();
+                periodString += " - " + format.format(new Date(sale.getPeriodEnd()));
             }
             period.setText(periodString);
         }
@@ -182,8 +204,69 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     @Override
+    public void showEmptyLists() {
+        Snackbar.make(fab, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
+                .setAction(R.string.button_create, view -> {
+                    DialogController.showDialogForNewList(getActivity(), presenter);
+                })
+                .show();
+    }
+
+    @Override
+    public void showListsSelecting(List<ShoppingList> shoppingLists) {
+        ArrayList<String> items = new ArrayList<>();
+        for (ShoppingList list : shoppingLists) {
+            items.add(list.getName());
+        }
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.dialog_title_selecting_lists);
+        builder.items(items);
+        builder.positiveText(R.string.dialog_button_send);
+        builder.negativeText(R.string.dialog_button_cancel);
+        builder.autoDismiss(false);
+        builder.itemsCallbackMultiChoice(null, (dialog, which, text) -> {
+            if (which.length > 0) {
+                presenter.listsSelected(which);
+                dialog.dismiss();
+            } else {
+                showToast(R.string.error_select_lists);
+            }
+            return false;
+        });
+        builder.onNegative((dialog, which) -> dialog.dismiss());
+        MaterialDialog dialog = builder.build();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    @Override
+    public void openInputListItemFragment(ListItem item, long[] listsIds) {
+        Intent intent = new Intent(getActivity(), InputListItemActivity.class);
+        intent.putExtra(InputListItemFragment.CURRENT_LISTS, listsIds);
+        intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, item);
+        startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
+                ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
+                if (item != null) {
+                    presenter.onItemsRerurned(item);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public void setParent(SaleMainCallback parent) {
         this.parent = parent;
+    }
+
+    private void showToast(int error_select_lists) {
+        Toast.makeText(getActivity(), error_select_lists, Toast.LENGTH_SHORT).show();
     }
 
     @Override

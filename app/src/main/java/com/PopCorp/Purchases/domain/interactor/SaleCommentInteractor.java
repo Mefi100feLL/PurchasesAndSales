@@ -45,11 +45,11 @@ public class SaleCommentInteractor {
                 });
     }
 
-    /*public Observable<CommentResult> sendComment(String author, String whom, String text, int regionId, int saleId){
-        return netRepository.sendComment(author, whom, text, regionId, saleId);
-    }*/
-
     public Observable<CommentResult> sendComment(String author, String whom, String text, int regionId, int saleId){
+        return netRepository.sendComment(author, whom, text, regionId, saleId);
+    }
+
+    /*public Observable<CommentResult> sendComment(String author, String whom, String text, int regionId, int saleId){
         return Observable.create(new Observable.OnSubscribe<CommentResult>() {
             @Override
             public void call(Subscriber<? super CommentResult> subscriber) {
@@ -61,5 +61,5 @@ public class SaleCommentInteractor {
                 subscriber.onNext(new CommentResult(false, "Ошибка при отправке!", "", "", 0));
             }
         });
-    }
+    }*/
 }

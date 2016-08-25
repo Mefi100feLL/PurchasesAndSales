@@ -38,7 +38,9 @@ public class ListItemSaleDAO {
         };
         int countUpdated = db.update(TABLE_LIST_SALES, COLUMNS_LIST_SALES, DB.KEY_ID + "=" + sale.getId(), values);
         if (countUpdated == 0) {
-            return db.addRec(TABLE_LIST_SALES, COLUMNS_LIST_SALES, values);
+            long id = db.addRec(TABLE_LIST_SALES, COLUMNS_LIST_SALES, values);
+            sale.setId(id);
+            return id;
         }
         return countUpdated;
     }

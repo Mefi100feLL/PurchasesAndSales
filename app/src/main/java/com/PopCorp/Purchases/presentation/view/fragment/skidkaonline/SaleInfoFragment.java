@@ -1,25 +1,35 @@
 package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
+import com.PopCorp.Purchases.data.model.ListItem;
+import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
+import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleInfoPresenter;
+import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
+import com.PopCorp.Purchases.presentation.view.fragment.InputListItemFragment;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleInfoView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
@@ -31,6 +41,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
         implements Toolbar.OnMenuItemClickListener,
@@ -38,6 +50,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         View.OnClickListener,
         SaleInfoView,
         SaleParamsProvider {
+
+    private static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
 
     @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = "SaleInfoPresenter")
     SaleInfoPresenter presenter;
@@ -61,6 +75,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
 
+    private Toolbar toolBar;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +89,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_skidkaonline_sale_info, container, false);
 
-        Toolbar toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolBar.inflateMenu(R.menu.skidkaonline_sale);
         toolBar.setOnMenuItemClickListener(this);
@@ -87,10 +103,16 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         cropImage = (ImageView) rootView.findViewById(R.id.crop);
 
         comments.setOnClickListener(view -> parent.showComments());
-        sendToList.setOnClickListener(view -> {});
+        sendToList.setOnClickListener(view -> presenter.loadShoppingLists());
         cropImage.setOnClickListener(view -> openCropActivity());
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     private void openCropActivity() {
@@ -236,5 +258,67 @@ public class SaleInfoFragment extends MvpAppCompatFragment
                 }
             }, (s, view, progress, size) -> progressView.setProgress(progress * 500 / size));
         }
+    }
+
+
+    @Override
+    public void showEmptyLists() {
+        Snackbar.make(image, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
+                .setAction(R.string.button_create, view -> {
+                    DialogController.showDialogForNewList(getActivity(), presenter);
+                })
+                .show();
+    }
+
+    @Override
+    public void showListsSelecting(List<ShoppingList> shoppingLists) {
+        ArrayList<String> items = new ArrayList<>();
+        for (ShoppingList list : shoppingLists) {
+            items.add(list.getName());
+        }
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.dialog_title_selecting_lists);
+        builder.items(items);
+        builder.positiveText(R.string.dialog_button_send);
+        builder.negativeText(R.string.dialog_button_cancel);
+        builder.autoDismiss(false);
+        builder.itemsCallbackMultiChoice(null, (dialog, which, text) -> {
+            if (which.length > 0) {
+                presenter.listsSelected(which);
+                dialog.dismiss();
+            } else {
+                showToast(R.string.error_select_lists);
+            }
+            return false;
+        });
+        builder.onNegative((dialog, which) -> dialog.dismiss());
+        MaterialDialog dialog = builder.build();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    @Override
+    public void openInputListItemFragment(ListItem item, long[] listsIds) {
+        Intent intent = new Intent(getActivity(), InputListItemActivity.class);
+        intent.putExtra(InputListItemFragment.CURRENT_LISTS, listsIds);
+        intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, item);
+        startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
+                ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
+                if (item != null) {
+                    presenter.onItemsRerurned(item);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showToast(int error_select_lists) {
+        Toast.makeText(getActivity(), error_select_lists, Toast.LENGTH_SHORT).show();
     }
 }

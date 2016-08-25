@@ -163,4 +163,13 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
     public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
 
     }
+
+    public void saveAuthor(String author) {
+        PreferencesManager.getInstance().putAuthorComment(author);
+        getViewState().showAuthorSaved();
+    }
+
+    public String getSavedAuthorComment() {
+        return PreferencesManager.getInstance().getAuthorCOmment();
+    }
 }

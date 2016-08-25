@@ -107,6 +107,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     public void onResume() {
         super.onResume();
         toolBar.setTitle(title);
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
@@ -224,6 +225,11 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     @Override
     public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
         emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+
     }
 
     @Override

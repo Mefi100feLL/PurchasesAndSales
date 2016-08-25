@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.domain.interactor;
 
+import com.PopCorp.Purchases.data.dao.ListItemSaleDAO;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.repository.db.ListItemDBRepository;
@@ -13,6 +14,7 @@ public class ListItemInteractor {
 
     private ListItemDBRepository dbRepository = new ListItemDBRepository();
     private ProductDBRepository productDBRepository = new ProductDBRepository();
+    private ListItemSaleDAO saleDAO = new ListItemSaleDAO();
 
     public Observable<List<ListItem>> getForList(long listId) {
         return dbRepository.getForList(listId);
@@ -27,7 +29,11 @@ public class ListItemInteractor {
     }
 
     public void addItem(ListItem item) {
+        if (item.getSale() != null) {
+            saleDAO.updateOrAddToDB(item.getSale());
+        }
         dbRepository.addItem(item);
+
         Product product = new Product(-1, item.getName(), item.getCountString(), item.getEdizm(), item.getCoastString(), item.getCategory(), item.getShop(), item.getComment(), true);
         productDBRepository.addItem(product);
     }
