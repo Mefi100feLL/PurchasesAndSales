@@ -3,6 +3,8 @@ package com.PopCorp.Purchases.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
+
 import java.math.BigDecimal;
 
 public class ListItem implements Parcelable, ContentSame<ListItem> {
@@ -224,11 +226,11 @@ public class ListItem implements Parcelable, ContentSame<ListItem> {
     }
 
     public String getCountString() {
-        return count.toString();
+        return DecoratorBigDecimal.decor(count);
     }
 
     public String getCoastString() {
-        return coast.toString();
+        return DecoratorBigDecimal.decor(coast);
     }
 
     public void setCount(String count) {

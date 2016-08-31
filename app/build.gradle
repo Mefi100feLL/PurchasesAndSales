@@ -90,7 +90,7 @@ dependencies {
     compile "com.android.support:gridlayout-v7:$supportVersion"
     compile "com.android.support:percent:$supportVersion"
 
-    compile 'com.google.android.gms:play-services-analytics:9.2.1'
+    compile 'com.google.android.gms:play-services-analytics:9.4.0'
 
     compile 'com.arello-mobile:moxy:0.4.3'
     compile 'com.arello-mobile:moxy-android:0.4.3'

@@ -2,8 +2,8 @@ package com.PopCorp.Purchases.domain.interactor.skidkaonline;
 
 import android.graphics.Bitmap;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,33 +14,20 @@ import rx.Subscriber;
 
 public class CropInteractor {
 
-    public Observable<File> saveBitmapInFile(final Bitmap bitmap, final String cacheDir) {
-        return Observable.create(new Observable.OnSubscribe<File>() {
+    public Observable<String> saveBitmapInFile(final Bitmap bitmap) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
             @Override
-            public void call(Subscriber<? super File> subscriber) {
-                String fileName = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss", new Locale("ru")).format(Calendar.getInstance().getTime()) + ".png";
-                File file = new File(cacheDir + "/tmp/" + fileName);
-                file.mkdirs();
-                if (file.exists()) {
-                    if (!file.delete()) {
-                        subscriber.onError(null);
-                    }
-                }
-                FileOutputStream out = null;
+            public void call(Subscriber<? super String> subscriber) {
+                String uri = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss", new Locale("ru")).format(Calendar.getInstance().getTime()) + ".jpg";
                 try {
-                    out = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                    subscriber.onNext(file);
-                } catch (Exception e) {
-                    subscriber.onError(null);
-                } finally {
-                    try {
-                        if (out != null) {
-                            out.close();
-                        }
-                    } catch (IOException ignored) {
-                    }
+                    ImageLoader.getInstance().getDiskCache().save(uri, bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    subscriber.onError(e);
+                    return;
                 }
+                subscriber.onNext(uri);
+                subscriber.onCompleted();
             }
         });
     }

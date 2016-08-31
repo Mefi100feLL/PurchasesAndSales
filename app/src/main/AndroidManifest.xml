@@ -92,6 +92,10 @@
             android:label=""/>
 
         <activity
+            android:name=".presentation.view.activity.ListItemSaleActivity"
+            android:label=""/>
+
+        <activity
             android:name=".presentation.view.activity.skidkaonline.CropActivity"
             android:label=""/>
 

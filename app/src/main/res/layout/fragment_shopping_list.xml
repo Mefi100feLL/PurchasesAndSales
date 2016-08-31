@@ -12,9 +12,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            style="@style/ToolbarStyle"
             app:contentInsetStart="@dimen/mcab_default_content_inset"/>
 
         <ViewStub

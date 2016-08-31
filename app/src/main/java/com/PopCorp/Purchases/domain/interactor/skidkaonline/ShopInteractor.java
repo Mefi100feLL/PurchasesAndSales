@@ -53,4 +53,8 @@ public class ShopInteractor {
     public void update(Shop item) {
         dbRepository.update(item);
     }
+
+    public String getForUrl(String shopUrl, int cityId) {
+        return dbRepository.getForUrl(shopUrl, cityId);
+    }
 }

@@ -21,17 +21,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.ListItem;
+import com.PopCorp.Purchases.data.model.ListItemSale;
+import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
+import com.PopCorp.Purchases.data.utils.sharing.SharingListBuilderFactory;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.ShoppingListPresenter;
+import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
+import com.PopCorp.Purchases.presentation.view.activity.ListItemSaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
 import com.PopCorp.Purchases.presentation.view.activity.ProductsActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemAdapter;
@@ -119,7 +125,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void showInputFragment(ListItem listItem) {
         Intent intent = new Intent(getActivity(), InputListItemActivity.class);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTS, presenter.getList().getId());
+        intent.putExtra(InputListItemFragment.CURRENT_LISTS, new long[] {presenter.getList().getId()});
         intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, listItem);
         startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
     }
@@ -165,8 +171,45 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     }
 
     @Override
+    public void onItemSaleClicked(View v, ListItemSale sale) {
+        Intent intent = new Intent(getActivity(), ListItemSaleActivity.class);
+        intent.putExtra(ListItemSaleActivity.CURRENT_LISTITEM_SALE, sale);
+        startActivity(intent);
+    }
+
+    @Override
+    public void shareListAsSMS(ShoppingList list) {
+        Intent intent = SharingListBuilderFactory.getBuilder(0).getIntent(list.getName(), list.getCurrency(), list.getItems());
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void shareListAsEmail(ShoppingList list) {
+        Intent intent = SharingListBuilderFactory.getBuilder(1).getIntent(list.getName(), list.getCurrency(), list.getItems());
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void shareListAsText(ShoppingList list) {
+        Intent intent = SharingListBuilderFactory.getBuilder(2).getIntent(list.getName(), list.getCurrency(), list.getItems());
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.string_send_list_with_app)));
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_list, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void showErrorLoadingList() {
-        showError(R.string.error_loading_list, R.drawable.ic_menu_gallery, R.string.button_exit, view -> {
+        showError(R.string.error_loading_list, R.drawable.ic_scream, R.string.button_exit, view -> {
             finish();
         });
     }
@@ -174,13 +217,13 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void showBuyedTotals(int countBuyed, BigDecimal buyed) {
         totalBuyedDesc.setText(getString(R.string.total_buyed_items).replace("count", String.valueOf(countBuyed)));
-        totalBuyed.setText(buyed.toString() + " " + presenter.getCurrency());
+        totalBuyed.setText(DecoratorBigDecimal.decor(buyed) + " " + presenter.getCurrency());
     }
 
     @Override
     public void showTotals(int size, BigDecimal total) {
         totalDesc.setText(getString(R.string.total_items).replace("count", String.valueOf(size)));
-        this.total.setText(total.toString() + " " + presenter.getCurrency());
+        this.total.setText(DecoratorBigDecimal.decor(total) + " " + presenter.getCurrency());
     }
 
     @Override
@@ -194,7 +237,9 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
             menu.findItem(R.id.action_shop).setVisible(true);
             Menu subMenu = menu.findItem(R.id.action_shop).getSubMenu();
             subMenu.clear();
-            shops.add(0, getString(R.string.menu_item_all_shops));
+            if (!shops.contains(getString(R.string.menu_item_all_shops))) {
+                shops.add(0, getString(R.string.menu_item_all_shops));
+            }
             for (String key : shops) {
                 MenuItem item = subMenu.add(R.id.action_shop_group, shops.indexOf(key), shops.indexOf(key), key).setCheckable(true);
                 if (key.equals(filter) || (filter.isEmpty() && shops.indexOf(key) == 0)) {
@@ -207,7 +252,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void showEmptyItems() {
-        showError(R.string.empty_no_listitems, R.drawable.ic_menu_gallery, R.string.button_add, view -> {
+        showError(R.string.empty_no_listitems, R.drawable.ic_cart_minus, R.string.button_add, view -> {
             showInputFragment(null);
         });
     }

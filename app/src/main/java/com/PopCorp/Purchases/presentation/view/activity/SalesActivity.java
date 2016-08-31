@@ -23,15 +23,14 @@ public class SalesActivity extends MvpAppCompatActivity {
         setContentView(R.layout.activity_sales);
 
         Fragment fragment;
-        Bundle args = new Bundle();
-        if (getIntent().getParcelableExtra(CURRENT_SHOP) != null){
-            fragment = new SalesInShopFragment();
-            args.putParcelable(CURRENT_SHOP, getIntent().getParcelableExtra(CURRENT_SHOP));
+        if (getIntent().getParcelableExtra(CURRENT_SHOP) != null) {
+            fragment = SalesInShopFragment.create(getIntent().getParcelableExtra(CURRENT_SHOP));
+        } else if (getIntent().getParcelableExtra(CURRENT_CATEGORY) != null) {
+            fragment = SalesInCategoryFragment.create(getIntent().getParcelableExtra(CURRENT_CATEGORY));
         } else {
-            fragment = new SalesInCategoryFragment();
-            args.putParcelable(CURRENT_CATEGORY, getIntent().getParcelableExtra(CURRENT_CATEGORY));
+            finish();
+            return;
         }
-        fragment.setArguments(args);
         String tag = fragment.getClass().getSimpleName();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

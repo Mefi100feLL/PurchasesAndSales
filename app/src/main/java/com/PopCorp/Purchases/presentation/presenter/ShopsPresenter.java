@@ -5,6 +5,8 @@ import android.view.View;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.model.Shop;
+import com.PopCorp.Purchases.data.utils.AnalitycsManager;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.RegionInteractor;
 import com.PopCorp.Purchases.domain.interactor.ShopsInteractor;
@@ -52,28 +54,33 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(e);
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
+                        loadFromNetwork();
                     }
 
                     @Override
                     public void onNext(List<Shop> shops) {
-                        if (shops.size() != 0) {
+                        if (shops != null && shops.size() != 0) {
                             objects.addAll(shops);
-                            boolean isFavorite = false;
-                            for (Shop shop : shops) {
-                                if (shop.isFavorite()) {
-                                    isFavorite = true;
-                                    currentFilter = ShopsAdapter.FILTER_FAVORITE;
-                                    break;
-                                }
-                            }
+                            boolean isFavorite = findFavoriteShops(shops);
                             getViewState().showData();
                             getViewState().selectSpinner(isFavorite ? 1 : 0);
                         }
                         loadFromNetwork();
                     }
                 });
+    }
+
+    private boolean findFavoriteShops(List<Shop> shops) {
+        boolean result = false;
+        for (Shop shop : shops) {
+            if (shop.isFavorite()) {
+                result = true;
+                currentFilter = ShopsAdapter.FILTER_FAVORITE;
+                break;
+            }
+        }
+        return result;
     }
 
     private void loadFromNetwork() {
@@ -89,10 +96,11 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        getViewState().showSnackBar(e);
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
-                            getViewState().showShopsEmpty();
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
                         }
                     }
 
@@ -101,32 +109,10 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
                         getViewState().refreshing(false);
                         if (shops != null) {
                             if (shops.size() == 0) {
-                                for (Shop shop : objects){
-                                    interactor.remove(shop);
-                                }
-                                objects.clear();
-                                getViewState().showShopsEmpty();
+                                removeAllShops();
                             } else {
-                                ArrayList<Shop> newShops = new ArrayList<>();
-                                for (Shop shop : shops) {
-                                    if (!objects.contains(shop)) {
-                                        newShops.add(shop);
-                                        objects.add(shop);
-                                    } else {
-                                        Shop exist = objects.get(objects.indexOf(shop));
-                                        shop.setFavorite(exist.isFavorite());
-                                        objects.remove(exist);
-                                        objects.add(shop);
-                                    }
-                                }
-                                ListIterator<Shop> iterator = objects.listIterator();
-                                while (iterator.hasNext()){
-                                    Shop shop = iterator.next();
-                                    if (!shops.contains(shop)){
-                                        interactor.remove(shop);
-                                        iterator.remove();
-                                    }
-                                }
+                                ArrayList<Shop> newShops = findNewShops(shops);
+                                removeNotExistsShops(shops);
                                 getViewState().showData();
                                 getViewState().filter(currentFilter);
                                 if (newShops.size() > 1) {
@@ -138,6 +124,41 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
                         }
                     }
                 });
+    }
+
+    private void removeNotExistsShops(List<Shop> shops) {
+        ListIterator<Shop> iterator = objects.listIterator();
+        while (iterator.hasNext()) {
+            Shop shop = iterator.next();
+            if (!shops.contains(shop)) {
+                interactor.remove(shop);
+                iterator.remove();
+            }
+        }
+    }
+
+    private ArrayList<Shop> findNewShops(List<Shop> shops) {
+        ArrayList<Shop> result = new ArrayList<>();
+        for (Shop shop : shops) {
+            if (!objects.contains(shop)) {
+                result.add(shop);
+                objects.add(shop);
+            } else {
+                Shop exist = objects.get(objects.indexOf(shop));
+                shop.setFavorite(exist.isFavorite());
+                objects.remove(exist);
+                objects.add(shop);
+            }
+        }
+        return result;
+    }
+
+    private void removeAllShops() {
+        for (Shop shop : objects) {
+            interactor.remove(shop);
+        }
+        objects.clear();
+        getViewState().showShopsEmpty();
     }
 
     public void onRefresh() {
@@ -156,10 +177,11 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
             }
             getViewState().showData();
             getViewState().filter(currentFilter);
+            selectSpinner(position);
         }
     }
 
-    public void selectSpinner(int position){
+    public void selectSpinner(int position) {
         getViewState().selectSpinner(position);
     }
 
@@ -185,7 +207,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
 
     @Override
     public void onEmpty() {
-        if (!PreferencesManager.getInstance().getRegionId().isEmpty()) { // чтобы не убрать empty с невыбранным регионом
+        if (!isRegionEmpty()) { // чтобы не убрать empty с невыбранным регионом
             if (currentFilter.equals(ShopsAdapter.FILTER_ALL)) {
                 getViewState().showShopsEmpty();
             } else {
@@ -206,7 +228,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
                     @Override
                     public void onError(Throwable e) {
                         getViewState().showSnackBar(e);
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
                     }
 
                     @Override
@@ -214,6 +236,8 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
                         getViewState().showRegionEmpty();
                         if (regions.size() != 0) {
                             getViewState().showSelectingRegions(regions);
+                        } else {
+                            getViewState().showEmptyRegions();
                         }
                     }
                 });

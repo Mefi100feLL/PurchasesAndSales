@@ -90,16 +90,16 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
 
     @Override
     public void showCitiesEmpty() {
-        showError(R.string.empty_no_cities, R.drawable.ic_menu_gallery, R.string.button_update, view -> {
+        showError(R.string.empty_no_cities, R.drawable.ic_skyscraper, R.string.button_update, view -> {
             presenter.update();
         });
     }
 
     @Override
     public void showEmptyForSearch(String searchText) {
-        showError(R.string.empty_search_city, R.drawable.ic_menu_gallery, R.string.button_all_cities, view -> {
+        showError(R.string.empty_search_city, R.drawable.ic_compas, R.string.button_all_cities, view -> {
             presenter.search("");
-            if (searchView!=null){
+            if (searchView != null) {
                 searchView.onActionViewCollapsed();
             }
         });

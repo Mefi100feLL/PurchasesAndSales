@@ -12,10 +12,6 @@ public class SaleActivityPresenter extends MvpPresenter<SaleActivityView> {
     private int currentSaleId;
     private ArrayList<Integer> salesIds = new ArrayList<>();
 
-    public SaleActivityPresenter() {
-
-    }
-
     public void setCurrentId(int id) {
         currentSaleId = id;
     }

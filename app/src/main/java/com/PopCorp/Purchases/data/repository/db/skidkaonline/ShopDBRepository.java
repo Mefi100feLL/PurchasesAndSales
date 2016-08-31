@@ -2,15 +2,13 @@ package com.PopCorp.Purchases.data.repository.db.skidkaonline;
 
 import com.PopCorp.Purchases.data.dao.skidkaonline.ShopDAO;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.repository.skidkaonline.ShopRepository;
 
 import java.util.List;
 
 import rx.Observable;
 
-/**
- * Created by Александр on 06.07.2016.
- */
 public class ShopDBRepository implements ShopRepository {
 
     private ShopDAO dao = new ShopDAO();
@@ -26,5 +24,9 @@ public class ShopDBRepository implements ShopRepository {
 
     public void update(Shop item) {
         dao.updateOrAddToDB(item);
+    }
+
+    public String getForUrl(String shopUrl, int cityId) {
+        return dao.getWithUrl(shopUrl, cityId).getName();
     }
 }

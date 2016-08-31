@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.BackPressedCallback;
-import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SalePresenter;
@@ -21,13 +20,21 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallback, SaleView, SaleParamsProvider, BackPressedCallback {
 
-    public static final String CURRENT_SALE = "current_sale";
+    private static final String CURRENT_SALE = "current_sale";
 
-    @InjectPresenter(factory = SalePresenterFactory.class, presenterId = "SalePresenter")
+    @InjectPresenter(factory = SalePresenterFactory.class, presenterId = SalePresenter.PRESENTER_ID)
     SalePresenter presenter;
 
     private int saleId;
     private boolean showedComments = false;
+
+    public static SaleFragment create(int saleId) {
+        SaleFragment result = new SaleFragment();
+        Bundle args = new Bundle();
+        args.putInt(SaleFragment.CURRENT_SALE, saleId);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,11 +52,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void showFragmentComments(int saleId) {
         showedComments = true;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = new SaleCommentsFragment();
-        Bundle args = new Bundle();
-        args.putInt(CURRENT_SALE, saleId);
-        fragment.setArguments(args);
-        ((SaleChildCallback) fragment).setParent(this);
+        Fragment fragment = SaleCommentsFragment.create(this, saleId);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName() + saleId)
                 .commit();
@@ -59,11 +62,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void showFragmentInfo(int saleId) {
         showedComments = false;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = new SaleInfoFragment();
-        Bundle args = new Bundle();
-        args.putInt(CURRENT_SALE, saleId);
-        fragment.setArguments(args);
-        ((SaleChildCallback) fragment).setParent(this);
+        Fragment fragment = SaleInfoFragment.create(this, saleId);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName() + saleId)
                 .commit();

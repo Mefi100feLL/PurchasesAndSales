@@ -59,6 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(com.PopCorp.Purchases.data.dao.skidkaonline.CategoryDAO.CREATE_TABLE_CATEGORIES);
         db.execSQL(com.PopCorp.Purchases.data.dao.skidkaonline.ShopDAO.CREATE_TABLE_SHOPES);
         db.execSQL(com.PopCorp.Purchases.data.dao.skidkaonline.SaleDAO.CREATE_TABLE_SALES);
+        db.execSQL(com.PopCorp.Purchases.data.dao.skidkaonline.SaleCommentDAO.CREATE_TABLE_SALES_COMMENTS);
 
         //db.execSQL(DB.CREATE_TABLE_SHOP_SALES);
 

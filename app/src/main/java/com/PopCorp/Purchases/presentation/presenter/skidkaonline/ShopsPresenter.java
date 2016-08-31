@@ -4,10 +4,8 @@ import android.view.View;
 
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
-import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.skidkaonline.ShopInteractor;
-import com.PopCorp.Purchases.presentation.view.adapter.ShopsAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.ShopAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.ShopsView;
 import com.arellomobile.mvp.InjectViewState;
@@ -87,10 +85,11 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        getViewState().showSnackBar(e);
                         e.printStackTrace();
                         if (objects.size() == 0) {
-                            getViewState().showShopsEmpty();
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
                         }
                     }
 

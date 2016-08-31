@@ -134,7 +134,7 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
         if (position == 0) {
             currentFilter = "";
         } else {
-            currentFilter = filterCatalogs.get(position - 1);
+            currentFilter = filterCatalogs.get(position);
         }
         getViewState().filter(currentFilter);
     }

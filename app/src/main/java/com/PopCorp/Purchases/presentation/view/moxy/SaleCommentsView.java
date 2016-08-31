@@ -4,6 +4,7 @@ import com.PopCorp.Purchases.presentation.viewstate.strategy.GroupSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
+@StateStrategyType(SkipStrategy.class)
 public interface SaleCommentsView extends SampleDataView {
 
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "commentText")
@@ -19,7 +20,6 @@ public interface SaleCommentsView extends SampleDataView {
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showCommentsEmpty();
 
-    @StateStrategyType(SkipStrategy.class)
     void clearFields();
 
     void showAuthorSaved();

@@ -21,10 +21,13 @@ import android.widget.TextView;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
+import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.InputListItemPresenter;
+import com.PopCorp.Purchases.presentation.view.activity.ListItemSaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemCategoriesAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.InputListItemView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -58,6 +61,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
 
     private ArrayAdapter<String> adapterUnits;
     private ArrayAdapter<String> productsAdapter;
+    private ArrayAdapter<String> adapterShop;
     private Toolbar toolbar;
 
     private View saleLayout;
@@ -205,7 +209,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         shops = new ArrayList<>(PreferencesManager.getInstance().getShops());
         shops.add(0, getString(R.string.string_no_shop));
 
-        ArrayAdapter<String> adapterShop = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, shops);
+        adapterShop = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, shops);
         adapterShop.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         shopSpinner.setAdapter(adapterShop);
         shopSpinner.setSelection(shops.size() - 1);
@@ -245,6 +249,26 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         return adapterUnits.getPosition(edizm);
     }
 
+    private int getPositionForShop(String shop){
+        if (shop == null) {
+            return adapterUnits.getCount() - 1;
+        }
+        if (!shops.contains(shop)) {
+            if (shop.equals("")) {
+                return adapterUnits.getCount() - 1;
+            }
+            shops.add(shop);
+            addNewShopToPrefs(shop);
+        }
+        return adapterShop.getPosition(shop);
+    }
+
+    private void addNewShopToPrefs(String shop) {
+        ArrayList<String> list = new ArrayList<>(PreferencesManager.getInstance().getShops());
+        list.add(shop);
+        PreferencesManager.getInstance().putShopes(list);
+    }
+
     private void addNewEdizmToPrefs(final String newEdizm) {
         List<String> list = new ArrayList<>(PreferencesManager.getInstance().getEdizms());
         list.add(newEdizm);
@@ -259,23 +283,26 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
             unitSpinner.setSelection(getPositionForEdizm(item.getEdizm()));
             coast.setText(item.getCoastString());
             important.setChecked(item.isImportant());
-            if (shops.contains(item.getShop())) {
-                shopSpinner.setSelection(shops.indexOf(item.getShop()));
-            } else {
-                shopSpinner.setSelection(0);
-            }
+            shopSpinner.setSelection(getPositionForShop(item.getShop()));
             if (presenter.getCategories().contains(item.getCategory())) {
                 categorySpinner.setSelection(presenter.getCategories().indexOf(item.getCategory()));
             }
             comment.setText(item.getComment());
             if (item.getSale() != null){
                 saleLayout.setVisibility(View.VISIBLE);
-                ImageLoader.getInstance().displayImage(item.getSale().getImage(), saleImage);
+                ImageLoader.getInstance().displayImage(item.getSale().getImage(), saleImage, UIL.getImageOptions());
                 salePeriod.setText(item.getSale().getPeriodStart() + " - " + item.getSale().getPeriodEnd());
+                saleImage.setOnClickListener(v -> openListItemSale(v, item.getSale()));
             } else {
                 saleLayout.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void openListItemSale(View v, ListItemSale sale) {
+        Intent intent = new Intent(getActivity(), ListItemSaleActivity.class);
+        intent.putExtra(ListItemSaleActivity.CURRENT_LISTITEM_SALE, sale);
+        startActivity(intent);
     }
 
     @Override
@@ -284,11 +311,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         count.setText(product.getCountString());
         unitSpinner.setSelection(getPositionForEdizm(product.getEdizm()));
         coast.setText(product.getCoastString());
-        if (shops.contains(product.getShop())) {
-            shopSpinner.setSelection(shops.indexOf(product.getShop()));
-        } else {
-            shopSpinner.setSelection(0);
-        }
+        shopSpinner.setSelection(getPositionForShop(product.getShop()));
         if (presenter.getCategories().contains(product.getCategory())) {
             categorySpinner.setSelection(presenter.getCategories().indexOf(product.getCategory()));
         }

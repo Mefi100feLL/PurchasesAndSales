@@ -14,17 +14,17 @@ import java.util.List;
 @StateStrategyType(SkipStrategy.class)
 public interface CategoriesView extends SampleDataView {
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void filter(String filter);
-
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showRegionEmpty();
-
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showFavoriteCategoriesEmpty();
-
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showCategoriesEmpty();
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
+    void showEmptyRegions();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void filter(String filter);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void selectSpinner(int position);
@@ -36,4 +36,5 @@ public interface CategoriesView extends SampleDataView {
     void showSnackBarWithNewCategory(Category category, boolean isFilterFavorite);
 
     void openCategory(View v, Category category);
+
 }

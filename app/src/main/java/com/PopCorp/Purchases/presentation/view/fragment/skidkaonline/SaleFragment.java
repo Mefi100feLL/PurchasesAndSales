@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.BackPressedCallback;
-import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SalePresenterFactory;
@@ -45,11 +44,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void showFragmentComments(int saleId) {
         showedComments = true;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = new SaleCommentsFragment();
-        Bundle args = new Bundle();
-        args.putInt(SaleFragment.CURRENT_SALE, saleId);
-        fragment.setArguments(args);
-        ((SaleChildCallback) fragment).setParent(this);
+        Fragment fragment = SaleCommentsFragment.create(this, saleId);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName())
                 .commit();
@@ -59,11 +54,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void showFragmentInfo(int saleId) {
         showedComments = false;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = new SaleInfoFragment();
-        Bundle args = new Bundle();
-        args.putInt(SaleFragment.CURRENT_SALE, saleId);
-        fragment.setArguments(args);
-        ((SaleChildCallback) fragment).setParent(this);
+        Fragment fragment = SaleInfoFragment.create(this, saleId);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName())
                 .commit();

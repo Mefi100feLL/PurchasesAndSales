@@ -25,11 +25,14 @@ import rx.schedulers.Schedulers;
 @InjectViewState
 public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implements RecyclerCallback<SaleComment> {
 
+    public static final String PRESENTER_ID = "SaleCommentsPresenter";
+
     private SaleCommentInteractor interactor = new SaleCommentInteractor();
 
     private int currentSaleId = -1;
 
     private ArrayList<SaleComment> objects = new ArrayList<>();
+
 
     public SaleCommentsPresenter(){
         getViewState().showProgress();
@@ -53,8 +56,12 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        e.printStackTrace();
-                        getViewState().showSnackBar(e);
+                        ErrorManager.printStackTrace(e);
+                        if (objects.size() > 0) {
+                            getViewState().showSnackBar(e);
+                        } else {
+                            getViewState().showError(e);
+                        }
                     }
 
                     @Override
@@ -109,7 +116,7 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     public void onError(Throwable e) {
                         comment.setError(ErrorManager.getErrorResource(e));
                         getViewState().showData();
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
                     }
 
                     @Override
@@ -126,10 +133,6 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                         getViewState().showData();
                     }
                 });
-    }
-
-    public ArrayList<SaleComment> getObjects() {
-        return objects;
     }
 
     public void onRefresh() {
@@ -171,5 +174,9 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
 
     public String getSavedAuthorComment() {
         return PreferencesManager.getInstance().getAuthorCOmment();
+    }
+
+    public ArrayList<SaleComment> getObjects() {
+        return objects;
     }
 }

@@ -4,9 +4,10 @@ import android.view.View;
 
 import com.PopCorp.Purchases.data.callback.AlarmListCallback;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.ListItemCallback;
 import com.PopCorp.Purchases.data.callback.ShareListCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
+import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
@@ -26,7 +27,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implements RecyclerCallback<ListItem>, CreateEditListCallback, ShareListCallback, AlarmListCallback {
+public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implements ListItemCallback, CreateEditListCallback, ShareListCallback, AlarmListCallback {
 
     private ShoppingListInteractor interactor = new ShoppingListInteractor();
     private ListItemInteractor itemsInteractor = new ListItemInteractor();
@@ -36,7 +37,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     private String currentFilter = "";
 
     private ArrayList<String> shops = new ArrayList<>();
-    private final ArrayList<ListItem> selectedItems = new ArrayList<>();
+    private ArrayList<ListItem> selectedItems = new ArrayList<>();
 
     public ShoppingListPresenter() {
         getViewState().showProgress();
@@ -228,6 +229,9 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
         calculateTotals();
         calculateShops();
         closeActionMode();
+        if (getObjects().size() == 0){
+            getViewState().showEmptyItems();
+        }
     }
 
     public ArrayList<ListItem> getSelectedItems() {
@@ -250,6 +254,9 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
             calculateShops();
             calculateTotals();
             getViewState().filter(currentFilter);
+            if (getObjects().size() == 0){
+                getViewState().showEmptyItems();
+            }
         } else {
             getViewState().showNothingRemoving();
         }
@@ -277,17 +284,17 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
 
     @Override
     public void shareAsSMS(ShoppingList list) {
-
+        getViewState().shareListAsSMS(list);
     }
 
     @Override
     public void shareAsEmail(ShoppingList list) {
-
+        getViewState().shareListAsEmail(list);
     }
 
     @Override
     public void shareAsText(ShoppingList list) {
-
+        getViewState().shareListAsText(list);
     }
 
     @Override
@@ -347,5 +354,10 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
                 getViewState().showEmptyItems();
             }
         }
+    }
+
+    @Override
+    public void onItemSaleClicked(View v, ListItemSale sale) {
+        getViewState().onItemSaleClicked(v, sale);
     }
 }

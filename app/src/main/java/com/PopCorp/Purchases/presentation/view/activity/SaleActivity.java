@@ -1,20 +1,13 @@
 package com.PopCorp.Purchases.presentation.view.activity;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.BackPressedCallback;
-import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.ZoomOutPageTransformer;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.presenter.SaleActivityPresenter;
@@ -28,12 +21,13 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
     public static final String CURRENT_SALE = "current_sale";
     public static final String ARRAY_SALES = "array_sales";
 
+    public static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
+
     @InjectPresenter
     SaleActivityPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
 
@@ -41,6 +35,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
                 .withActivity(this)
                 .withTranslucentStatusBarProgrammatically(true)
                 .withTransparentStatusBar(true)
+                .withStatusBarColorRes(android.R.color.transparent)
                 .build();
 
         presenter.setCurrentId(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)));
@@ -69,11 +64,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         @Override
         public Fragment getItem(int position) {
-            SaleFragment fragment = new SaleFragment();
-            Bundle args = new Bundle();
-            args.putInt(SaleFragment.CURRENT_SALE, presenter.getSalesIds().get(position));
-            fragment.setArguments(args);
-            return fragment;
+            return SaleFragment.create(presenter.getSalesIds().get(position));
         }
 
         @Override
@@ -83,10 +74,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         @Override
         public void onPageSelected(int position) {
-            /*if (Build.VERSION.SDK_INT >= 21) {
-                image.setTransitionName(String.valueOf(presenter.getSalesIds().get(position)));
-                ImageLoader.getInstance().displayImage(sales.get(position).getImageUrl(), image, UIL.getScaleImageOptions());
-            }*/
+
         }
 
         @Override

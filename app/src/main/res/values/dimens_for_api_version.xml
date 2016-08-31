@@ -6,4 +6,8 @@
     <dimen name="margin_bottom_fab">0dp</dimen>
     <dimen name="margin_right_fab">0dp</dimen>
     <dimen name="margin_top_fab">-44dp</dimen>
+
+    <dimen name="toolbar_background_gradient_height">56dp</dimen>
+    <dimen name="toolbar_padding_top">0dp</dimen>
+    <dimen name="statusbar_height">0dp</dimen>
 </resources>

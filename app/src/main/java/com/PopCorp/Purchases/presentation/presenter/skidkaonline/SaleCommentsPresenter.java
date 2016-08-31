@@ -56,9 +56,10 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                         getViewState().refreshing(false);
                         e.printStackTrace();
                         if (objects.size() == 0) {
-                            getViewState().showCommentsEmpty();
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
                         }
-                        getViewState().showSnackBar(e);
                     }
 
                     @Override
@@ -164,4 +165,12 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
 
     }
 
+    public void saveAuthor(String author) {
+        PreferencesManager.getInstance().putAuthorComment(author);
+        getViewState().showAuthorSaved();
+    }
+
+    public String getSavedAuthorComment() {
+        return PreferencesManager.getInstance().getAuthorCOmment();
+    }
 }

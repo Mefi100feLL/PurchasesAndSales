@@ -196,7 +196,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             getActivity().finish();
         }
         for (String filterItem : arraySizesTable) {
@@ -212,11 +212,10 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public void showErrorLoadingSales(Throwable e) {
-        showError(getString(R.string.error_when_loading_sales) + "\n" + getString(ErrorManager.getErrorResource(e)), R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.tryAgain();
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), ErrorManager.getErrorButtonTextResource(e), view -> {
+            presenter.onRefresh();
         });
     }
-
 
     @Override
     public void selectSpinner(int filterPosition) {
@@ -229,7 +228,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         intent.putExtra(SaleActivity.CURRENT_SALE, String.valueOf(item.getId()));
         ArrayList<Sale> sales = adapter.getSales();
         String[] salesIds = new String[sales.size()];
-        for (int i=0; i < sales.size(); i++){
+        for (int i = 0; i < sales.size(); i++) {
             salesIds[i] = String.valueOf(sales.get(i).getId());
         }
         intent.putExtra(SaleActivity.ARRAY_SALES, salesIds);
@@ -238,8 +237,8 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.tryAgain();
+        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
+            getActivity().onBackPressed();
         });
     }
 

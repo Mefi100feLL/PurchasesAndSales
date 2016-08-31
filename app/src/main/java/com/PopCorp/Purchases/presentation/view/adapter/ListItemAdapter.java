@@ -15,12 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.callback.ListItemCallback;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
+import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
+import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -28,7 +33,7 @@ import java.util.List;
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHolder> implements Filterable {
 
     private Context context;
-    private RecyclerCallback<ListItem> callback;
+    private ListItemCallback callback;
     private Comparator<ListItemDecorator> comparator;
 
     protected SortedList<ListItemDecorator> publishItems;
@@ -36,7 +41,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
     private List<ListItem> selectedItems;
     private String currency;
 
-    public ListItemAdapter(Context context, RecyclerCallback<ListItem> callback, List<ListItem> objects, List<ListItem> selectedItems, Comparator<ListItemDecorator> saleComparator, String currency) {
+    public ListItemAdapter(Context context, ListItemCallback callback, List<ListItem> objects, List<ListItem> selectedItems, Comparator<ListItemDecorator> saleComparator, String currency) {
         this.context = context;
         this.callback = callback;
         this.objects = objects;
@@ -188,7 +193,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         holder.totalOne.setTextSize(TypedValue.COMPLEX_UNIT_SP, smallTextSize);
 
         String mainInfo = context.getString(R.string.list_item_main_info).replace("count", item.getCountString()).replace("unit", item.getEdizm()).replace("coast", item.getCoastString()).replace("currency", currency);
-        String total = item.getCount().multiply(item.getCoast()).toString();
+        String total = DecoratorBigDecimal.decor(item.getCount().multiply(item.getCoast()));
 
         holder.comment.setVisibility(item.getComment().isEmpty() && item.getShop().isEmpty() ? View.GONE : View.VISIBLE);
         holder.totalTwo.setVisibility(item.getComment().isEmpty() && item.getShop().isEmpty() ? View.GONE : View.VISIBLE);
@@ -225,11 +230,15 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         }
 
         if (item.getSale() != null){
-            ImageLoader.getInstance().displayImage(item.getSale().getImage(), holder.image);
+            ImageLoader.getInstance().displayImage(item.getSale().getImage(), holder.image, UIL.getImageOptions());
+            holder.image.setTag(item.getSale());
+            holder.image.setOnClickListener(v -> callback.onItemSaleClicked(v, (ListItemSale) v.getTag()));
+            holder.image.setBackgroundResource(android.R.color.transparent);
         } else {
             ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
             coloredCircle.getPaint().setColor(item.getCategory().getColor());
             holder.image.setBackgroundDrawable(coloredCircle);
+            holder.image.setImageResource(android.R.color.transparent);
         }
 
         if (selectedItems.contains(item)) {

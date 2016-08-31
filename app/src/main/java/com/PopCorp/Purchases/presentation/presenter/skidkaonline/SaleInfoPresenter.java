@@ -12,7 +12,9 @@ import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
+import com.PopCorp.Purchases.domain.interactor.ShopsInteractor;
 import com.PopCorp.Purchases.domain.interactor.skidkaonline.SaleInteractor;
+import com.PopCorp.Purchases.domain.interactor.skidkaonline.ShopInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleInfoView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -153,6 +155,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
         if (shop != null) {
             shopName = shop.getName();
         }
+        String comment = format.format(new Date(sale.getPeriodStart())) + " - " + format.format(new Date(sale.getPeriodEnd()));
 
         ListItem item = new ListItem(
                 -1,
@@ -163,7 +166,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
                 coast,
                 listItemCategory,
                 shopName,
-                "",
+                comment,
                 false,
                 false,
                 new ListItemSale(-1, sale.getImageBig(), format.format(new Date(sale.getPeriodStart())), format.format(new Date(sale.getPeriodEnd())))
@@ -173,5 +176,9 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             ids[i] = selectedLists.get(i).getId();
         }
         getViewState().openInputListItemFragment(item, ids);
+    }
+
+    public String getShopNameForUrl(String shopUrl) {
+        return new ShopInteractor().getForUrl(shopUrl, Integer.parseInt(PreferencesManager.getInstance().getCity()));
     }
 }

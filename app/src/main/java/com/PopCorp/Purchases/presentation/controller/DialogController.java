@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -192,7 +193,11 @@ public class DialogController {
                 inputLayout.setError(activity.getString(R.string.error_enter_list_name));
             }
         });
-        builder.onNegative((dialog, which) -> dialog.dismiss());
+        builder.onNegative((dialog, which) -> {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edittextForName.getWindowToken(), 0);
+            dialog.dismiss();
+        });
 
         final Dialog dialog = builder.build();
 
@@ -203,6 +208,8 @@ public class DialogController {
         edittextForName.setOnEditorActionListener((v, actionId, event) -> {
             if (checkNameAndCreateNewList(edittextForName.getText().toString(), (String) spinnerForCurrency.getSelectedItem(), callback)) {
                 dialog.dismiss();
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(edittextForName.getWindowToken(), 0);
             } else{
                 inputLayout.setError(activity.getString(R.string.error_enter_list_name));
             }

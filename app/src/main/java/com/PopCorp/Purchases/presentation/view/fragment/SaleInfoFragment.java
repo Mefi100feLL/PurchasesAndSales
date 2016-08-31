@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,12 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
-import com.PopCorp.Purchases.data.model.SameSale;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.UIL;
@@ -34,6 +33,7 @@ import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
 import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
+import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SameSaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SameSaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleInfoView;
@@ -49,16 +49,16 @@ import java.util.List;
 import java.util.Locale;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
-        implements RecyclerCallback<SameSale>,
+        implements
         Toolbar.OnMenuItemClickListener,
         SaleChildCallback,
         View.OnClickListener,
         SaleInfoView,
         SaleParamsProvider {
 
-    private static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
+    private static final String CURRENT_SALE = "current_sale";
 
-    @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = "SaleInfoPresenter")
+    @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = SaleInfoPresenter.PRESENTER_ID)
     SaleInfoPresenter presenter;
 
     private int saleId;
@@ -85,12 +85,21 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private View sameSalesLayout;
     private RecyclerView sameSalesRecycler;
 
-    private SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
     private FloatingActionButton fab;
+
+
+    public static Fragment create(SaleMainCallback parent, int saleId) {
+        SaleInfoFragment result = new SaleInfoFragment();
+        Bundle args = new Bundle();
+        args.putInt(CURRENT_SALE, saleId);
+        result.setArguments(args);
+        result.setParent(parent);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        saleId = getArguments().getInt(SaleFragment.CURRENT_SALE);
+        saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
     }
@@ -193,6 +202,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         if (sale.getPeriodStart() == 0 && sale.getPeriodEnd() == 0) {
             periodLayout.setVisibility(View.GONE);
         } else {
+            SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
             periodLayout.setVisibility(View.VISIBLE);
             String periodString = format.format(new Date(sale.getPeriodStart()));
             if (sale.getPeriodStart() != sale.getPeriodEnd()) {
@@ -201,6 +211,16 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             period.setText(periodString);
         }
         showSameSales(sale);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+        Snackbar.make(fab, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSaleEmpty() {
+
     }
 
     @Override
@@ -244,13 +264,23 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         Intent intent = new Intent(getActivity(), InputListItemActivity.class);
         intent.putExtra(InputListItemFragment.CURRENT_LISTS, listsIds);
         intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, item);
-        startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
+        startActivityForResult(intent, SaleActivity.REQUEST_CODE_FOR_INPUT_LISTITEM);
+    }
+
+    @Override
+    public void showErrorLoadingLists(Throwable e) {
+
+    }
+
+    @Override
+    public void showItemAdded() {
+        Snackbar.make(fab, R.string.notification_sale_sended_in_lists, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
+            if (requestCode == SaleActivity.REQUEST_CODE_FOR_INPUT_LISTITEM) {
                 ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
                 if (item != null) {
                     presenter.onItemsRerurned(item);
@@ -285,7 +315,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             sameSalesRecycler.setLayoutManager(layoutManager);
             RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
             sameSalesRecycler.setItemAnimator(itemAnimator);
-            SameSaleAdapter sameSaleAdapter = new SameSaleAdapter(getActivity(), this, sale.getSameSales());
+            SameSaleAdapter sameSaleAdapter = new SameSaleAdapter(getActivity(), presenter, sale.getSameSales());
             sameSalesRecycler.setAdapter(sameSaleAdapter);
 
             sameSalesLayout.setVisibility(View.VISIBLE);
@@ -294,35 +324,11 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         }
     }
 
+    @Override
     public void openSameSale(View view, int saleId) {
         Intent intent = new Intent(getActivity(), SameSaleActivity.class);
         intent.putExtra(SameSaleActivity.CURRENT_SALE, String.valueOf(saleId));
         startActivity(intent);
-    }
-
-    @Override
-    public void onItemClicked(View view, SameSale item) {
-        openSameSale(view, item.getSaleId());
-    }
-
-    @Override
-    public void onItemLongClicked(View view, SameSale item) {
-
-    }
-
-    @Override
-    public void onEmpty() {
-
-    }
-
-    @Override
-    public void onEmpty(int stringRes, int drawableRes, int buttonRes, View.OnClickListener listener) {
-
-    }
-
-    @Override
-    public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
-
     }
 
     @Override
@@ -342,7 +348,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     private void shareSale(Sale sale) {
-        SimpleDateFormat parser = new SimpleDateFormat("dd.MM.yyyy", new Locale("ru"));
         SimpleDateFormat format = new SimpleDateFormat("d MMMM", new Locale("ru"));
         File image = ImageLoader.getInstance().getDiskCache().get(sale.getImage());
         if (image == null) {

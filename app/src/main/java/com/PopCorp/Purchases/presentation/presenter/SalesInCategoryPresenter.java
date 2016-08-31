@@ -27,9 +27,9 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
     private ShopsInteractor shopsInteractor = new ShopsInteractor();
     private SaleInteractor interactor = new SaleInteractor();
 
-    private ArrayList<Sale> objects = new ArrayList<>();
-
     private Category currentCategory;
+
+    private ArrayList<Sale> objects = new ArrayList<>();
 
     private ArrayList<Shop> favoriteShops = new ArrayList<>();
     private ArrayList<Shop> allShops = new ArrayList<>();
@@ -40,48 +40,6 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
     public SalesInCategoryPresenter() {
         getViewState().showProgress();
-    }
-
-    public void loadData() {
-        int regionId = Integer.valueOf(PreferencesManager.getInstance().getRegionId());
-        int[] shops = new int[favoriteShops.size()];
-        for (int i = 0; i < favoriteShops.size(); i++) {
-            shops[i] = favoriteShops.get(i).getId();
-        }
-        int[] categories = new int[]{currentCategory.getId()};
-        int[] types = new int[]{currentCategory.getType()};
-        interactor.getData(regionId, shops, categories, types)
-                .subscribe(new Observer<List<Sale>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getViewState().refreshing(false);
-                        e.printStackTrace();
-                        if (objects.size() == 0){
-                            getViewState().showErrorLoadingSales(e);
-                        } else{
-                            getViewState().showSnackBar(e);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(List<Sale> sales) {
-                        getViewState().refreshing(false);
-                        if (sales.size() == 0) {
-                            getViewState().showSalesEmpty();
-                        } else {
-                            objects.clear();
-                            objects.addAll(sales);
-                            initFilters();
-                            getViewState().showData();
-                            getViewState().filter(currentFilter);
-                        }
-                    }
-                });
     }
 
     public void setCurrentCategory(Category currentCategory) {
@@ -101,9 +59,12 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(e);
-                        e.printStackTrace();
-                        getViewState().showShopsEmpty();
+                        ErrorManager.printStackTrace(e);
+                        if (allShops.size() == 0) {
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
+                        }
                     }
 
                     @Override
@@ -127,6 +88,70 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                         }
                     }
                 });
+    }
+
+    public void loadData() {
+        int regionId = Integer.valueOf(PreferencesManager.getInstance().getRegionId());
+        int[] shops = new int[favoriteShops.size()];
+        for (int i = 0; i < favoriteShops.size(); i++) {
+            shops[i] = favoriteShops.get(i).getId();
+        }
+        int[] categories = new int[]{currentCategory.getId()};
+        int[] types = new int[]{currentCategory.getType()};
+        interactor.getData(regionId, shops, categories, types)
+                .subscribe(new Observer<List<Sale>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getViewState().refreshing(false);
+                        ErrorManager.printStackTrace(e);
+                        if (objects.size() == 0) {
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(List<Sale> sales) {
+                        getViewState().refreshing(false);
+                        if (sales.size() == 0) {
+                            getViewState().showSalesEmpty();
+                        } else {
+                            objects.clear();
+                            objects.addAll(sales);
+                            initFilters();
+                            getViewState().showData();
+                            getViewState().filter(currentFilter);
+                        }
+                    }
+                });
+    }
+
+    private void initFilters() {
+        boolean added = false;
+        for (Sale sale : objects) {
+            if (!filterShops.contains(sale.getShop())) {
+                filterShops.add(sale.getShop());
+                added = true;
+            }
+        }
+        Collections.sort(filterShops, new ShopComparator());
+        if (added && filterPosition != 0){
+            for (Shop shop : filterShops){
+                if (shop.getName().equals(currentFilter)){
+                    filterPosition = filterShops.indexOf(shop) + 1;
+                }
+            }
+        }
+        if (filterShops.size() > 1) {
+            getViewState().showSpinner();
+            getViewState().selectSpinner(filterPosition);
+        }
     }
 
     public void onRefresh() {
@@ -174,28 +199,6 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
     @Override
     public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
 
-    }
-
-    private void initFilters() {
-        boolean added = false;
-        for (Sale sale : objects) {
-            if (!filterShops.contains(sale.getShop())) {
-                filterShops.add(sale.getShop());
-                added = true;
-            }
-        }
-        Collections.sort(filterShops, new ShopComparator());
-        if (added && filterPosition != 0){
-            for (Shop shop : filterShops){
-                if (shop.getName().equals(currentFilter)){
-                    filterPosition = filterShops.indexOf(shop) + 1;
-                }
-            }
-        }
-        if (filterShops.size() > 1) {
-            getViewState().showSpinner();
-            getViewState().selectSpinner(filterPosition);
-        }
     }
 
     public ArrayList<String> getFilterStrings() {

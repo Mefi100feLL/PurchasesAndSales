@@ -7,6 +7,8 @@ import com.arellomobile.mvp.MvpPresenter;
 @InjectViewState
 public class SalePresenter extends MvpPresenter<SaleView> {
 
+    public static final String PRESENTER_ID = "SalePresenter";
+
     private int currentSaleId = -1;
 
     public void setSale(int saleId) {

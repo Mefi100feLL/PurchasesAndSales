@@ -1,15 +1,19 @@
 package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -20,6 +24,7 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleInfoPresenterFactory;
@@ -34,15 +39,16 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
         implements Toolbar.OnMenuItemClickListener,
@@ -50,6 +56,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         View.OnClickListener,
         SaleInfoView,
         SaleParamsProvider {
+
+    public static final String CURRENT_SALE = "current_sale";
 
     private static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
 
@@ -63,20 +71,18 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private CircularProgressView progressView;
     private View progressLayout;
     private SubsamplingScaleImageView image;
-    private ImageView comments;
-    private ImageView sendToList;
-    private ImageView cropImage;
-
-    ImageLoader imageLoader = ImageLoader.getInstance();
-    DisplayImageOptions options = new DisplayImageOptions.Builder()
-            .imageScaleType(ImageScaleType.EXACTLY)
-            .cacheOnDisk(true)
-            .considerExifParams(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .build();
 
     private Toolbar toolBar;
 
+
+    public static Fragment create(SaleMainCallback parent, int saleId) {
+        SaleInfoFragment result = new SaleInfoFragment();
+        Bundle args = new Bundle();
+        args.putInt(CURRENT_SALE, saleId);
+        result.setArguments(args);
+        result.setParent(parent);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,9 +104,9 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
-        comments = (ImageView) rootView.findViewById(R.id.comments);
-        sendToList = (ImageView) rootView.findViewById(R.id.send_to_list);
-        cropImage = (ImageView) rootView.findViewById(R.id.crop);
+        ImageView comments = (ImageView) rootView.findViewById(R.id.comments);
+        ImageView sendToList = (ImageView) rootView.findViewById(R.id.send_to_list);
+        ImageView cropImage = (ImageView) rootView.findViewById(R.id.crop);
 
         comments.setOnClickListener(view -> parent.showComments());
         sendToList.setOnClickListener(view -> presenter.loadShoppingLists());
@@ -113,11 +119,18 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public void onResume() {
         super.onResume();
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(image.getWindowToken(), 0);
     }
 
     private void openCropActivity() {
         Intent intent = new Intent(getActivity(), CropActivity.class);
-        intent.putExtra(CropActivity.CURRENT_FILE_NAME, ImageLoader.getInstance().getDiskCache().get(presenter.getSale().getImageBig()).getAbsolutePath());
+        intent.putExtra(CropActivity.CURRENT_SALE, presenter.getSale().getId());
+        intent.putExtra(CropActivity.CURRENT_FILE_PATH, ImageLoader.getInstance().getDiskCache().get(presenter.getSale().getImageBig()).getAbsolutePath());
         startActivity(intent);
     }
 
@@ -128,7 +141,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_share:
                 shareSale(presenter.getSale());
                 break;
@@ -143,7 +156,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     private void shareSale(Sale sale) {
-        /*SimpleDateFormat parser = new SimpleDateFormat("dd.MM.yyyy", new Locale("ru"));
         SimpleDateFormat format = new SimpleDateFormat("d MMMM", new Locale("ru"));
         File image = ImageLoader.getInstance().getDiskCache().get(sale.getImageBig());
         if (image == null) {
@@ -153,23 +165,10 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         String string = getString(R.string.string_for_share_sale_skidkaonline);
-        string = string.replace("shop", sale.getsh);
-        String periodBegin;
-        try {
-            periodBegin = format.format(parser.parse(sale.getPeriodStart()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            periodBegin = sale.getPeriodStart();
-        }
-        String periodFinish;
-        try {
-            periodFinish = format.format(parser.parse(sale.getPeriodEnd()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            periodFinish = sale.getPeriodEnd();
-        }
+        string = string.replace("shop", presenter.getShopNameForUrl(sale.getShopUrl()));
+        String periodBegin = format.format(new Date(sale.getPeriodStart()));
+        String periodFinish = format.format(new Date(sale.getPeriodEnd()));
         string = string.replace("period", periodBegin.equals(periodFinish) ? periodBegin : "c " + periodBegin + " по " + periodFinish);
-        string = string.replace("coast", sale.getCoast());
 
         shareIntent.putExtra(Intent.EXTRA_TEXT, string);
 
@@ -178,9 +177,9 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.string_send_sale_with_app)));
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_sale, Toast.LENGTH_SHORT).show();
-        }*/
+        }
     }
 
     @Override
@@ -194,7 +193,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     private void loadBigImage(Sale sale) {
-        imageLoader.loadImage(sale.getImageBig(), null, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().loadImage(sale.getImageBig(), null, UIL.getScaleImageOptions(), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
                 progressLayout.setVisibility(View.VISIBLE);
@@ -207,7 +206,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
             @Override
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                File file = imageLoader.getDiskCache().get(sale.getImageBig());
+                File file = ImageLoader.getInstance().getDiskCache().get(sale.getImageBig());
                 if (file != null) {
                     image.setImage(ImageSource.uri(file.getAbsolutePath()));
                 }
@@ -226,12 +225,12 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         image.setMaxScale(getResources().getDimension(R.dimen.image_maximum_scale));
 
-        File smallFile = imageLoader.getDiskCache().get(sale.getImageSmall());
+        File smallFile = ImageLoader.getInstance().getDiskCache().get(sale.getImageSmall());
         if (smallFile != null) {
             image.setImage(ImageSource.uri(smallFile.getAbsolutePath()));
             loadBigImage(sale);
         } else {
-            imageLoader.loadImage(sale.getImageSmall(), null, options, new ImageLoadingListener() {
+            ImageLoader.getInstance().loadImage(sale.getImageSmall(), null, UIL.getScaleImageOptions(), new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String s, View view) {
                     progressLayout.setVisibility(View.VISIBLE);
@@ -244,7 +243,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
                 @Override
                 public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                    File smallFile = imageLoader.getDiskCache().get(sale.getImageSmall());
+                    File smallFile = ImageLoader.getInstance().getDiskCache().get(sale.getImageSmall());
                     if (smallFile != null) {
                         image.setImage(ImageSource.uri(smallFile.getAbsolutePath()));
                     }

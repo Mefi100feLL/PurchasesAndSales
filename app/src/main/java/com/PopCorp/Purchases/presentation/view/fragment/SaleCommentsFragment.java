@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -40,12 +41,15 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.mikepenz.materialdrawer.util.KeyboardUtil;
 
 public class SaleCommentsFragment extends MvpAppCompatFragment
-        implements View.OnClickListener,
+        implements
+        View.OnClickListener,
         SaleChildCallback,
         SaleCommentsView,
         SaleParamsProvider {
 
-    @InjectPresenter(factory = SaleCommentsPresenterFactory.class, presenterId = "SaleCommentsPresenter")
+    private static final String CURRENT_SALE = "current_sale";
+
+    @InjectPresenter(factory = SaleCommentsPresenterFactory.class, presenterId = SaleCommentsPresenter.PRESENTER_ID)
     SaleCommentsPresenter presenter;
 
     private int saleId;
@@ -53,11 +57,12 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     private SaleMainCallback parent;
 
     private EditText commentText;
-    private Button commentAuthorSave;
     private EditText commentAuthor;
     private View commentTopStroke;
     private TextInputLayout commentAuthorLayout;
     private TextInputLayout commentTextLayout;
+    private Toolbar toolBar;
+    private View snackBarLayout;
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefresh;
@@ -66,11 +71,20 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
     private SaleCommentAdapter adapter;
     private KeyboardUtil keyboardUtil;
-    private Toolbar toolBar;
+
+
+    public static SaleCommentsFragment create(SaleMainCallback parent, int saleId){
+        SaleCommentsFragment result = new SaleCommentsFragment();
+        Bundle args = new Bundle();
+        args.putInt(CURRENT_SALE, saleId);
+        result.setArguments(args);
+        result.setParent(parent);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        saleId = getArguments().getInt(SaleFragment.CURRENT_SALE);
+        saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
     }
@@ -80,7 +94,6 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         View rootView = inflater.inflate(R.layout.fragment_sale_comments, container, false);
 
         toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolBar.setTitle(getString(R.string.comments));
         toolBar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolBar.setNavigationOnClickListener(this);
 
@@ -88,10 +101,11 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         progressBar = rootView.findViewById(R.id.progress);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        snackBarLayout = rootView.findViewById(R.id.snackbar_layout);
 
         commentAuthor = (EditText) rootView.findViewById(R.id.comment_author);
         commentAuthorLayout = (TextInputLayout) rootView.findViewById(R.id.comment_author_layout);
-        commentAuthorSave = (Button) rootView.findViewById(R.id.comment_save_author);
+        Button commentAuthorSave = (Button) rootView.findViewById(R.id.comment_save_author);
         commentText = (EditText) rootView.findViewById(R.id.comment_text);
         commentTextLayout = (TextInputLayout) rootView.findViewById(R.id.comment_text_layout);
         ImageView commentSend = (ImageView) rootView.findViewById(R.id.comment_send);
@@ -117,14 +131,16 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
             }
         });
-        keyboardUtil = new KeyboardUtil(getActivity(), (View) commentText.getParent());
-        commentText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                keyboardUtil.enable();
-            } else {
-                keyboardUtil.disable();
-            }
-        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            keyboardUtil = new KeyboardUtil(getActivity(), (View) commentText.getParent());
+            commentText.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) {
+                    keyboardUtil.enable();
+                } else {
+                    keyboardUtil.disable();
+                }
+            });
+        }
         commentAuthor.setText(presenter.getSavedAuthorComment());
         commentSend.setBackgroundDrawable(createOvalSelector(ThemeManager.getInstance().getAccentColor()));
         commentSend.setOnClickListener(v -> presenter.sendComment(commentAuthor.getText().toString(), commentText.getText().toString()));
@@ -154,12 +170,18 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     @Override
     public void onResume() {
         super.onResume();
+        toolBar.setTitle(getString(R.string.comments));
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(commentText.getWindowToken(), 0);
+    }
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     public static Drawable createOvalSelector(int color) {
@@ -214,9 +236,14 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
     @Override
     public void showCommentsEmpty() {
-        showError(R.string.empty_no_comments, R.drawable.ic_menu_gallery, R.string.button_back_to_sale, view -> {
-            onClick(null);
+        showError(R.string.empty_no_comments, R.drawable.ic_owl, R.string.button_add, view -> {
+            commentText.requestFocus();
+            showKeyboard();
         });
+    }
+
+    private void backToSale() {
+        onClick(null);
     }
 
     @Override
@@ -227,7 +254,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
     @Override
     public void showAuthorSaved() {
-        Snackbar.make(recyclerView, R.string.notification_author_saved, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(snackBarLayout, R.string.notification_author_saved, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -257,7 +284,9 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
     @Override
     public void showError(Throwable e) {
-
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_back_to_sale, view -> {
+            backToSale();
+        });
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.PopCorp.Purchases.data.utils;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 
+import com.PopCorp.Purchases.BuildConfig;
 import com.PopCorp.Purchases.R;
 
 import java.net.ConnectException;
@@ -12,6 +13,12 @@ import java.net.UnknownHostException;
 import retrofit2.adapter.rxjava.HttpException;
 
 public class ErrorManager {
+
+    public static void printStackTrace(Throwable e){
+        if (BuildConfig.DEBUG){
+            e.printStackTrace();
+        }
+    }
 
     public static String getErrorText(Throwable e, Context context) {
         String result;
@@ -48,13 +55,13 @@ public class ErrorManager {
     public static int getErrorImage(Throwable e) {
         int result = R.drawable.ic_menu_gallery;//default error image
         if (e instanceof HttpException) {
-            result = R.drawable.ic_menu_gallery;
+            result = R.drawable.ic_mug;
         } else if (e instanceof UnknownHostException) {
-            result = R.drawable.ic_menu_gallery;
+            result = R.drawable.ic_cloud_error;
         } else if (e instanceof SocketTimeoutException) {
-            result = R.drawable.ic_menu_gallery;
+            result = R.drawable.ic_clock;
         } else if (e instanceof ConnectException) {
-            result = R.drawable.ic_menu_gallery;
+            result = R.drawable.ic_wifi_empty;
         }
         return result;
     }

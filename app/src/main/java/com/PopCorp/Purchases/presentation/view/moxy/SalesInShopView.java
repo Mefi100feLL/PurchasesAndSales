@@ -7,6 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 import java.util.ArrayList;
 
+@StateStrategyType(SkipStrategy.class)
 public interface SalesInShopView extends SalesView {
 
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
@@ -15,7 +16,5 @@ public interface SalesInShopView extends SalesView {
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showFavoriteCategoriesEmpty();
 
-    @StateStrategyType(SkipStrategy.class)
     void showCategoriesForSelectingFavorites(ArrayList<Category> categories);
-
 }

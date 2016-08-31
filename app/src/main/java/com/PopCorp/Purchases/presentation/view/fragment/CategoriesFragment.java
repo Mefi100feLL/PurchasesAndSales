@@ -139,7 +139,9 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
 
     @Override
     public void showError(Throwable e) {
-
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgainLoadShops();
+        });
     }
 
     @Override
@@ -196,22 +198,29 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
 
     @Override
     public void showRegionEmpty() {
-        showError(R.string.empty_categories_select_region, R.drawable.ic_menu_gallery, R.string.button_select_region, v -> {
+        showError(R.string.empty_categories_select_region, R.drawable.ic_globe, R.string.button_select_region, v -> {
             presenter.loadRegions();
         });
     }
 
     @Override
     public void showFavoriteCategoriesEmpty() {
-        showError(R.string.empty_no_favorite_categories, R.drawable.ic_menu_gallery, R.string.button_show_all_categories, v -> {
+        showError(R.string.empty_no_favorite_categories, R.drawable.ic_file_favorite, R.string.button_show_all_categories, v -> {
             spinner.setSelection(0);
         });
     }
 
     @Override
     public void showCategoriesEmpty() {
-        showError(R.string.empty_no_categgories, R.drawable.ic_menu_gallery, R.string.button_update, v -> {
+        showError(R.string.empty_no_categgories, R.drawable.ic_tag, R.string.button_update, v -> {
             presenter.tryAgainLoadShops();
+        });
+    }
+
+    @Override
+    public void showEmptyRegions() {
+        showError(R.string.empty_no_regions, R.drawable.ic_globe, R.string.button_try_again, view -> {
+            presenter.loadRegions();
         });
     }
 

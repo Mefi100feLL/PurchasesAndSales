@@ -21,8 +21,8 @@
     <string name="empty_select_city">Не выбран город.\nВыберите город для загрузки магазинов</string>
     <string name="empty_no_sales_in_shop">Нет акций\nВозможно в магазине в данный момент не проводятся акции или они пока не появились на сайте\nПопробуйте посмотреть позже</string>
     <string name="empty_no_shopping_lists">Нет списков покупок</string>
-    <string name="empty_no_shops">Нет магазинов\nНе получилось загрузить магазины. То ли на сервере проблемы, то ли у Вас интернет пошаливает.\nПопробуйте позже!</string>
-    <string name="empty_no_categgories">Нет категорий\nНе получилось загрузить категории. То ли на сервере проблемы, то ли у Вас интернет пошаливает.\nПопробуйте позже!</string>
+    <string name="empty_no_shops">Нет магазинов\nНе понимаю, как такое произошло...\nПопробуйте еще раз или позже!</string>
+    <string name="empty_no_categgories">Нет категорий\nОчень странно... Постараюсь решить эту проблему\nПопробуйте еще раз или позже!</string>
     <string name="empty_no_favorite_categories_in_shop">Нет избранных категорий\nВыберите категории, для которых загружать акции</string>
     <string name="empty_no_favorite_shops_in_category">Нет избранных магазинов\nВыберите магазины, для которых загружать акции</string>
     <string name="empty_no_sales_in_category">Нет акций\nВозможно в магазинах в данный момент не проводятся акции данной категории или они пока не появились на сайте\nПопробуйте посмотреть позже</string>
@@ -31,7 +31,7 @@
     <string name="empty_no_finded_products">Нет товаров по запросу \"query\"</string>
     <string name="empty_no_listitems">Нет товаров в списке\nТовар можно добавить вручную или выбрать несколько из списка</string>
     <string name="empty_no_lists">Нет списков покупок\nСоздайте новый список, чтобы ничего не забыть купить</string>
-    <string name="empty_no_cities">Не получилось загрузить города\nПроверьте интернет соединение и попробуйте обновить</string>
+    <string name="empty_no_cities">Не получилось загрузить города\nЯ работаю над этой проблемой\nПопробуйте зайти позже</string>
     <string name="empty_search_city">К сожалению у нас в списке нет города с таким именем\nПроверьте правильность введенного имени или попробуйте найти ближайший районный центр или крупный город</string>
     <string name="empty_comments_for_sale">Нет комментариев к акции</string>
     <string name="empty_no_comments">Нет комментариев к данной акции</string>
@@ -273,6 +273,13 @@
     <string name="dialog_button_send">Отправить</string>
     <string name="error_select_lists">Выберите списки для отправки акции</string>
     <string name="notification_author_saved">Сохранено</string>
+    <string name="error_can_not_access_for_memory">Нет доступа к памяти</string>
+    <string name="notification_sale_sended_in_lists">Товар с акцией отправлен</string>
+    <string name="button_back_to_shops">К магазинам</string>
+    <string name="button_back_to_categories">К категориям</string>
+    <string name="error_when_openning_image_file">Ошибка при открытии картинки</string>
+    <string name="error_when_cropping_image">Ошибка при обрезке картинки. Попробуйте еще раз</string>
+    <string name="empty_no_regions">Не получилось загрузить регионы\nПопробуйте загрузить еще раз или попозже</string>
 
 
 </resources>

@@ -51,7 +51,6 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     private String[] arraySizesTable;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_shops, container, false);
@@ -139,7 +138,9 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showError(Throwable e) {
-
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), ErrorManager.getErrorButtonTextResource(e), view -> {
+            presenter.onRefresh();
+        });
     }
 
     @Override
@@ -197,7 +198,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showRegionEmpty() {
-        showError(R.string.empty_shops_select_city, R.drawable.ic_menu_gallery, R.string.button_select_city, v -> {
+        showError(R.string.empty_shops_select_city, R.drawable.ic_skyscraper, R.string.button_select_city, v -> {
             openSelectingCityActivity();
         });
     }
@@ -209,14 +210,14 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showFavoriteShopsEmpty() {
-        showError(R.string.empty_no_favorite_shops, R.drawable.ic_menu_gallery, R.string.button_show_all_shops, v -> {
+        showError(R.string.empty_no_favorite_shops, R.drawable.ic_folder_favorite, R.string.button_show_all_shops, v -> {
             presenter.selectSpinner(0);
         });
     }
 
     @Override
     public void showShopsEmpty() {
-        showError(R.string.empty_no_shops, R.drawable.ic_menu_gallery, R.string.button_update, v -> {
+        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_update, v -> {
             presenter.tryAgainLoadShops();
         });
     }

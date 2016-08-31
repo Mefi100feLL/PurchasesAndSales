@@ -197,7 +197,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
 
     @Override
     public void showEmptyLists() {
-        showError(R.string.empty_no_lists, R.drawable.ic_menu_gallery, R.string.button_create, v -> {
+        showError(R.string.empty_no_lists, R.drawable.ic_notebook_minus, R.string.button_create, v -> {
             presenter.createNewList();
         });
     }

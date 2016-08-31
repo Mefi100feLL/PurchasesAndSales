@@ -1,6 +1,10 @@
 package com.PopCorp.Purchases.presentation.view.moxy;
 
+import android.view.View;
+
 import com.PopCorp.Purchases.data.model.ListItem;
+import com.PopCorp.Purchases.data.model.ListItemSale;
+import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.presentation.viewstate.strategy.GroupSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
@@ -12,6 +16,29 @@ import java.util.ArrayList;
 @StateStrategyType(SkipStrategy.class)
 public interface ShoppingListView extends SampleDataView {
 
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "actionMode")
+    void finishActionMode();
+
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "actionMode")
+    void startActionMode();
+
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
+    void showErrorLoadingList();
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
+    void showEmptyItems();
+
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "shopsFilter")
+    void hideShopsFilter();
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "shopsFilter")
+    void showShopsFilter(ArrayList<String> shops, String filter);
+
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showBuyedTotals(int countBuyed, BigDecimal buyed);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showTotals(int size, BigDecimal total);
+
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showTitle(String title);
 
@@ -21,11 +48,8 @@ public interface ShoppingListView extends SampleDataView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void changeItemInActionMode(int count, ListItem item);
 
-    @StateStrategyType(value = GroupSingleStrategy.class, tag = "actionMode")
-    void finishActionMode();
 
-    @StateStrategyType(value = GroupSingleStrategy.class, tag = "actionMode")
-    void startActionMode();
+    void onItemBuyedChanged(ListItem item);
 
     void showInputFragment(ListItem listItem);
 
@@ -39,23 +63,12 @@ public interface ShoppingListView extends SampleDataView {
 
     void updateCurrency(String currency);
 
-    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
-    void showErrorLoadingList();
+    void onItemSaleClicked(View v, ListItemSale sale);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void showBuyedTotals(int countBuyed, BigDecimal buyed);
+    void shareListAsSMS(ShoppingList list);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void showTotals(int size, BigDecimal total);
+    void shareListAsEmail(ShoppingList list);
 
-    @StateStrategyType(value = GroupSingleStrategy.class, tag = "shopsFilter")
-    void hideShopsFilter();
+    void shareListAsText(ShoppingList list);
 
-    @StateStrategyType(value = GroupSingleStrategy.class, tag = "shopsFilter")
-    void showShopsFilter(ArrayList<String> shops, String filter);
-
-    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
-    void showEmptyItems();
-
-    void onItemBuyedChanged(ListItem item);
 }

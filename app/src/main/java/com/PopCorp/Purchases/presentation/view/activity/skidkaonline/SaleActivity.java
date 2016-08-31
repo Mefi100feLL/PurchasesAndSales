@@ -1,23 +1,20 @@
 package com.PopCorp.Purchases.presentation.view.activity.skidkaonline;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.BackPressedCallback;
-import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.ZoomOutPageTransformer;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.presenter.SaleActivityPresenter;
 import com.PopCorp.Purchases.presentation.view.fragment.skidkaonline.SaleFragment;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleActivityView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.mikepenz.materialize.MaterializeBuilder;
 
 public class SaleActivity extends MvpAppCompatActivity implements SaleActivityView {
 
@@ -29,16 +26,16 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
+        //setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS | WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(getResources().getColor(android.R.color.transparent));
-        }
+        new MaterializeBuilder()
+                .withActivity(this)
+                .withTranslucentStatusBarProgrammatically(true)
+                .withTransparentStatusBar(true)
+                .withStatusBarColorRes(android.R.color.transparent)
+                .build();
 
         presenter.setCurrentId(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)));
         presenter.setSalesIds(getIntent().getStringArrayExtra(ARRAY_SALES));
