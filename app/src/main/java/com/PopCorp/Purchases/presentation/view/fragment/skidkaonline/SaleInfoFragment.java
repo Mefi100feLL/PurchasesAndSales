@@ -12,9 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
@@ -37,6 +40,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.mikepenz.materialize.MaterializeBuilder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -86,6 +90,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
+
     }
 
     @Override
@@ -101,9 +106,12 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
+        LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
         ImageView comments = (ImageView) rootView.findViewById(R.id.comments);
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         ImageView cropImage = (ImageView) rootView.findViewById(R.id.crop);
+
+        buttonslayout.setPadding(0,0,0, getNavigationBarHeight());
 
         image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         image.setMaxScale(getResources().getDimension(R.dimen.image_maximum_scale));
@@ -113,6 +121,17 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         cropImage.setOnClickListener(view -> openCropActivity());
 
         return rootView;
+    }
+
+    public int getNavigationBarHeight()
+    {
+        boolean hasMenuKey = ViewConfiguration.get(getActivity()).hasPermanentMenuKey();
+        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0 && !hasMenuKey)
+        {
+            return getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
     @Override

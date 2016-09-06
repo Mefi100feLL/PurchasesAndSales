@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class SaleToListItemMapper {
+public class SaleTOListItemMapper {
 
     public static ListItem getListItem(Sale sale){
         ListItem result;

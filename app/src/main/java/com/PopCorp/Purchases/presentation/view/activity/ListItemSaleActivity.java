@@ -17,16 +17,17 @@ public class ListItemSaleActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
+        //setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
-        /*new MaterializeBuilder()
+        new MaterializeBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBarProgrammatically(true)
                 .withTransparentStatusBar(true)
+                .withTransparentNavigationBar(true)
                 .withStatusBarColorRes(android.R.color.transparent)
-                .build();*/
+                .build();
 
         Fragment fragment = ListItemSaleFragment.create(getIntent().getParcelableExtra(CURRENT_LISTITEM_SALE));
         String tag = fragment.getClass().getSimpleName();

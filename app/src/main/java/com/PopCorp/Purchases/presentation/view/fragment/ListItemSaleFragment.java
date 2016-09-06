@@ -6,7 +6,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.ListItemSale;
@@ -36,7 +35,6 @@ public class ListItemSaleFragment extends MvpAppCompatFragment implements View.O
     private View progressLayout;
     private SubsamplingScaleImageView image;
     private Toolbar toolBar;
-    private TextView period;
 
 
     public static ListItemSaleFragment create(ListItemSale sale) {
@@ -64,7 +62,6 @@ public class ListItemSaleFragment extends MvpAppCompatFragment implements View.O
         image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
-        period = (TextView) rootView.findViewById(R.id.sale_period);
 
         return rootView;
     }
@@ -82,7 +79,7 @@ public class ListItemSaleFragment extends MvpAppCompatFragment implements View.O
 
     @Override
     public void showInfo(ListItemSale sale) {
-        period.setText(sale.getPeriodStart() + " - " + sale.getPeriodEnd());
+        toolBar.setTitle(sale.getPeriodStart() + " - " + sale.getPeriodEnd());
         image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         image.setMaxScale(getResources().getDimension(R.dimen.image_maximum_scale));
 

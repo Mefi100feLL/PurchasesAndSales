@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:animateLayoutChanges="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_background_gradient_height"
+        android:background="@drawable/shadow_toolbar"
+        android:fitsSystemWindows="true"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/shadow_toolbar"
-        android:paddingTop="@dimen/toolbar_padding_top"/>
+        android:layout_marginTop="@dimen/toolbar_padding_top"
+        android:background="@android:color/transparent"/>
 
     <FrameLayout
         android:id="@+id/progress_layout"
@@ -25,7 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="#64000000"
-        android:padding="24dp">
+        android:padding="24dp"
+        android:layout_centerInParent="true">
 
         <com.github.rahatarmanahmed.cpv.CircularProgressView
             android:id="@+id/progress"
@@ -37,14 +44,13 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
         android:background="@drawable/shadow_toolbar_bottom"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingTop="16dp">
+        android:layout_alignParentBottom="true">
 
         <ImageView
             android:id="@+id/comments"
@@ -56,10 +62,12 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:src="@drawable/ic_shopping_cart_white_24dp"/>
 
         <ImageView
@@ -72,4 +80,4 @@
     </LinearLayout>
 
 
-</FrameLayout>
+</RelativeLayout>

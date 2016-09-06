@@ -3,7 +3,7 @@ package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 import android.graphics.Bitmap;
 
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
-import com.PopCorp.Purchases.data.mapper.SaleToListItemMapper;
+import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
@@ -175,7 +175,7 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
     private void openInputListItem() {
         currentSale.setImageBig(croppedImageUri);
-        ListItem item = SaleToListItemMapper.getListItem(currentSale);
+        ListItem item = SaleTOListItemMapper.getListItem(currentSale);
         long[] ids = new long[selectedLists.size()];
         for (int i = 0; i < selectedLists.size(); i++) {
             ids[i] = selectedLists.get(i).getId();
