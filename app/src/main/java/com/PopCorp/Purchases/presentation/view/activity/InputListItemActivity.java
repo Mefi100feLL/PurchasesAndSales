@@ -12,18 +12,20 @@ import com.PopCorp.Purchases.presentation.view.fragment.InputListItemFragment;
 
 public class InputListItemActivity extends MvpAppCompatActivity {
 
+    public static final String CURRENT_LISTS = "current_list";
+    public static final String CURRENT_LISTITEM = "current_listitem";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_listitem);
 
-        Fragment fragment = new InputListItemFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(InputListItemFragment.CURRENT_LISTITEM, getIntent().getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM));
-        args.putLong(InputListItemFragment.CURRENT_LIST, getIntent().getLongExtra(InputListItemFragment.CURRENT_LIST, -1));
-        args.putString(InputListItemFragment.CURRENT_CURRENCY, getIntent().getStringExtra(InputListItemFragment.CURRENT_CURRENCY));
-        fragment.setArguments(args);
+        Fragment fragment = InputListItemFragment.create(
+                getIntent().getParcelableExtra(CURRENT_LISTITEM),
+                getIntent().getLongArrayExtra(CURRENT_LISTS)
+        );
+
         String tag = fragment.getClass().getSimpleName();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

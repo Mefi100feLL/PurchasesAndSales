@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.data.repository.net;
 
+import com.PopCorp.Purchases.data.dto.UniversalDTO;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.net.API;
 import com.PopCorp.Purchases.data.net.APIFactory;
@@ -15,6 +16,7 @@ public class CategoryNetRepository implements CategoryRepository {
 
     @Override
     public Observable<List<Category>> getData() {
-        return api.getCategories();
+        return api.getCategories()
+                .flatMap(UniversalDTO::getData);
     }
 }

@@ -13,12 +13,6 @@ public class SaleComment {
     @SerializedName("whom")
     private String whom;
 
-    @SerializedName("date")
-    private String date;
-
-    @SerializedName("time")
-    private String time;
-
     @SerializedName("text")
     private String text;
 
@@ -29,12 +23,10 @@ public class SaleComment {
     private int error;
     private String errorText;
 
-    public SaleComment(int saleId, String author, String whom, String date, String time, String text, long dateTime) {
+    public SaleComment(int saleId, String author, String whom, String text, long dateTime) {
         this.saleId = saleId;
         this.author = author;
         this.whom = whom;
-        this.date = date;
-        this.time = time;
         this.text = text;
         this.dateTime = dateTime;
     }
@@ -46,8 +38,7 @@ public class SaleComment {
         if (saleId == saleComment.getSaleId() &&
                 author.equals(saleComment.getAuthor()) &&
                 text.equals(saleComment.getText()) &&
-                date.equals(saleComment.getDate()) &&
-                time.equals(saleComment.getText())){
+                dateTime == saleComment.getDateTime()){
             return true;
         } else{
             return false;
@@ -76,22 +67,6 @@ public class SaleComment {
 
     public void setWhom(String whom) {
         this.whom = whom;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getText() {

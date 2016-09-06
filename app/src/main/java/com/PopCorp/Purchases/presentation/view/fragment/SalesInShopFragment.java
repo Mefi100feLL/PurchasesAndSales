@@ -43,6 +43,8 @@ import java.util.List;
 
 public class SalesInShopFragment extends MvpAppCompatFragment implements SalesInShopView {
 
+    private static final String CURRENT_SHOP = "current_shop";
+
     @InjectPresenter
     SalesInShopPresenter presenter;
 
@@ -58,6 +60,15 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     private String title = "";
 
     private String[] arraySizesTable;
+
+
+    public static SalesInShopFragment create(Shop shop) {
+        SalesInShopFragment result = new SalesInShopFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(CURRENT_SHOP, shop);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +107,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        adapter = new SalesInShopAdapter(getActivity(), presenter, presenter.getObjects(), new SalesCategoryComparator());
+        adapter = new SalesInShopAdapter(presenter, presenter.getObjects(), new SalesCategoryComparator());
         adapter.setLayoutManager(layoutManager, PreferencesManager.getInstance().getSaleTableSize());
         recyclerView.setAdapter(adapter);
 
@@ -107,12 +118,13 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     public void onResume() {
         super.onResume();
         toolBar.setTitle(title);
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
     public void showCategoriesEmpty() {
-        showError(R.string.empty_no_categgories, R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.selectCategories();
+        showError(R.string.empty_no_categgories, R.drawable.ic_tag, R.string.button_try_again, v -> {
+            presenter.loadCategories();
         });
     }
 
@@ -126,28 +138,23 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
             @Override
             public void onCancel() {
-                showCategoriesEmpty();
+                showFavoriteCategoriesEmpty();
             }
         });
     }
 
     @Override
     public void showFavoriteCategoriesEmpty() {
-        showError(R.string.empty_no_favorite_categories_in_shop, R.drawable.ic_menu_gallery, R.string.button_select_categories, v -> {
+        showError(R.string.empty_no_favorite_categories_in_shop, R.drawable.ic_file_favorite, R.string.button_select_categories, v -> {
             presenter.selectCategories();
         });
     }
 
     @Override
-    public void showErrorLoadingSales(Throwable e) {
-        showError(getString(R.string.error_when_loading_sales) + "\n" + getString(ErrorManager.getErrorResource(e)), R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.tryAgain();
-        });
-    }
-
-    @Override
     public void selectSpinner(int filterPosition) {
-        spinner.setSelection(filterPosition);
+        if (spinner.getSelectedItemPosition() != filterPosition) {
+            spinner.setSelection(filterPosition);
+        }
     }
 
     @Override
@@ -156,7 +163,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         intent.putExtra(SaleActivity.CURRENT_SALE, String.valueOf(item.getId()));
         ArrayList<Sale> sales = adapter.getSales();
         String[] salesIds = new String[sales.size()];
-        for (int i=0; i < sales.size(); i++){
+        for (int i = 0; i < sales.size(); i++) {
             salesIds[i] = String.valueOf(sales.get(i).getId());
         }
         intent.putExtra(SaleActivity.ARRAY_SALES, salesIds);
@@ -165,8 +172,8 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.tryAgain();
+        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
+            getActivity().onBackPressed();
         });
     }
 
@@ -227,14 +234,21 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     }
 
     @Override
+    public void showError(Throwable e) {
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgain();
+        });
+    }
+
+    @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
         swipeRefresh.setEnabled(!refresh);
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -260,6 +274,9 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().onBackPressed();
+        }
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
                 PreferencesManager.getInstance().putSaleTableSize(Integer.parseInt(filterItem));

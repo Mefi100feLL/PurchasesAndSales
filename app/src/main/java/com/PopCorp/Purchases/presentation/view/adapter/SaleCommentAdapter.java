@@ -26,6 +26,7 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
     private final Context context;
     private final List<SaleComment> objects;
     private final SortedList<SaleComment> publishItems;
+
     private RecyclerCallback<SaleComment> callback;
 
     private SaleCommentComparator comparator = new SaleCommentComparator();
@@ -130,14 +131,14 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
         if (saleComment.getErrorText() != null || saleComment.getError() != 0 || saleComment.getTmpText() != 0){
             String tmpText = "";
             if (saleComment.getErrorText() != null){
-                tmpText = saleComment.getErrorText();
-                holder.dateTime.setTextColor(context.getResources().getColor(R.color.md_red_500));
+                tmpText = saleComment.getErrorText() + context.getString(R.string.error_touch_for_retry);
+                holder.tmpText.setTextColor(context.getResources().getColor(R.color.md_red_500));
             } else if (saleComment.getError() != 0){
-                tmpText = context.getString(saleComment.getError());
-                holder.dateTime.setTextColor(context.getResources().getColor(R.color.md_red_500));
+                tmpText = context.getString(saleComment.getError()) + context.getString(R.string.error_touch_for_retry);
+                holder.tmpText.setTextColor(context.getResources().getColor(R.color.md_red_500));
             } else if (saleComment.getTmpText() != 0){
                 tmpText = context.getString(saleComment.getTmpText());
-                holder.dateTime.setTextColor(context.getResources().getColor(R.color.secondary_text));
+                holder.tmpText.setTextColor(context.getResources().getColor(R.color.secondary_text));
             }
             holder.tmpText.setText(tmpText);
             holder.dateTime.setVisibility(View.GONE);
@@ -147,9 +148,11 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
             Calendar today = Calendar.getInstance();
             Calendar dateTime = Calendar.getInstance();
             dateTime.setTime(new Date(saleComment.getDateTime()));
-            dateTimeText = saleComment.getTime();
             if (today.get(Calendar.DAY_OF_YEAR) != dateTime.get(Calendar.DAY_OF_YEAR)) {
                 SimpleDateFormat format = new SimpleDateFormat("dd MMM, HH:mm", new Locale("ru"));
+                dateTimeText = format.format(dateTime.getTime());
+            } else {
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm", new Locale("ru"));
                 dateTimeText = format.format(dateTime.getTime());
             }
             holder.dateTime.setText(dateTimeText);

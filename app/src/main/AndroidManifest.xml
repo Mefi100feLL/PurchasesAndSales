@@ -1,6 +1,6 @@
-<manifest
-    package="com.PopCorp.Purchases"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.PopCorp.Purchases" >
 
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -36,46 +36,64 @@
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:required="false" />
 
-
     <application
         android:name=".PurchasesApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".presentation.view.activity.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.view.activity.SalesActivity"
-            android:label=""/>
-
+            android:label="" />
         <activity
             android:name=".presentation.view.activity.SaleActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:label=""/>
-
+            android:label=""
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".presentation.view.activity.SameSaleActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:label=""/>
-
+            android:label=""
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".presentation.view.activity.ShoppingListActivity"
-            android:label=""/>
-
+            android:label=""
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".presentation.view.activity.InputListItemActivity"
-            android:label=""/>
+            android:label="" />
+        <activity
+            android:name=".presentation.view.activity.SelectingCityActivity"
+            android:label="" />
+        <activity
+            android:name=".presentation.view.activity.skidkaonline.SalesActivity"
+            android:label="" />
+        <activity
+            android:name=".presentation.view.activity.skidkaonline.SaleActivity"
+            android:label=""
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".presentation.view.activity.ListItemSaleActivity"
+            android:label="" />
+        <activity
+            android:name=".presentation.view.activity.skidkaonline.CropActivity"
+            android:label="" />
+        <activity
+            android:name=".presentation.view.activity.ProductsActivity"
+            android:label=""
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

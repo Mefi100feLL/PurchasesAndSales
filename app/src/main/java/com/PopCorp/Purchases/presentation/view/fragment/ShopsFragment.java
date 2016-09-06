@@ -23,6 +23,7 @@ import com.PopCorp.Purchases.data.callback.DialogRegionsCallback;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
@@ -101,14 +102,15 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         toolBar.setTitle("");
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
@@ -136,6 +138,13 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     }
 
     @Override
+    public void showError(Throwable e) {
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgainLoadShops();
+        });
+    }
+
+    @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
         swipeRefresh.setEnabled(!refresh);
@@ -146,6 +155,13 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         Intent intent = new Intent(getActivity(), SalesActivity.class);
         intent.putExtra(SalesActivity.CURRENT_SHOP, shop);
         startActivity(intent);
+    }
+
+    @Override
+    public void showEmptyRegions() {
+        showError(R.string.empty_no_regions, R.drawable.ic_globe, R.string.button_try_again, view -> {
+            presenter.loadRegions();
+        });
     }
 
     @Override
@@ -189,21 +205,21 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showRegionEmpty() {
-        showError(R.string.empty_shops_select_region, R.drawable.ic_menu_gallery, R.string.button_select_region, v -> {
+        showError(R.string.empty_shops_select_region, R.drawable.ic_globe, R.string.button_select_region, v -> {
             presenter.loadRegions();
         });
     }
 
     @Override
     public void showFavoriteShopsEmpty() {
-        showError(R.string.empty_no_favorite_shops, R.drawable.ic_menu_gallery, R.string.button_show_all_shops, v -> {
+        showError(R.string.empty_no_favorite_shops, R.drawable.ic_folder_favorite, R.string.button_show_all_shops, v -> {
             presenter.selectSpinner(0);
         });
     }
 
     @Override
     public void showShopsEmpty() {
-        showError(R.string.empty_no_shops, R.drawable.ic_menu_gallery, R.string.button_update, v -> {
+        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_try_again, v -> {
             presenter.tryAgainLoadShops();
         });
     }
@@ -213,7 +229,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         DialogController.showDialogWithRegions(getActivity(), regions, new DialogRegionsCallback() {
 
             @Override
-            public void onSelected() {
+            public void onSelected(Region region) {
                 presenter.onRegionSelected();
             }
 
@@ -226,7 +242,9 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void selectSpinner(int position) {
-        spinner.setSelection(position);
+        if (spinner.getSelectedItemPosition() != position) {
+            spinner.setSelection(position);
+        }
     }
 
     @Override

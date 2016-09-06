@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -73,7 +74,7 @@ public class DialogController {
                 return false;
             }
             PreferencesManager.getInstance().putRegion(String.valueOf(regions.get(which).getId()));
-            callback.onSelected();
+            callback.onSelected(regions.get(which));
             dialog.dismiss();
             return true;
         });
@@ -192,7 +193,11 @@ public class DialogController {
                 inputLayout.setError(activity.getString(R.string.error_enter_list_name));
             }
         });
-        builder.onNegative((dialog, which) -> dialog.dismiss());
+        builder.onNegative((dialog, which) -> {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edittextForName.getWindowToken(), 0);
+            dialog.dismiss();
+        });
 
         final Dialog dialog = builder.build();
 
@@ -203,6 +208,8 @@ public class DialogController {
         edittextForName.setOnEditorActionListener((v, actionId, event) -> {
             if (checkNameAndCreateNewList(edittextForName.getText().toString(), (String) spinnerForCurrency.getSelectedItem(), callback)) {
                 dialog.dismiss();
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(edittextForName.getWindowToken(), 0);
             } else{
                 inputLayout.setError(activity.getString(R.string.error_enter_list_name));
             }
@@ -240,7 +247,7 @@ public class DialogController {
         builder.title(R.string.dialog_title_new_list);
         builder.autoDismiss(false);
         builder.customView(layout, false);
-        builder.positiveText(R.string.dialog_button_create);
+        builder.positiveText(R.string.dialog_button_edit);
         builder.negativeText(R.string.dialog_button_cancel);
 
         builder.onPositive((dialog, which) -> {

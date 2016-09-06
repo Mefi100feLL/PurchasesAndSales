@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -21,13 +23,18 @@ import android.widget.TextView;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
+import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.InputListItemPresenter;
+import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
+import com.PopCorp.Purchases.presentation.view.activity.ListItemSaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemCategoriesAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.InputListItemView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -35,13 +42,13 @@ import java.util.List;
 
 public class InputListItemFragment extends MvpAppCompatFragment implements InputListItemView {
 
-    public static final String CURRENT_LIST = "current_list";
-    public static final String CURRENT_LISTITEM = "current_listitem";
-    public static final String CURRENT_CURRENCY = "current_currency";
+    private static final String CURRENT_LISTS = "current_list";
+    private static final String CURRENT_LISTITEM = "current_listitem";
 
     @InjectPresenter
     InputListItemPresenter presenter;
 
+    private Toolbar toolbar;
     private EditText count;
     private AutoCompleteTextView name;
     private TextInputLayout nameLayout;
@@ -58,26 +65,39 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
 
     private ArrayAdapter<String> adapterUnits;
     private ArrayAdapter<String> productsAdapter;
+    private ArrayAdapter<String> adapterShop;
+
+    private View saleLayout;
+    private ImageView saleImage;
+    private TextView salePeriod;
+
+    public static InputListItemFragment create(ListItem item, long[] listIds){
+        InputListItemFragment result = new InputListItemFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(InputListItemFragment.CURRENT_LISTITEM, item);
+        args.putLongArray(InputListItemFragment.CURRENT_LISTS, listIds);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.setItem(getArguments().getParcelable(CURRENT_LISTITEM));
-        presenter.setListId(getArguments().getLong(CURRENT_LIST, -1));
+        presenter.setListsIds(getArguments().getLongArray(CURRENT_LISTS));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.content_listitem_input, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_listitem_input, container, false);
         setHasOptionsMenu(true);
         
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
 
         ImageView minus = (ImageView) rootView.findViewById(R.id.listitem_count_minus);
         ImageView plus = (ImageView) rootView.findViewById(R.id.listitem_count_plus);
-        TextView currency = (TextView) rootView.findViewById(R.id.listitem_currency);
         count = (EditText) rootView.findViewById(R.id.listitem_count);
         name = (AutoCompleteTextView) rootView.findViewById(R.id.listitem_name);
         nameLayout = (TextInputLayout) rootView.findViewById(R.id.listitem_name_layout);
@@ -89,6 +109,10 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         shopSpinner = (Spinner) rootView.findViewById(R.id.listitem_shop);
         categorySpinner = (Spinner) rootView.findViewById(R.id.listitem_category);
         comment = (EditText) rootView.findViewById(R.id.listitem_comment);
+        saleLayout = rootView.findViewById(R.id.sale_layout);
+        saleImage = (ImageView) rootView.findViewById(R.id.sale_image);
+        salePeriod = (TextView) rootView.findViewById(R.id.sale_period);
+
         minus.setOnClickListener(v -> {
             if (count.getText().toString().isEmpty()){
                 count.setText("1");
@@ -108,12 +132,18 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
             count.setText(value.toString());
         });
         count.setText("1");
-        currency.setText(getArguments().getString(CURRENT_CURRENCY));
         initUnitSpinner();
         initShopsSpinner();
         fab.setOnClickListener(v -> onFabClicked());
+        setFields();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolbar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     private void onFabClicked() {
@@ -121,7 +151,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         if (shopSpinner.getSelectedItemPosition() == 0){
             shop = "";
         }
-        presenter.onFabClicked(name.getText().toString(),
+        presenter.buildItem(name.getText().toString(),
                 count.getText().toString(),
                 (String) unitSpinner.getSelectedItem(),
                 coast.getText().toString(),
@@ -137,13 +167,18 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         ListItemCategoriesAdapter adapterCategories = new ListItemCategoriesAdapter(getActivity(), categories);
         adapterCategories.setDropDownViewResource(R.layout.item_listitem_category);
         categorySpinner.setAdapter(adapterCategories);
-        categorySpinner.setSelection(adapterCategories.getCount() - 1);
+        if (presenter.getItem() == null) {
+            categorySpinner.setSelection(adapterCategories.getCount() - 1);
+        } else {
+            categorySpinner.setSelection(categories.indexOf(presenter.getItem().getCategory()));
+        }
     }
 
     @Override
     public void showNameEmpty() {
         nameLayout.setErrorEnabled(true);
         nameLayout.setError(getString(R.string.error_listitem_name_empty));
+        name.requestFocus();
     }
 
     @Override
@@ -161,9 +196,15 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
     @Override
     public void returnItemAndClose(ListItem item) {
         Intent result = new Intent();
-        result.putExtra(CURRENT_LISTITEM, item);
+        result.putExtra(InputListItemActivity.CURRENT_LISTITEM, item);
         getActivity().setResult(Activity.RESULT_OK, result);
         getActivity().finish();
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(name.getWindowToken(), 0);
     }
 
     @Override
@@ -174,10 +215,10 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
     }
 
     private void initShopsSpinner() {
-        shops = new ArrayList<>(PreferencesManager.getInstance().getShopes());
-        shops.add(getString(R.string.string_no_shop));
+        shops = new ArrayList<>(PreferencesManager.getInstance().getShops());
+        shops.add(0, getString(R.string.string_no_shop));
 
-        ArrayAdapter<String> adapterShop = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, shops);
+        adapterShop = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, shops);
         adapterShop.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         shopSpinner.setAdapter(adapterShop);
         shopSpinner.setSelection(shops.size() - 1);
@@ -217,28 +258,60 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         return adapterUnits.getPosition(edizm);
     }
 
+    private int getPositionForShop(String shop){
+        if (shop == null) {
+            return adapterShop.getCount() - 1;
+        }
+        if (!shops.contains(shop)) {
+            if (shop.equals("")) {
+                return adapterShop.getCount() - 1;
+            }
+            shops.add(shop);
+            addNewShopToPrefs(shop);
+        }
+        return adapterShop.getPosition(shop);
+    }
+
+    private void addNewShopToPrefs(String shop) {
+        ArrayList<String> list = new ArrayList<>(PreferencesManager.getInstance().getShops());
+        list.add(shop);
+        PreferencesManager.getInstance().putShopes(list);
+    }
+
     private void addNewEdizmToPrefs(final String newEdizm) {
         List<String> list = new ArrayList<>(PreferencesManager.getInstance().getEdizms());
         list.add(newEdizm);
         PreferencesManager.getInstance().putEdizms(list);
     }
 
-    @Override
-    public void setFields(ListItem item) {
-        name.setText(item.getName());
-        count.setText(item.getCountString());
-        unitSpinner.setSelection(getPositionForEdizm(item.getEdizm()));
-        coast.setText(item.getCoastString());
-        important.setChecked(item.isImportant());
-        if (shops.contains(item.getShop())) {
-            shopSpinner.setSelection(shops.indexOf(item.getShop()));
-        } else {
-            shopSpinner.setSelection(0);
+    private void setFields() {
+        if (presenter.getItem() != null){
+            ListItem item = presenter.getItem();
+            name.setText(item.getName());
+            count.setText(item.getCountString());
+            unitSpinner.setSelection(getPositionForEdizm(item.getEdizm()));
+            coast.setText(item.getCoastString());
+            important.setChecked(item.isImportant());
+            shopSpinner.setSelection(getPositionForShop(item.getShop()));
+            if (presenter.getCategories().contains(item.getCategory())) {
+                categorySpinner.setSelection(presenter.getCategories().indexOf(item.getCategory()));
+            }
+            comment.setText(item.getComment());
+            if (item.getSale() != null){
+                saleLayout.setVisibility(View.VISIBLE);
+                ImageLoader.getInstance().displayImage(item.getSale().getImage(), saleImage, UIL.getImageOptions());
+                salePeriod.setText(item.getSale().getPeriodStart() + " - " + item.getSale().getPeriodEnd());
+                saleImage.setOnClickListener(v -> openListItemSale(v, item.getSale()));
+            } else {
+                saleLayout.setVisibility(View.GONE);
+            }
         }
-        if (presenter.getCategories().contains(item.getCategory())) {
-            categorySpinner.setSelection(presenter.getCategories().indexOf(item.getCategory()));
-        }
-        comment.setText(item.getComment());
+    }
+
+    private void openListItemSale(View v, ListItemSale sale) {
+        Intent intent = new Intent(getActivity(), ListItemSaleActivity.class);
+        intent.putExtra(ListItemSaleActivity.CURRENT_LISTITEM_SALE, sale);
+        startActivity(intent);
     }
 
     @Override
@@ -247,11 +320,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         count.setText(product.getCountString());
         unitSpinner.setSelection(getPositionForEdizm(product.getEdizm()));
         coast.setText(product.getCoastString());
-        if (shops.contains(product.getShop())) {
-            shopSpinner.setSelection(shops.indexOf(product.getShop()));
-        } else {
-            shopSpinner.setSelection(0);
-        }
+        shopSpinner.setSelection(getPositionForShop(product.getShop()));
         if (presenter.getCategories().contains(product.getCategory())) {
             categorySpinner.setSelection(presenter.getCategories().indexOf(product.getCategory()));
         }

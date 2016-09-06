@@ -1,8 +1,10 @@
 package com.PopCorp.Purchases.presentation.presenter;
 
 import com.PopCorp.Purchases.data.dao.ListItemCategoryDAO;
+import com.PopCorp.Purchases.data.dao.skidkaonline.CityDAO;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
 import com.PopCorp.Purchases.data.model.Region;
+import com.PopCorp.Purchases.data.model.skidkaonline.City;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.RegionInteractor;
@@ -105,5 +107,23 @@ public class SettingsPresenter extends MvpPresenter<SettingsView> {
                         }
                     }
                 });
+    }
+
+    public String getSelectedRegion() {
+        String result = "";
+        Region region = regionsInteractor.getRegionWithId(PreferencesManager.getInstance().getRegionId());
+        if (region != null){
+            result = region.getName();
+        }
+        return result;
+    }
+
+    public String getSelectedCity() {
+        String result = "";
+        City city = new CityDAO().getWithId(PreferencesManager.getInstance().getCity());
+        if (city != null){
+            result = city.getName();
+        }
+        return result;
     }
 }

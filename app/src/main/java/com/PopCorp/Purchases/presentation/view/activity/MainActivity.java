@@ -27,6 +27,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView {
 
+    public static final int REQUEST_CODE_FOR_SELECTING_CITY_ACTIVITY = 1;
+    public static final int REQUEST_CODE_FOR_SELECTING_PRODUCTS = 2;
+
     @InjectPresenter
     MainPresenter presenter;
 
@@ -63,7 +66,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         if (fragment != null) {
-            String tag = fragment.getClass().getSimpleName();
+            String tag = fragment.getClass().getName();
             if (manager.findFragmentByTag(tag) == null) {
                 transaction.replace(R.id.content, fragment, tag).commit();
             }
@@ -77,30 +80,33 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
                 .withHeader(R.layout.content_header)
                 .addDrawerItems(
                         new SectionDrawerItem().withName(R.string.navigation_drawer_mestoskidki).withDivider(false),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_shops).withIdentifier(R.id.navigation_shops).withIcon(R.drawable.ic_store_mall_directory_grey600_24dp).withIconTintingEnabled(true),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_categories).withIdentifier(R.id.navigation_categories).withIcon(R.drawable.tag).withIconTintingEnabled(true),
+                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_shops).withIdentifier(R.string.navigation_drawer_shops).withIcon(R.drawable.ic_store_mall_directory_grey600_24dp).withIconTintingEnabled(true),
+                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_categories).withIdentifier(R.string.navigation_drawer_categories).withIcon(R.drawable.tag).withIconTintingEnabled(true),
                         new SectionDrawerItem().withName(R.string.navigation_drawer_skidkaonline).withDivider(true),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_skidkaonline_sales).withIdentifier(R.id.navigation_skidkaonline).withIcon(R.drawable.sale).withIconTintingEnabled(true),
+                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_skidkaonline_sales).withIdentifier(R.string.navigation_drawer_skidkaonline_sales).withIcon(R.drawable.sale).withIconTintingEnabled(true),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_lists).withIdentifier(R.id.navigation_lists).withIcon(R.drawable.ic_dashboard_grey600_24dp).withIconTintingEnabled(true),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_all_products).withIdentifier(R.id.navigation_all_products).withIcon(R.drawable.ic_list_grey600_24dp).withIconTintingEnabled(true),
+                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_lists).withIdentifier(R.string.navigation_drawer_lists).withIcon(R.drawable.ic_dashboard_grey600_24dp).withIconTintingEnabled(true),
+                        //new PrimaryDrawerItem().withName(R.string.navigation_drawer_all_products).withIdentifier(R.string.navigation_drawer_all_products).withIcon(R.drawable.ic_list_grey600_24dp).withIconTintingEnabled(true),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_settings).withIdentifier(R.id.navigation_settings).withIcon(R.drawable.ic_settings_grey600_24dp).withIconTintingEnabled(true)
+                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_settings).withIdentifier(R.string.navigation_drawer_settings).withIcon(R.drawable.ic_settings_grey600_24dp).withIconTintingEnabled(true)
                 )
                 .withOnDrawerItemClickListener((view, position, iDrawerItem) -> {
                     presenter.setSelectedDrawerItem(iDrawerItem.getIdentifier());
                     Fragment fragment = null;
-                    switch (iDrawerItem.getIdentifier()){
-                        case R.id.navigation_shops:
+                    switch ((int) iDrawerItem.getIdentifier()){
+                        case R.string.navigation_drawer_shops:
                             fragment = new ShopsFragment();
                             break;
-                        case R.id.navigation_categories:
+                        case R.string.navigation_drawer_categories:
                             fragment = new CategoriesFragment();
                             break;
-                        case R.id.navigation_lists:
+                        case R.string.navigation_drawer_skidkaonline_sales:
+                            fragment = new com.PopCorp.Purchases.presentation.view.fragment.skidkaonline.ShopsFragment();
+                            break;
+                        case R.string.navigation_drawer_lists:
                             fragment = new ShoppingListsFragment();
                             break;
-                        case R.id.navigation_settings:
+                        case R.string.navigation_drawer_settings:
                             fragment = new SettingsFragment();
                             break;
                     }

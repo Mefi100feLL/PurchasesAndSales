@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 public class SalesCategoryComparator implements Comparator<SaleDecorator> {
 
-    private  CategoryComparator categoryComparator = new CategoryComparator();
+    private CategoryComparator categoryComparator = new CategoryComparator();
     private SalesComparator salesComparator = new SalesComparator();
 
     @Override

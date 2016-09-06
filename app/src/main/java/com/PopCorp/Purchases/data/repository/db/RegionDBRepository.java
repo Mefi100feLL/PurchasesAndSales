@@ -20,4 +20,8 @@ public class RegionDBRepository implements RegionRepository {
     public void addAllRegions(List<Region> regions) {
         dao.addAllRegions(regions);
     }
+
+    public Region getWithId(String regionId) {
+        return dao.getWithId(regionId);
+    }
 }

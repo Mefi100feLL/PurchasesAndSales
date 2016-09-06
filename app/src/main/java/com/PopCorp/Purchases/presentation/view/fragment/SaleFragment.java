@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,25 +9,32 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.SaleChildCallback;
+import com.PopCorp.Purchases.data.callback.BackPressedCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
-import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SalePresenter;
-import com.PopCorp.Purchases.presentation.presenter.factory.ViewPagerPresenterFactory;
+import com.PopCorp.Purchases.presentation.presenter.factory.SalePresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
-import com.PopCorp.Purchases.presentation.view.activity.SameSaleActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
-public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallback, SaleView, SaleParamsProvider {
+public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallback, SaleView, SaleParamsProvider, BackPressedCallback {
 
-    public static final String CURRENT_SALE = "current_sale";
+    private static final String CURRENT_SALE = "current_sale";
 
-    @InjectPresenter(factory = ViewPagerPresenterFactory.class, presenterId = "SalePresenter")
+    @InjectPresenter(factory = SalePresenterFactory.class, presenterId = SalePresenter.PRESENTER_ID)
     SalePresenter presenter;
 
     private int saleId;
+    private boolean showedComments = false;
+
+    public static SaleFragment create(int saleId) {
+        SaleFragment result = new SaleFragment();
+        Bundle args = new Bundle();
+        args.putInt(SaleFragment.CURRENT_SALE, saleId);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,60 +49,23 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     }
 
     @Override
-    public void showComments(Sale sale) {
-
-    }
-
-    @Override
-    public void showInfo(Sale sale) {
-
-    }
-
-    @Override
-    public void showFragmentComments(Sale sale) {
+    public void showFragmentComments(int saleId) {
+        showedComments = true;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = new SaleCommentsFragment();
-        Bundle args = new Bundle();
-        args.putInt(SaleFragment.CURRENT_SALE, sale.getId());
-        fragment.setArguments(args);
-        ((SaleChildCallback) fragment).setParent(this);
+        Fragment fragment = SaleCommentsFragment.create(this, saleId);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName())
+        transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName() + saleId)
                 .commit();
     }
 
     @Override
-    public void showFragmentInfo(Sale sale) {
+    public void showFragmentInfo(int saleId) {
+        showedComments = false;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = new SaleInfoFragment();
-        Bundle args = new Bundle();
-        args.putInt(SaleFragment.CURRENT_SALE, sale.getId());
-        fragment.setArguments(args);
-        ((SaleChildCallback) fragment).setParent(this);
+        Fragment fragment = SaleInfoFragment.create(this, saleId);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName())
-                //.addToBackStack(fragment.getClass().getSimpleName())
+        transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName() + saleId)
                 .commit();
-    }
-
-    @Override
-    public void showCommentTextEmpty() {
-
-    }
-
-    @Override
-    public void hideCommentTextError() {
-
-    }
-
-    @Override
-    public void showCommentAuthorEmpty() {
-
-    }
-
-    @Override
-    public void hideCommentAuthorError() {
-
     }
 
     @Override
@@ -110,14 +79,16 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     }
 
     @Override
-    public void openSameSale(View view, int saleId) {
-        Intent intent = new Intent(getActivity(), SameSaleActivity.class);
-        intent.putExtra(SameSaleActivity.CURRENT_SALE, String.valueOf(saleId));
-        startActivity(intent);
+    public String getSaleId(String presenterId) {
+        return String.valueOf(saleId);
     }
 
     @Override
-    public String getSaleId(String presenterId) {
-        return String.valueOf(saleId);
+    public boolean onBackPressed() {
+        if (showedComments){
+            presenter.showInfo();
+            return true;
+        }
+        return false;
     }
 }

@@ -58,7 +58,7 @@ public class ListItemDAO {
     private ListItemSaleDAO saleDAO = new ListItemSaleDAO();
 
     public long updateOrAddToDB(ListItem item) {
-        String saleId = item.getSale() != null ? String.valueOf(item.getSale().getId()) : "0";
+        String saleId = item.getSale() != null ? String.valueOf(item.getSale().getId()) : "-1";
         String[] values = new String[]{
                 String.valueOf(item.getListId()),
                 item.getName(),
@@ -129,5 +129,11 @@ public class ListItemDAO {
 
     public boolean existsWithName(long listId, String name) {
         return db.getData(TABLE_ITEMS, KEY_ITEMS_LIST_ID + "=" + listId + " AND " + KEY_ITEMS_NAME + "='" + name + "'").moveToNext();
+    }
+
+    public void addAllItems(List<ListItem> items) {
+        for (ListItem item : items){
+            updateOrAddToDB(item);
+        }
     }
 }

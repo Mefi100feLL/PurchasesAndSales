@@ -15,9 +15,6 @@ import java.util.List;
 @StateStrategyType(SkipStrategy.class)
 public interface ShopsView extends SampleDataView {
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void filter(String filter);
-
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showRegionEmpty();
 
@@ -26,6 +23,12 @@ public interface ShopsView extends SampleDataView {
 
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showShopsEmpty();
+
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
+    void showEmptyRegions();
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void filter(String filter);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void selectSpinner(int position);
@@ -37,4 +40,5 @@ public interface ShopsView extends SampleDataView {
     void showSnackBarWithNewShop(Shop shop, boolean isFilterFavorite);
 
     void openShop(View v, Shop shop);
+
 }

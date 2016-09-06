@@ -8,6 +8,9 @@ public class ShoppingListDateComparator implements Comparator<ShoppingList> {
 
     @Override
     public int compare(ShoppingList lhs, ShoppingList rhs) {
+        if (lhs.getId() == rhs.getId()){
+            return 0;
+        }
         int result = 0;
         if (lhs.getDateTime() > rhs.getDateTime()){
             result = 1;

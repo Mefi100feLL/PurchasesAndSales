@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.PopCorp.Purchases.data.db.DB;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.SalesCleaner;
+import com.PopCorp.Purchases.data.utils.SkidkaonlineSalesCleaner;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -25,6 +27,8 @@ public class PurchasesApplication extends Application {
         DB.setInstance(this);
         initImageLoader(this);
         PreferencesManager.getInstance().firstStart();
+        new SalesCleaner().start();
+        new SkidkaonlineSalesCleaner().start();
     }
 
     public static void initImageLoader(Context context) {

@@ -5,10 +5,6 @@
         android:title="@string/prefs_view"
         android:persistent="false">
 
-        <Preference
-            android:key="theme"
-            android:title="@string/prefs_theme" />
-
         <CheckBoxPreference
             android:key="replacebuyed"
             android:title="@string/prefs_replace_buyed"
@@ -96,6 +92,10 @@
             android:key="city"
             android:title="@string/prefs_region" />
 
+        <Preference
+            android:key="skidkaonline_city"
+            android:title="@string/prefs_city" />
+
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -107,10 +107,6 @@
             android:defaultValue="true"
             android:key="displaynooff"
             android:title="@string/prefs_display_no_off" />
-
-        <Preference
-            android:key="about"
-            android:title="@string/prefs_about" />
 
     </PreferenceCategory>
 </PreferenceScreen>

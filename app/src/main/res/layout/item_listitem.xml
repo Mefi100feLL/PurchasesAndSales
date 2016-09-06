@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/item_listitem_main_layout"
+    android:id="@+id/main_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -43,12 +43,11 @@
 
             <ImageView
                 android:id="@+id/important"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:padding="4dp"
-                android:src="@drawable/ic_error_outline_grey600_24dp"/>
+                android:src="@drawable/ic_error_outline_red600_24dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -70,11 +69,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginStart="8dp"
                 android:gravity="end"
                 android:text="200 RUB"
-                android:textColor="@color/secondary_text"/>
+                android:textColor="@color/secondary_text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:ellipsize="end"/>
         </LinearLayout>
 
         <LinearLayout
@@ -93,10 +95,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginStart="8dp"
                 android:text="200 RUB"
-                android:textColor="@color/secondary_text"/>
+                android:textColor="@color/secondary_text"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,7 +1,10 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
@@ -10,10 +13,12 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,12 +40,17 @@ import com.PopCorp.Purchases.presentation.common.ColorDialog;
 import com.PopCorp.Purchases.presentation.common.MvpPreferenceFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SettingsPresenter;
+import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
+import com.PopCorp.Purchases.presentation.view.activity.SelectingCityActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.SettingsView;
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SettingsFragment extends MvpPreferenceFragment implements SettingsView {
 
@@ -74,6 +84,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     public void onResume() {
         super.onResume();
         toolBar.setTitle(R.string.navigation_drawer_settings);
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
@@ -205,7 +216,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         Preference shopes = findPreference(PreferencesManager.PREFS_SHOPES);
         if (shopes != null) {
             shopes.setOnPreferenceClickListener(preference -> {
-                //showDialogWithShopes();
+                showDialogWithShops();
                 return true;
             });
         }
@@ -219,11 +230,21 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
             });
         }
 
-        Preference prefCity = findPreference(PreferencesManager.PREFS_CITY);
-        if (prefCity != null) {
-            prefCity.setSummary("");
-            prefCity.setOnPreferenceClickListener(preference -> {
+        Preference prefRegion = findPreference(PreferencesManager.PREFS_CITY);
+        if (prefRegion != null) {
+            prefRegion.setSummary(presenter.getSelectedRegion());
+            prefRegion.setOnPreferenceClickListener(preference -> {
                 presenter.loadRegions();
+                return true;
+            });
+        }
+
+        Preference prefCity = findPreference(PreferencesManager.PREFS_SKIDKAONLINE_CITY);
+        if (prefCity != null) {
+            prefCity.setSummary(presenter.getSelectedCity());
+            prefCity.setOnPreferenceClickListener(preference -> {
+                Intent intent = new Intent(getActivity(), SelectingCityActivity.class);
+                startActivityForResult(intent, MainActivity.REQUEST_CODE_FOR_SELECTING_CITY_ACTIVITY);
                 return true;
             });
         }
@@ -260,11 +281,28 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         }
     }
 
-    public void selectCity(String selectedCity) {
+    public void selectRegion(String selectedCity) {
         Preference prefCity = findPreference(PreferencesManager.PREFS_CITY);
         if (prefCity != null) {
             prefCity.setSummary(selectedCity);
         }
+    }
+
+    public void selectCity(String selectedCity) {
+        Preference prefCity = findPreference(PreferencesManager.PREFS_SKIDKAONLINE_CITY);
+        if (prefCity != null) {
+            prefCity.setSummary(selectedCity);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == MainActivity.REQUEST_CODE_FOR_SELECTING_CITY_ACTIVITY) {
+                selectCity(presenter.getSelectedCity());
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -373,7 +411,6 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     }
 
 
-
     @Override
     public void showDialogWithCurrencies(ArrayList<String> currencies) {
         final String currentCurrency = PreferencesManager.getInstance().getCurrentCurrency();
@@ -438,7 +475,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         builder.negativeText(R.string.dialog_button_cancel);
         builder.dismissListener(dialog -> presenter.showCurrencies());
         builder.onPositive((dialog, which) -> {
-            if (addNewCurrency(input, inputLayout)){
+            if (addNewCurrency(input, inputLayout)) {
                 dialog.dismiss();
             }
         });
@@ -446,7 +483,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         builder.customView(customView, false);
         final Dialog dialog = builder.build();
         input.setOnEditorActionListener((v, actionId, event) -> {
-            if (addNewCurrency(input, inputLayout)){
+            if (addNewCurrency(input, inputLayout)) {
                 dialog.dismiss();
             }
             return false;
@@ -455,7 +492,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         dialog.show();
     }
 
-    private boolean addNewCurrency(EditText input, TextInputLayout inputLayout){
+    private boolean addNewCurrency(EditText input, TextInputLayout inputLayout) {
         String newCurrency = input.getText().toString();
         if (newCurrency.isEmpty()) {
             inputLayout.setError(getString(R.string.error_input_currency_name));
@@ -540,8 +577,8 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         DialogController.showDialogWithRegions(getActivity(), regions, new DialogRegionsCallback() {
 
             @Override
-            public void onSelected() {
-
+            public void onSelected(Region region) {
+                selectRegion(region.getName());
             }
 
             @Override
@@ -582,7 +619,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
                 .autoDismiss(false)
                 .customView(customView, false)
                 .onPositive((dialog1, which) -> {
-                    if (addNewUnit(input, inputLayout)){
+                    if (addNewUnit(input, inputLayout)) {
                         dialog1.dismiss();
                     }
                 })
@@ -597,7 +634,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         dialog.show();
     }
 
-    private boolean addNewUnit(EditText input, TextInputLayout inputLayout){
+    private boolean addNewUnit(EditText input, TextInputLayout inputLayout) {
         String newUnit = input.getText().toString();
         if (newUnit.isEmpty()) {
             inputLayout.setError(getString(R.string.error_input_unit_name));
@@ -609,5 +646,86 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
             inputLayout.setError(getString(R.string.error_unit_exists));
             return false;
         }
+    }
+
+    public void showDialogWithShops() {
+        ArrayList<String> shopes = new ArrayList<>(PreferencesManager.getInstance().getShops());
+        Dialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.prefs_shops)
+                .items(shopes.toArray(new String[shopes.size()]))
+                .itemsCallback((dialog1, view, which, text) -> showDialogForNewShop(text.toString()))
+                .positiveText(R.string.dialog_button_add)
+                .negativeText(R.string.dialog_button_cancel)
+                .onPositive((dialog1, which) -> showDialogForNewShop(null))
+                .build();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void showDialogForNewShop(String editingShop) {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.dialog_input, null);
+        final EditText input = (EditText) customView.findViewById(R.id.edittext);
+        final TextInputLayout inputLayout = (TextInputLayout) customView.findViewById(R.id.input_layout);
+        inputLayout.setHint(getString(R.string.hint_shop_name));
+        if (editingShop != null){
+            input.setText(editingShop);
+        }
+
+        final Dialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.dialog_title_new_shop)
+                .positiveText(editingShop == null ? R.string.dialog_button_add : R.string.dialog_button_edit)
+                .negativeText(R.string.dialog_button_cancel)
+                .neutralText(editingShop == null ? 0 : R.string.dialog_button_remove)
+                .autoDismiss(false)
+                .customView(customView, false)
+                .dismissListener(dialog1 -> showDialogWithShops())
+                .onPositive((dialog1, which) -> {
+                    String newShop = input.getText().toString();
+                    if (newShop.isEmpty()) {
+                        inputLayout.setError(getString(R.string.error_enter_shop_name));
+                        return;
+                    }
+                    ArrayList<String> shopes = new ArrayList<>(PreferencesManager.getInstance().getShops());
+                    if (!newShop.equals(editingShop) && shopes.contains(newShop)) {
+                        inputLayout.setError(getString(R.string.error_shop_already_exists));
+                    } else if (newShop.equals(editingShop)){
+                        dialog1.dismiss();
+                    } else {
+                        shopes.remove(editingShop);
+                        shopes.add(newShop);
+                        PreferencesManager.getInstance().putShopes(shopes);
+                        dialog1.dismiss();
+                    }
+                })
+                .onNegative((dialog1, which) -> dialog1.dismiss())
+                .onNeutral((dialog1, which) -> {
+                    ArrayList<String> shopes = new ArrayList<>(PreferencesManager.getInstance().getShops());
+                    shopes.remove(editingShop);
+                    PreferencesManager.getInstance().putShopes(shopes);
+                    dialog1.dismiss();
+                })
+                .build();
+        input.setOnEditorActionListener((v, actionId, event) -> {
+            String newShop = input.getText().toString();
+            if (newShop.isEmpty()) {
+                inputLayout.setError(getString(R.string.error_enter_shop_name));
+                return false;
+            }
+            ArrayList<String> shopes = new ArrayList<>(PreferencesManager.getInstance().getShops());
+            if (!newShop.equals(editingShop) && shopes.contains(newShop)) {
+                inputLayout.setError(getString(R.string.error_shop_already_exists));
+            } else if (newShop.equals(editingShop)){
+                dialog.dismiss();
+            } else {
+                shopes.remove(editingShop);
+                shopes.add(newShop);
+                PreferencesManager.getInstance().putShopes(shopes);
+                dialog.dismiss();
+            }
+            return false;
+        });
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 }

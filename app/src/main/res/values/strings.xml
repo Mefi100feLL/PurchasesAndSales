@@ -11,6 +11,7 @@
 
     <!-- Empty -->
     <string name="empty_shops_select_region">Не указан регион для загрузки магазинов.\nПожалуйста выберите регион</string>
+    <string name="empty_shops_select_city">Не указан город для загрузки магазинов.\nПожалуйста выберите город</string>
     <string name="empty_categories_select_region">Не указан регион для загрузки категорий.\nПожалуйста выберите регион</string>
     <string name="empty_no_shops_restart_app">Нет магазинов.\nПопробуйте перезапустить приложение</string>
     <string name="empty_no_favorite_shops">Нет избранных магазинов\nОткройте все магазины и добавьте в избранные те, которые Вам нужны, нажав на звездочку</string>
@@ -20,11 +21,20 @@
     <string name="empty_select_city">Не выбран город.\nВыберите город для загрузки магазинов</string>
     <string name="empty_no_sales_in_shop">Нет акций\nВозможно в магазине в данный момент не проводятся акции или они пока не появились на сайте\nПопробуйте посмотреть позже</string>
     <string name="empty_no_shopping_lists">Нет списков покупок</string>
-    <string name="empty_no_shops">Нет магазинов\nНе получилось загрузить магазины. То ли на сервере проблемы, то ли у Вас интернет пошаливает.\nПопробуйте позже!</string>
-    <string name="empty_no_categgories">Нет категорий\nНе получилось загрузить категории. То ли на сервере проблемы, то ли у Вас интернет пошаливает.\nПопробуйте позже!</string>
+    <string name="empty_no_shops">Нет магазинов\nНе понимаю, как такое произошло...\nПопробуйте еще раз или позже!</string>
+    <string name="empty_no_categgories">Нет категорий\nОчень странно... Постараюсь решить эту проблему\nПопробуйте еще раз или позже!</string>
     <string name="empty_no_favorite_categories_in_shop">Нет избранных категорий\nВыберите категории, для которых загружать акции</string>
     <string name="empty_no_favorite_shops_in_category">Нет избранных магазинов\nВыберите магазины, для которых загружать акции</string>
     <string name="empty_no_sales_in_category">Нет акций\nВозможно в магазинах в данный момент не проводятся акции данной категории или они пока не появились на сайте\nПопробуйте посмотреть позже</string>
+    <string name="empty_no_products">Нет товаров</string>
+    <string name="empty_no_favorite_products">Нет избранных товаров\nТовар становится избранным, если был хоть раз добавлен в список покупок</string>
+    <string name="empty_no_finded_products">Нет товаров по запросу \"query\"</string>
+    <string name="empty_no_listitems">Нет товаров в списке\nТовар можно добавить вручную или выбрать несколько из списка</string>
+    <string name="empty_no_lists">Нет списков покупок\nСоздайте новый список, чтобы ничего не забыть купить</string>
+    <string name="empty_no_cities">Не получилось загрузить города\nЯ работаю над этой проблемой\nПопробуйте зайти позже</string>
+    <string name="empty_search_city">К сожалению у нас в списке нет города с таким именем\nПроверьте правильность введенного имени или попробуйте найти ближайший районный центр или крупный город</string>
+    <string name="empty_comments_for_sale">Нет комментариев к акции</string>
+    <string name="empty_no_comments">Нет комментариев к данной акции</string>
 
 
     <!-- Buttons -->
@@ -133,7 +143,8 @@
     <string name="string_za">за</string>
     <string name="string_in">в</string>
     <string name="toast_no_founded_sale_image">Не найдена картинка акции</string>
-    <string name="string_for_share_sale">В \"shop\" period проводится акция на: name (comment). Цена: coast.\nОтправлено из приложения \"Покупки по акциям\"\nhttps://play.google.com/store/apps/details?id=com.PopCorp.Purchases</string>
+    <string name="string_for_share_sale">В \"shop\" period проводится акция на: name (comment). Цена: coast\n\nОтправлено из приложения \"Покупки по акциям\"</string>
+    <string name="string_for_share_sale_skidkaonline">Акция проводится в \"shop\" period \n\nОтправлено из приложения \"Покупки по акциям\"</string>
     <string name="string_send_sale_with_app">Отправить акцию через</string>
     <string name="navigation_drawer_skidkaonline">SkidkaOnline.ru</string>
     <string name="navigation_drawer_shopping_lists">Списки покупок</string>
@@ -149,7 +160,7 @@
     <string name="snackbar_undo">Отмена</string>
     <string name="listitem_shop">в shop</string>
     <string name="listitem_count">count edizm по coast currency shop</string>
-    <string name="checkbox_listitem_important">Важное</string>
+    <string name="checkbox_listitem_important">Купить обязательно</string>
     <string name="string_no_shop">Нет магазина</string>
     <string name="comments">Комментарии</string>
     <string name="same_sales">Похожие акции</string>
@@ -188,7 +199,6 @@
     <string name="error_no_shops">Не удалось загрузить регионы</string>
     <string name="dialog_title_loading_regions">Загрузка регионов...</string>
     <string name="count_of_items_in_list">Товаров:</string>
-    <string name="empty_no_lists">Нет списков покупок\nСоздайте новый список, чтобы ничего не забыть купить</string>
     <string name="button_create">Создать</string>
     <string name="hint_list_name">Имя списка</string>
     <string name="error_enter_list_name">Введите имя списка</string>
@@ -213,6 +223,64 @@
     <string name="error_listitem_name_empty">Введите наименование товара</string>
     <string name="error_listitem_with_name_exists">Товар с таким именем уже есть в списке</string>
     <string name="action_edit">Изменить</string>
+    <string name="notification_item_removed">Удален товар: name</string>
+    <string name="notification_items_removed">Удалено товаров: count</string>
+    <string name="action_shop">Фильтр по магазину</string>
+    <string name="notification_no_items_for_removing">Нет товаров для удаления</string>
+    <string name="dialog_title_removing_list">Удалить список</string>
+    <string name="dialog_content_sure_remove_list">Вы действительно хотите удалить данный список?</string>
+    <string name="string_send_list_with_app">Отправить список через:</string>
+    <string name="notification_no_apps_for_share_list">Нет приложений для отправки списка</string>
+    <string name="notification_city_not_selected">Выберите город</string>
+    <string name="action_search">Поиск</string>
+    <string name="button_all_cities">Все города</string>
+    <string name="prefs_city">Город</string>
+    <string name="spinner_all_catalogs">Все каталоги</string>
+    <string name="button_close">Закрыть</string>
+    <string name="button_back_to_sale">К акции</string>
+    <string name="error_touch_for_retry">\nНажмите, чтобы попробовать отправить еще раз</string>
+    <string name="error_comment_no_sended">Ошибка при отправке комментария</string>
+    <string name="dialog_button_edit">Изменить</string>
+    <string name="error_can_not_crop_image">Не получилось обрезать картинку</string>
+    <string name="error_loading_list">Ошибка при загрузке списка</string>
+    <string name="notification_lists_removed">Удалено списков: count</string>
+    <string name="total_buyed_items">Итого куплено - count, на:</string>
+    <string name="total_items">Итого товаров - count, на:</string>
+    <string name="menu_item_all_shops">Все магазины</string>
+    <string name="hint_shop_name">Наименование магазина</string>
+    <string name="dialog_title_new_shop">Новый магазин</string>
+    <string name="error_enter_shop_name">Введите наименование магазина</string>
+    <string name="error_shop_already_exists">Такой магазин уже есть</string>
+    <string name="title_selecting_products">Выбор товаров</string>
+    <string name="spinner_all_products">Все товары</string>
+    <string name="spinner_favorite_products">Избранные</string>
+    <string name="action_sorte">Сортировать</string>
+    <string name="action_sort_by_alphabet">по алфавиту</string>
+    <string name="action_sort_by_category">по категориям</string>
+    <string name="header_no_category">Нет категории</string>
+    <string name="button_back_to_list">К списку покупок</string>
+    <string name="button_all_products">Все товары</string>
+    <string name="button_add">Добавить</string>
+    <string name="action_select_from_products">Выбрать из списка</string>
+    <string name="action_create_listitem">Ввести вручную</string>
+    <string name="error_server_no_response_expanded">Сервер не отвечает\nСкорее всего это не надолго. Попробуйте снова через несколько минут</string>
+    <string name="error_no_internet_connection_expanded">Нет подключения к сети\nПроверьте подключение к сети и попробуйте снова</string>
+    <string name="error_timeout_expanded">Время ожидания превышено\nВозможно у Вас не устойчивое подключение к сети или сервер перегружен\nПопробуйте снова</string>
+    <string name="error_can_not_connect_expanded">Ошибка при подключении к сети\nПроверьте Ваше подключение и попробуйте снова</string>
+    <string name="empty_no_shopping_lists_short">Нет списков</string>
+    <string name="header_sale">Акция</string>
+    <string name="dialog_title_selecting_lists">Выбор списков</string>
+    <string name="dialog_button_send">Отправить</string>
+    <string name="error_select_lists">Выберите списки для отправки акции</string>
+    <string name="notification_author_saved">Сохранено</string>
+    <string name="error_can_not_access_for_memory">Нет доступа к памяти</string>
+    <string name="notification_sale_sended_in_lists">Товар с акцией отправлен</string>
+    <string name="button_back_to_shops">К магазинам</string>
+    <string name="button_back_to_categories">К категориям</string>
+    <string name="error_when_openning_image_file">Ошибка при открытии картинки</string>
+    <string name="error_when_cropping_image">Ошибка при обрезке картинки. Попробуйте еще раз</string>
+    <string name="empty_no_regions">Не получилось загрузить регионы\nПопробуйте загрузить еще раз или попозже</string>
+    <string name="error_can_not_load_lists">Не получилось загрузить списки. Попробуйте позже</string>
 
 
 </resources>

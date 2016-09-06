@@ -51,4 +51,8 @@ public class CategoryInteractor {
                     }).materialize().observeOn(AndroidSchedulers.mainThread()).<List<Category>>dematerialize();
                 });
     }
+
+    public void remove(Category category) {
+        dbRepository.remove(category);
+    }
 }

@@ -1,5 +1,7 @@
 package com.PopCorp.Purchases.data.comparator;
 
+import android.util.Log;
+
 import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
 
 import java.util.Comparator;
@@ -14,6 +16,7 @@ public class ListItemDecoratorAlphabetZAComparator implements Comparator<ListIte
         } else {
             result = rhs.getName().compareToIgnoreCase(lhs.getName());
         }
+        //Log.d(getClass().getSimpleName(), "lhs=" + lhs.toString() + ", rhs=" + rhs.toString() + " result=" + result);
         return result;
     }
 }

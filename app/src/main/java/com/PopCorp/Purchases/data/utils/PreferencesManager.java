@@ -26,14 +26,16 @@ import java.util.Set;
 public class PreferencesManager {
 
     public static final String PREFS_CITY = "city";
+    public static final String PREFS_SKIDKAONLINE_CITY = "skidkaonline_city";
 
     public static final String PREFS_SIZE_TABLE_LISTS = "size_table_lists";
     public static final String PREFS_SIZE_TABLE_SHOPS = "size_table_shops";
     public static final String PREFS_SIZE_TABLE_SALES = "size_table_sales";
     public static final String PREFS_SIZE_TABLE_CATEGS = "size_table_categs";
+    public static final String PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE = "size_table_shops_skidkaonline";
+    public static final String PREFS_SIZE_TABLE_SALES_SKIDKAONLINE = "size_table_sales_sakidkaonline";
 
     public static final String PREFS_DISPLAY_NO_OFF = "displaynooff";
-    public static final String PREFS_SKIDKAONLINE_CITY = "skidkaonline_city";
     public static final String PREFS_LIST_ITEM_FONT_SIZE = "listsize";
     public static final String PREFS_LIST_ITEM_FONT_SIZE_SMALL = "listsizesmall";
     public static final String PREFS_REPLACE_BUYED = "replacebuyed";
@@ -62,6 +64,7 @@ public class PreferencesManager {
     public static final String PREFS_THEME = "theme";
     public static final String PREFS_DIALOG_THEME = "dialog_theme";
     public static final String PREFS_HEADER = "header";
+    private static final String PREFS_AUTHOR_COMMENT = "author_comment";
 
     private Context context;
     private SharedPreferences sPref;
@@ -124,6 +127,24 @@ public class PreferencesManager {
     public void putSaleTableSize(int size) {
         editor.putInt(PREFS_SIZE_TABLE_SALES, size).commit();
     }
+
+
+    public int getSkidkaonlineSaleTableSize() {
+        return sPref.getInt(PREFS_SIZE_TABLE_SALES_SKIDKAONLINE, context.getResources().getInteger(R.integer.default_size_table_lists));
+    }
+
+    public void putSkidkaonlineSaleTableSize(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_SALES_SKIDKAONLINE, size).commit();
+    }
+
+    public int getSkidkaonlineShopTableSize() {
+        return sPref.getInt(PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE, context.getResources().getInteger(R.integer.default_size_table_lists));
+    }
+
+    public void putSkidkaonlineShopTableSize(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE, size).commit();
+    }
+
 
     public boolean isDisplayNoOff() {
         return sPref.getBoolean(PREFS_DISPLAY_NO_OFF, true);
@@ -297,12 +318,13 @@ public class PreferencesManager {
         editor.putString(PREFS_DEF_EDIZM, value).commit();
     }
 
-    public Set<String> getShopes() {
-        return sPref.getStringSet(PREFS_SHOPES, new LinkedHashSet<String>());
+    public Set<String> getShops() {
+        return sPref.getStringSet(PREFS_SHOPES, new LinkedHashSet<>());
     }
 
-    public void putShopes(Set<String> value) {
-        editor.putStringSet(PREFS_SHOPES, value).commit();
+    public void putShopes(ArrayList<String> shops) {
+        Set<String> set = new LinkedHashSet<>(shops);
+        editor.putStringSet(PREFS_SHOPES, set).commit();
     }
 
     public String getCurrentSortingList() {
@@ -311,6 +333,10 @@ public class PreferencesManager {
 
     public String getCurrentFilteringList() {
         return sPref.getString(PreferencesManager.PREFS_FILTER_LIST, context.getString(R.string.prefs_filter_list_default_one));
+    }
+
+    public boolean isFilterListOnlyProductsOfShop(){
+        return getCurrentFilteringList().equals(context.getString(R.string.prefs_filter_list_default_one));
     }
 
     public void putCurrentCurrency(String selectedCurrency) {
@@ -347,5 +373,13 @@ public class PreferencesManager {
             result = new ListItemDecoratorBuyedComparator(result);
         }
         return result;
+    }
+
+    public void putAuthorComment(String author) {
+        editor.putString(PREFS_AUTHOR_COMMENT, author).commit();
+    }
+
+    public String getAuthorCOmment(){
+        return sPref.getString(PREFS_AUTHOR_COMMENT, "");
     }
 }

@@ -1,8 +1,13 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,46 +16,58 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
 import com.PopCorp.Purchases.data.callback.SaleMainCallback;
+import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
-import com.PopCorp.Purchases.data.model.SameSale;
+import com.PopCorp.Purchases.data.model.ShoppingList;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
-import com.PopCorp.Purchases.presentation.presenter.SalePresenter;
-import com.PopCorp.Purchases.presentation.presenter.factory.ViewPagerPresenterFactory;
+import com.PopCorp.Purchases.presentation.controller.DialogController;
+import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
+import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
+import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
+import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
+import com.PopCorp.Purchases.presentation.view.activity.SameSaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SameSaleAdapter;
-import com.PopCorp.Purchases.presentation.view.moxy.SaleView;
+import com.PopCorp.Purchases.presentation.view.moxy.SaleInfoView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
-        implements RecyclerCallback<SameSale>,
+        implements
         Toolbar.OnMenuItemClickListener,
         SaleChildCallback,
         View.OnClickListener,
-        SaleView,
+        SaleInfoView,
         SaleParamsProvider {
 
-    @InjectPresenter(factory = ViewPagerPresenterFactory.class, presenterId = "SalePresenter")
-    SalePresenter presenter;
+    private static final String CURRENT_SALE = "current_sale";
+
+    @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = SaleInfoPresenter.PRESENTER_ID)
+    SaleInfoPresenter presenter;
 
     private int saleId;
 
     private SaleMainCallback parent;
 
+    private Toolbar toolBar;
     private ImageView image;
     private TextView title;
     private TextView subTitle;
@@ -70,9 +87,21 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private View sameSalesLayout;
     private RecyclerView sameSalesRecycler;
 
+    private FloatingActionButton fab;
+
+
+    public static Fragment create(SaleMainCallback parent, int saleId) {
+        SaleInfoFragment result = new SaleInfoFragment();
+        Bundle args = new Bundle();
+        args.putInt(CURRENT_SALE, saleId);
+        result.setArguments(args);
+        result.setParent(parent);
+        return result;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        saleId = getArguments().getInt(SaleFragment.CURRENT_SALE);
+        saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
     }
@@ -81,7 +110,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sale_info, container, false);
 
-        Toolbar toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolBar.inflateMenu(R.menu.sale);
         toolBar.setOnMenuItemClickListener(this);
@@ -113,9 +142,18 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         sameSalesRecycler = (RecyclerView) rootView.findViewById(R.id.same_sales_recycler);
         sameSalesLayout = rootView.findViewById(R.id.same_sales_layout);
 
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(v -> presenter.loadShoppingLists());
+
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        hideKeyboard();
+    }
 
     @Override
     public void showInfo(Sale sale) {
@@ -164,47 +202,119 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             coastForQuantity.setText(sale.getCoastForQuantity());
         }
 
-        if (sale.getPeriodStart().isEmpty() && sale.getPeriodEnd().isEmpty()) {
+        if (sale.getPeriodStart() == 0 && sale.getPeriodEnd() == 0) {
             periodLayout.setVisibility(View.GONE);
         } else {
+            SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
             periodLayout.setVisibility(View.VISIBLE);
-            String periodString = sale.getPeriodStart();
-            if (!sale.getPeriodStart().equals(sale.getPeriodEnd())) {
-                periodString += " - " + sale.getPeriodEnd();
+            String periodString = format.format(new Date(sale.getPeriodStart()));
+            if (sale.getPeriodStart() != sale.getPeriodEnd()) {
+                periodString += " - " + format.format(new Date(sale.getPeriodEnd()));
             }
             period.setText(periodString);
         }
         showSameSales(sale);
     }
 
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(fab.getWindowToken(), 0);
+    }
+
     @Override
-    public void showFragmentComments(Sale sale) {
+    public void showError(Throwable e) {
+        Snackbar.make(fab, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSaleEmpty() {
 
     }
 
     @Override
-    public void showFragmentInfo(Sale sale) {
-
+    public void showEmptyLists() {
+        Snackbar.make(fab, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
+                .setAction(R.string.button_create, view -> {
+                    DialogController.showDialogForNewList(getActivity(), presenter);
+                })
+                .show();
     }
 
     @Override
-    public void showCommentTextEmpty() {
-
+    public void showListsSelecting(List<ShoppingList> shoppingLists) {
+        ArrayList<String> items = new ArrayList<>();
+        for (ShoppingList list : shoppingLists) {
+            items.add(list.getName());
+        }
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.dialog_title_selecting_lists);
+        builder.items(items);
+        builder.positiveText(R.string.dialog_button_send);
+        builder.negativeText(R.string.dialog_button_cancel);
+        builder.autoDismiss(false);
+        builder.itemsCallbackMultiChoice(null, (dialog, which, text) -> {
+            if (which.length > 0) {
+                presenter.listsSelected(which);
+                dialog.dismiss();
+            } else {
+                showToast(R.string.error_select_lists);
+            }
+            return false;
+        });
+        builder.onNegative((dialog, which) -> dialog.dismiss());
+        MaterialDialog dialog = builder.build();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override
-    public void hideCommentTextError() {
-
+    public void openInputListItemFragment(ListItem item, long[] listsIds) {
+        Intent intent = new Intent(getActivity(), InputListItemActivity.class);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTS, listsIds);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTITEM, item);
+        startActivityForResult(intent, SaleActivity.REQUEST_CODE_FOR_INPUT_LISTITEM);
     }
 
     @Override
-    public void showCommentAuthorEmpty() {
-
+    public void showErrorLoadingLists(Throwable e) {
+        Snackbar.make(toolBar, R.string.error_can_not_load_lists, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
-    public void hideCommentAuthorError() {
+    public void showItemAdded() {
+        Snackbar.make(toolBar, R.string.notification_sale_sended_in_lists, Snackbar.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SaleActivity.REQUEST_CODE_FOR_INPUT_LISTITEM) {
+                ListItem item = data.getParcelableExtra(InputListItemActivity.CURRENT_LISTITEM);
+                if (item != null) {
+                    presenter.onItemsRerurned(item);
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void setParent(SaleMainCallback parent) {
+        this.parent = parent;
+    }
+
+    private void showToast(int error_select_lists) {
+        Toast.makeText(getActivity(), error_select_lists, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        getActivity().onBackPressed();
+    }
+
+    @Override
+    public String getSaleId(String presenterId) {
+        return String.valueOf(saleId);
     }
 
     public void showSameSales(Sale sale) {
@@ -213,7 +323,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             sameSalesRecycler.setLayoutManager(layoutManager);
             RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
             sameSalesRecycler.setItemAnimator(itemAnimator);
-            SameSaleAdapter sameSaleAdapter = new SameSaleAdapter(getActivity(), this, sale.getSameSales());
+            SameSaleAdapter sameSaleAdapter = new SameSaleAdapter(getActivity(), presenter, sale.getSameSales());
             sameSalesRecycler.setAdapter(sameSaleAdapter);
 
             sameSalesLayout.setVisibility(View.VISIBLE);
@@ -223,33 +333,15 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     @Override
-    public void onItemClicked(View view, SameSale item) {
-        parent.openSameSale(view, item.getSaleId());
-    }
-
-    @Override
-    public void onItemLongClicked(View view, SameSale item) {
-
-    }
-
-    @Override
-    public void onEmpty() {
-
-    }
-
-    @Override
-    public void onEmpty(int stringRes, int drawableRes, int buttonRes, View.OnClickListener listener) {
-
-    }
-
-    @Override
-    public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
-
+    public void openSameSale(View view, int saleId) {
+        Intent intent = new Intent(getActivity(), SameSaleActivity.class);
+        intent.putExtra(SameSaleActivity.CURRENT_SALE, String.valueOf(saleId));
+        startActivity(intent);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_share:
                 shareSale(presenter.getSale());
                 break;
@@ -264,7 +356,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     private void shareSale(Sale sale) {
-        SimpleDateFormat parser = new SimpleDateFormat("dd.MM.yyyy", new Locale("ru"));
         SimpleDateFormat format = new SimpleDateFormat("d MMMM", new Locale("ru"));
         File image = ImageLoader.getInstance().getDiskCache().get(sale.getImage());
         if (image == null) {
@@ -276,25 +367,13 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         String string = getString(R.string.string_for_share_sale);
         string = string.replace("shop", sale.getShop().getName());
         string = string.replace("name", sale.getTitle());
-        if (!sale.getSubTitle().isEmpty()){
+        if (!sale.getSubTitle().isEmpty()) {
             string = string.replace("comment", sale.getSubTitle());
-        } else{
+        } else {
             string = string.replace(" (comment)", "");
         }
-        String periodBegin;
-        try {
-            periodBegin = format.format(parser.parse(sale.getPeriodStart()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            periodBegin = sale.getPeriodStart();
-        }
-        String periodFinish;
-        try {
-            periodFinish = format.format(parser.parse(sale.getPeriodEnd()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            periodFinish = sale.getPeriodEnd();
-        }
+        String periodBegin = format.format(sale.getPeriodStart());
+        String periodFinish = format.format(sale.getPeriodEnd());
         string = string.replace("period", periodBegin.equals(periodFinish) ? periodBegin : "c " + periodBegin + " по " + periodFinish);
         string = string.replace("coast", sale.getCoast());
 
@@ -305,28 +384,8 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             startActivity(Intent.createChooser(shareIntent, getString(R.string.string_send_sale_with_app)));
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_sale, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    public void setParent(SaleMainCallback parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public void onClick(View v) {
-        getActivity().onBackPressed();
-    }
-
-    @Override
-    public String getSaleId(String presenterId) {
-        return String.valueOf(saleId);
-    }
-
-    @Override
-    public void showComments(Sale sale) {
-
     }
 }

@@ -3,10 +3,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 import android.view.View;
 
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
-import com.PopCorp.Purchases.data.comparator.CategoryComparator;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
-import com.PopCorp.Purchases.data.dao.CategoryDAO;
-import com.PopCorp.Purchases.data.dao.ShopDAO;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.Shop;
@@ -23,8 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 @InjectViewState
 public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> implements RecyclerCallback<Sale> {
@@ -32,9 +27,9 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
     private ShopsInteractor shopsInteractor = new ShopsInteractor();
     private SaleInteractor interactor = new SaleInteractor();
 
-    private ArrayList<Sale> objects = new ArrayList<>();
-
     private Category currentCategory;
+
+    private ArrayList<Sale> objects = new ArrayList<>();
 
     private ArrayList<Shop> favoriteShops = new ArrayList<>();
     private ArrayList<Shop> allShops = new ArrayList<>();
@@ -45,6 +40,54 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
     public SalesInCategoryPresenter() {
         getViewState().showProgress();
+    }
+
+    public void setCurrentCategory(Category currentCategory) {
+        if (currentCategory != null) {
+            this.currentCategory = currentCategory;
+            loadShops();
+        }
+    }
+
+    public void loadShops() {
+        shopsInteractor.getData(Integer.valueOf(PreferencesManager.getInstance().getRegionId()))
+                .subscribe(new Observer<List<Shop>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ErrorManager.printStackTrace(e);
+                        if (allShops.size() == 0) {
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(List<Shop> shops) {
+                        if (shops.size() == 0) {
+                            getViewState().showShopsEmpty();
+                        } else {
+                            if (allShops.size() == 0) {
+                                allShops.addAll(shops);
+                                for (Shop shop : shops) {
+                                    if (shop.isFavorite()) {
+                                        favoriteShops.add(shop);
+                                    }
+                                }
+                                if (favoriteShops.size() == 0) {
+                                    getViewState().showFavoriteShopsEmpty();
+                                } else {
+                                    loadData();
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     public void loadData() {
@@ -65,11 +108,11 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        e.printStackTrace();
-                        if (objects.size() == 0){
-                            getViewState().showErrorLoadingSales(e);
-                        } else{
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        ErrorManager.printStackTrace(e);
+                        if (objects.size() == 0) {
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
                         }
                     }
 
@@ -87,116 +130,6 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                         }
                     }
                 });
-    }
-
-    public void setCurrentCategory(Category currentCategory) {
-        if (currentCategory != null) {
-            this.currentCategory = currentCategory;
-            shopsInteractor.loadFromDB(Integer.valueOf(PreferencesManager.getInstance().getRegionId()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Shop>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
-                            getViewState().showShopsEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Shop> shops) {
-                            if (shops.size() == 0) {
-                                getViewState().showShopsEmpty();
-                            } else {
-                                allShops.addAll(shops);
-                                for (Shop shop : shops) {
-                                    if (shop.isFavorite()) {
-                                        favoriteShops.add(shop);
-                                    }
-                                }
-                                if (favoriteShops.size() == 0) {
-                                    getViewState().showFavoriteShopsEmpty();
-                                } else {
-                                    loadData();
-                                }
-                            }
-                        }
-                    });
-        }
-    }
-
-    public void onRefresh() {
-        if (favoriteShops.size() != 0) {
-            getViewState().refreshing(true);
-            loadData();
-        }
-    }
-
-    public void selectShops() {
-        if (allShops.size() == 0) {
-            getViewState().showProgress();
-            shopsInteractor.loadFromNet(Integer.valueOf(PreferencesManager.getInstance().getRegionId()))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Shop>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
-                            getViewState().showShopsEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Shop> shops) {
-                            getViewState().showShopsEmpty();
-                            allShops.addAll(shops);
-                            getViewState().showShopsForSelectingFavorites(allShops);
-                        }
-                    });
-        } else {
-            getViewState().showShopsForSelectingFavorites(allShops);
-        }
-    }
-
-    public void onFavoriteShopsSelected(List<Shop> shops) {
-        favoriteShops.addAll(shops);
-        getViewState().showProgress();
-        loadData();
-    }
-
-    @Override
-    public void onItemClicked(View view, Sale item) {
-
-    }
-
-    @Override
-    public void onItemLongClicked(View view, Sale item) {
-
-    }
-
-    @Override
-    public void onEmpty() {
-
-    }
-
-    @Override
-    public void onEmpty(int stringRes, int drawableRes, int buttonRes, View.OnClickListener listener) {
-
-    }
-
-    @Override
-    public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
-
     }
 
     private void initFilters() {
@@ -219,6 +152,53 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
             getViewState().showSpinner();
             getViewState().selectSpinner(filterPosition);
         }
+    }
+
+    public void onRefresh() {
+        if (favoriteShops.size() != 0) {
+            getViewState().refreshing(true);
+            loadData();
+        }
+    }
+
+    public void selectShops() {
+        if (allShops.size() == 0) {
+            getViewState().showProgress();
+            loadShops();
+        } else {
+            getViewState().showShopsForSelectingFavorites(allShops);
+        }
+    }
+
+    public void onFavoriteShopsSelected(List<Shop> shops) {
+        favoriteShops.addAll(shops);
+        getViewState().showProgress();
+        loadData();
+    }
+
+    @Override
+    public void onItemClicked(View view, Sale item) {
+        getViewState().showSales(view, item);
+    }
+
+    @Override
+    public void onItemLongClicked(View view, Sale item) {
+
+    }
+
+    @Override
+    public void onEmpty() {
+
+    }
+
+    @Override
+    public void onEmpty(int stringRes, int drawableRes, int buttonRes, View.OnClickListener listener) {
+
+    }
+
+    @Override
+    public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
+
     }
 
     public ArrayList<String> getFilterStrings() {

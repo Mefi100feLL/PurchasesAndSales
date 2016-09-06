@@ -16,6 +16,15 @@ public class ListItemCategory implements Parcelable {
     }
 
     @Override
+    public String toString(){
+        String result = "";
+        result += "id=" + id + ", ";
+        result += "name=" + name + ", ";
+        result += "color=" + color;
+        return result;
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (!(object instanceof ListItemCategory)) return false;
         ListItemCategory category = (ListItemCategory) object;

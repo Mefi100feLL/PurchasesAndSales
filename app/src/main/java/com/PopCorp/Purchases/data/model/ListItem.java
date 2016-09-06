@@ -3,9 +3,11 @@ package com.PopCorp.Purchases.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
+
 import java.math.BigDecimal;
 
-public class ListItem implements Parcelable {
+public class ListItem implements Parcelable, ContentSame<ListItem> {
 
     private long id;
     private long listId;
@@ -24,9 +26,9 @@ public class ListItem implements Parcelable {
         this.id = id;
         this.listId = listId;
         this.name = name;
-        this.count = new BigDecimal(count);
+        this.count = new BigDecimal(count != null && !count.isEmpty() ? count : "0");
         this.edizm = edizm;
-        this.coast = new BigDecimal(coast);
+        this.coast = new BigDecimal(coast != null && !coast.isEmpty() ? coast : "0");
         this.category = category;
         this.shop = shop;
         this.comment = comment;
@@ -36,10 +38,50 @@ public class ListItem implements Parcelable {
     }
 
     @Override
+    public String toString(){
+        String result = "";
+        /*result += "id=" + id + ", ";
+        result += "listId=" + listId + ", ";*/
+        result += "name=" + name + ", ";
+        /*result += "count=" + count + ", ";
+        result += "edizm=" + edizm + ", ";
+        result += "coast=" + coast + ", ";*/
+        result += "category=" + category + ", ";
+        /*result += "shop=" + shop + ", ";
+        result += "comment=" + comment + ", ";*/
+        result += "buyed=" + buyed + ", ";
+        /*result += "important=" + important;*/
+        return result;
+    }
+
+    @Override
+    public boolean equalsContent(ListItem object) {
+        if (equals(object)) {
+            if (name.equals(object.getName()) &&
+                    count.equals(object.getCount()) &&
+                    edizm.equals(object.getEdizm()) &&
+                    coast.equals(object.getCoast()) &&
+                    shop.equals(object.getShop()) &&
+                    comment.equals(object.getComment()) &&
+                    buyed == object.isBuyed() &&
+                    important == object.isImportant()) {
+                if ((category != null && object.getCategory() != null && category.equals(object.getCategory())) || (category == null && object.getCategory() == null)) {
+                    if (sale != null && object.getSale() != null) {
+                        if (sale.equals(object.getSale())) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (!(object instanceof ListItem)) return false;
         ListItem item = (ListItem) object;
-        return id == item.getId();
+        return name.equals(item.getName());
     }
 
     @Override
@@ -52,9 +94,9 @@ public class ListItem implements Parcelable {
         dest.writeLong(id);
         dest.writeLong(listId);
         dest.writeString(name);
-        dest.writeString(getCountString());
+        dest.writeString(count.toString());
         dest.writeString(edizm);
-        dest.writeString(getCoastString());
+        dest.writeString(coast.toString());
         dest.writeParcelable(category, flags);
         dest.writeString(shop);
         dest.writeString(comment);
@@ -185,11 +227,11 @@ public class ListItem implements Parcelable {
     }
 
     public String getCountString() {
-        return count.toString();
+        return DecoratorBigDecimal.decor(count);
     }
 
     public String getCoastString() {
-        return coast.toString();
+        return DecoratorBigDecimal.decor(coast);
     }
 
     public void setCount(String count) {
@@ -199,4 +241,5 @@ public class ListItem implements Parcelable {
     public void setCoast(String coast) {
         this.coast = new BigDecimal(coast);
     }
+
 }

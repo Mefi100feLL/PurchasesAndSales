@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.PopCorp.Purchases.data.db.DB;
 import com.PopCorp.Purchases.data.model.Sale;
+import com.PopCorp.Purchases.data.utils.DBList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class SaleDAO {
     public static final String KEY_SALE_SHOP = "shop";
     public static final String KEY_SALE_CATEGORY = "category";
     public static final String KEY_SALE_CATEGORY_TYPE = "category_type";
+    public static final String KEY_SALE_COUNT_COMMENTS = "count_comments";
     public static final String KEY_SALE_PERIOD_BEGIN = "period_begin";
     public static final String KEY_SALE_PERIOD_FINISH = "period_finish";
 
@@ -39,6 +41,7 @@ public class SaleDAO {
             KEY_SALE_SHOP,
             KEY_SALE_CATEGORY,
             KEY_SALE_CATEGORY_TYPE,
+            KEY_SALE_COUNT_COMMENTS,
             KEY_SALE_PERIOD_BEGIN,
             KEY_SALE_PERIOD_FINISH
     };
@@ -56,8 +59,9 @@ public class SaleDAO {
             KEY_SALE_SHOP + " integer, " +
             KEY_SALE_CATEGORY + " integer, " +
             KEY_SALE_CATEGORY_TYPE + " integer, " +
-            KEY_SALE_PERIOD_BEGIN + " text, " +
-            KEY_SALE_PERIOD_FINISH + " text);";
+            KEY_SALE_COUNT_COMMENTS + " integer, " +
+            KEY_SALE_PERIOD_BEGIN + " integer, " +
+            KEY_SALE_PERIOD_FINISH + " integer);";
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,8 +85,9 @@ public class SaleDAO {
                 String.valueOf(sale.getShopId()),
                 String.valueOf(sale.getCategoryId()),
                 String.valueOf(sale.getCategoryType()),
-                sale.getPeriodStart(),
-                sale.getPeriodEnd()
+                String.valueOf(sale.getCountComments()),
+                String.valueOf(sale.getPeriodStart()),
+                String.valueOf(sale.getPeriodEnd())
         };
     }
 
@@ -131,9 +136,9 @@ public class SaleDAO {
         Cursor cursor = db.getData(TABLE_SALES, COLUMNS_SALES, selection);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                result.add(getSale(cursor));
+                result.add(get(cursor));
                 while (cursor.moveToNext()) {
-                    result.add(getSale(cursor));
+                    result.add(get(cursor));
                 }
             }
             cursor.close();
@@ -141,34 +146,11 @@ public class SaleDAO {
         return result;
     }
 
-    private Sale getSale(Cursor cursor) {
-        Sale result = new Sale(
-                cursor.getInt(cursor.getColumnIndex(KEY_SALE_ID)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_TITLE)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_SUBTITLET)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_PERIOD_BEGIN)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_PERIOD_FINISH)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_COAST)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_QUANTITY)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_COAST_FOR_QUANTITY)),
-                cursor.getString(cursor.getColumnIndex(KEY_SALE_IMAGE_URL)),
-                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CITY_ID)),
-                cursor.getInt(cursor.getColumnIndex(KEY_SALE_SHOP)),
-                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CATEGORY)),
-                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CATEGORY_TYPE))
-        );
-        result.setShop(shopDAO.getShop(result));
-        result.setCategory(categoryDAO.getCategory(result));
-        result.setSameSales(sameSaleDao.getForSale(result.getCityId(), result.getId()));
-        result.setComments(saleCommentDao.getForSale(result.getId()));
-        return result;
-    }
-
     public Sale getSale(int regionId, int saleId) {
         Cursor cursor = db.getData(TABLE_SALES, COLUMNS_SALES, KEY_SALE_CITY_ID + "=" + regionId + " AND " + KEY_SALE_ID + "=" + saleId);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                return getSale(cursor);
+                return get(cursor);
             }
         }
         return null;
@@ -184,5 +166,45 @@ public class SaleDAO {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public Sale get(Cursor cursor) {
+        Sale result = new Sale(
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_ID)),
+                cursor.getString(cursor.getColumnIndex(KEY_SALE_TITLE)),
+                cursor.getString(cursor.getColumnIndex(KEY_SALE_SUBTITLET)),
+                cursor.getLong(cursor.getColumnIndex(KEY_SALE_PERIOD_BEGIN)),
+                cursor.getLong(cursor.getColumnIndex(KEY_SALE_PERIOD_FINISH)),
+                cursor.getString(cursor.getColumnIndex(KEY_SALE_COAST)),
+                cursor.getString(cursor.getColumnIndex(KEY_SALE_QUANTITY)),
+                cursor.getString(cursor.getColumnIndex(KEY_SALE_COAST_FOR_QUANTITY)),
+                cursor.getString(cursor.getColumnIndex(KEY_SALE_IMAGE_URL)),
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CITY_ID)),
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_SHOP)),
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CATEGORY)),
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_CATEGORY_TYPE)),
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_COUNT_COMMENTS))
+
+        );
+        result.setShop(shopDAO.getShop(result));
+        result.setCategory(categoryDAO.getCategory(result));
+        result.setSameSales(sameSaleDao.getForSale(result.getCityId(), result.getId()));
+        //result.setComments(saleCommentDao.getForSale(result.getId()));
+        return result;
+    }
+
+    public List<Sale> getForShop(int shopId) {
+        ArrayList<Sale> result = new ArrayList<>();
+        Cursor cursor = db.getData(TABLE_SALES, COLUMNS_SALES, KEY_SALE_SHOP + "=" + shopId);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                result.add(get(cursor));
+                while (cursor.moveToNext()) {
+                    result.add(get(cursor));
+                }
+            }
+            cursor.close();
+        }
+        return result;
     }
 }

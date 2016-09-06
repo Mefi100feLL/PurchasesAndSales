@@ -78,4 +78,16 @@ public class RegionDAO {
             db.endTransaction();
         }
     }
+
+    public Region getWithId(String id) {
+        Region result = null;
+        Cursor cursor = db.getData(TABLE_CITIES, KEY_CITY_ID + "=" + id);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                result = getRegion(cursor);
+            }
+            cursor.close();
+        }
+        return result;
+    }
 }

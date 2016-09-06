@@ -20,4 +20,8 @@ public class CategoryDBRepository implements CategoryRepository {
     public void addAllCategories(List<Category> categories) {
         dao.addAllCategories(categories);
     }
+
+    public void remove(Category category) {
+        dao.remove(category);
+    }
 }

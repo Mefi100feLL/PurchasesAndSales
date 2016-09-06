@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 @InjectViewState
 public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implements RecyclerCallback<Sale> {
@@ -29,9 +27,9 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
     private CategoryInteractor categoryInteractor = new CategoryInteractor();
     private SaleInteractor interactor = new SaleInteractor();
 
-    private ArrayList<Sale> objects = new ArrayList<>();
-
     private Shop currentShop;
+
+    private ArrayList<Sale> objects = new ArrayList<>();
 
     private ArrayList<Category> favoriteCategories = new ArrayList<>();
     private ArrayList<Category> allCategories = new ArrayList<>();
@@ -42,6 +40,54 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
     public SalesInShopPresenter() {
         getViewState().showProgress();
+    }
+
+    public void setCurrentShop(Shop shop) {
+        if (shop != null && currentShop == null) {
+            currentShop = shop;
+            loadCategories();
+        }
+    }
+
+    public void loadCategories() {
+        categoryInteractor.getData()
+                .subscribe(new Observer<List<Category>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ErrorManager.printStackTrace(e);
+                        if (allCategories.size() == 0) {
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(List<Category> categories) {
+                        if (categories.size() == 0) {
+                            getViewState().showCategoriesEmpty();
+                        } else {
+                            if (allCategories.size() == 0) {
+                                allCategories.addAll(categories);
+                                for (Category category : categories) {
+                                    if (category.isFavorite()) {
+                                        favoriteCategories.add(category);
+                                    }
+                                }
+                                if (favoriteCategories.size() == 0) {
+                                    getViewState().showFavoriteCategoriesEmpty();
+                                } else {
+                                    loadData();
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     public void loadData() {
@@ -63,11 +109,11 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        e.printStackTrace();
-                        if (objects.size() == 0){
-                            getViewState().showErrorLoadingSales(e);
-                        } else{
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
+                        ErrorManager.printStackTrace(e);
+                        if (objects.size() == 0) {
+                            getViewState().showError(e);
+                        } else {
+                            getViewState().showSnackBar(e);
                         }
                     }
 
@@ -87,44 +133,25 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                 });
     }
 
-    public void setCurrentShop(Shop shop) {
-        if (shop != null && currentShop == null) {
-            currentShop = shop;
-            categoryInteractor.loadFromDB()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Category>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
-                            getViewState().showCategoriesEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Category> categories) {
-                            if (categories.size() == 0) {
-                                getViewState().showCategoriesEmpty();
-                            } else {
-                                allCategories.addAll(categories);
-                                for (Category category : categories) {
-                                    if (category.isFavorite()) {
-                                        favoriteCategories.add(category);
-                                    }
-                                }
-                                if (favoriteCategories.size() == 0) {
-                                    getViewState().showFavoriteCategoriesEmpty();
-                                } else {
-                                    loadData();
-                                }
-                            }
-                        }
-                    });
+    private void initFilters() {
+        boolean added = false;
+        for (Sale sale : objects) {
+            if (!filterCategories.contains(sale.getCategory())) {
+                filterCategories.add(sale.getCategory());
+                added = true;
+            }
+        }
+        Collections.sort(filterCategories, new CategoryComparator());
+        if (added && filterPosition != 0) {
+            for (Category category : filterCategories) {
+                if (category.getName().equals(currentFilter)) {
+                    filterPosition = filterCategories.indexOf(category) + 1;
+                }
+            }
+        }
+        if (filterCategories.size() > 1) {
+            getViewState().showSpinner();
+            getViewState().selectSpinner(filterPosition);
         }
     }
 
@@ -138,29 +165,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
     public void selectCategories() {
         if (allCategories.size() == 0) {
             getViewState().showProgress();
-            categoryInteractor.loadFromNet()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<List<Category>>() {
-                        @Override
-                        public void onCompleted() {
-
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                            e.printStackTrace();
-                            getViewState().showCategoriesEmpty();
-                        }
-
-                        @Override
-                        public void onNext(List<Category> categories) {
-                            getViewState().showCategoriesEmpty();
-                            allCategories.addAll(categories);
-                            getViewState().showCategoriesForSelectingFavorites(allCategories);
-                        }
-                    });
+            loadCategories();
         } else {
             getViewState().showCategoriesForSelectingFavorites(allCategories);
         }
@@ -197,27 +202,6 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
     }
 
-    private void initFilters() {
-        boolean added = false;
-        for (Sale sale : objects) {
-            if (!filterCategories.contains(sale.getCategory())) {
-                filterCategories.add(sale.getCategory());
-                added = true;
-            }
-        }
-        Collections.sort(filterCategories, new CategoryComparator());
-        if (added && filterPosition != 0){
-            for (Category category : filterCategories){
-                if (category.getName().equals(currentFilter)){
-                    filterPosition = filterCategories.indexOf(category) + 1;
-                }
-            }
-        }
-        if (filterCategories.size() > 1) {
-            getViewState().showSpinner();
-            getViewState().selectSpinner(filterPosition);
-        }
-    }
 
     public ArrayList<String> getFilterStrings() {
         ArrayList<String> names = new ArrayList<>();
@@ -235,6 +219,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
             currentFilter = filterCategories.get(position - 1).getName();
         }
         getViewState().filter(currentFilter);
+        getViewState().selectSpinner(position);
     }
 
     public void tryAgain() {

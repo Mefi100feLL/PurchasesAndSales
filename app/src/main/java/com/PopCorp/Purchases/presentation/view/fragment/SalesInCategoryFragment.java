@@ -43,6 +43,8 @@ import java.util.List;
 
 public class SalesInCategoryFragment extends MvpAppCompatFragment implements SalesInCategoryView {
 
+    private static final String CURRENT_CATEGORY = "current_category";
+
     @InjectPresenter
     SalesInCategoryPresenter presenter;
 
@@ -58,6 +60,14 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     private String title = "";
 
     private String[] arraySizesTable;
+
+    public static SalesInCategoryFragment create(Category category) {
+        SalesInCategoryFragment result = new SalesInCategoryFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(CURRENT_CATEGORY, category);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +106,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        adapter = new SalesInCategoryAdapter(getActivity(), presenter, presenter.getObjects(), new SalesShopComparator());
+        adapter = new SalesInCategoryAdapter(presenter, presenter.getObjects(), new SalesShopComparator());
         adapter.setLayoutManager(layoutManager, PreferencesManager.getInstance().getSaleTableSize());
         recyclerView.setAdapter(adapter);
 
@@ -107,12 +117,13 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     public void onResume() {
         super.onResume();
         toolBar.setTitle(title);
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
     public void showShopsEmpty() {
-        showError(R.string.empty_no_favorite_shops, R.drawable.ic_menu_gallery, R.string.button_select_shops, v -> {
-            presenter.selectShops();
+        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_try_again, v -> {
+            presenter.loadShops();
         });
     }
 
@@ -126,22 +137,22 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
             @Override
             public void onCancel() {
-                showShopsEmpty();
+                showFavoriteShopsEmpty();
             }
         });
     }
 
     @Override
     public void showFavoriteShopsEmpty() {
-        showError(R.string.empty_no_favorite_shops_in_category, R.drawable.ic_menu_gallery, R.string.button_select_shops, v -> {
+        showError(R.string.empty_no_favorite_shops_in_category, R.drawable.ic_folder_favorite, R.string.button_select_shops, v -> {
             presenter.selectShops();
         });
     }
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_category, R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.tryAgain();
+        showError(R.string.empty_no_sales_in_category, R.drawable.ic_ghost_top, R.string.button_back_to_categories, v -> {
+            getActivity().onBackPressed();
         });
     }
 
@@ -188,18 +199,11 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         intent.putExtra(SaleActivity.CURRENT_SALE, String.valueOf(item.getId()));
         ArrayList<Sale> sales = adapter.getSales();
         String[] salesIds = new String[sales.size()];
-        for (int i=0; i < sales.size(); i++){
+        for (int i = 0; i < sales.size(); i++) {
             salesIds[i] = String.valueOf(sales.get(i).getId());
         }
         intent.putExtra(SaleActivity.ARRAY_SALES, salesIds);
         startActivity(intent);
-    }
-
-    @Override
-    public void showErrorLoadingSales(Throwable e) {
-        showError(getString(R.string.error_when_loading_sales) + "\n" + getString(ErrorManager.getErrorResource(e)), R.drawable.ic_menu_gallery, R.string.button_try_again, v -> {
-            presenter.tryAgain();
-        });
     }
 
     @Override
@@ -227,14 +231,21 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     }
 
     @Override
+    public void showError(Throwable e) {
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgain();
+        });
+    }
+
+    @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
         swipeRefresh.setEnabled(!refresh);
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -260,6 +271,9 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            getActivity().onBackPressed();
+        }
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
                 PreferencesManager.getInstance().putSaleTableSize(Integer.parseInt(filterItem));

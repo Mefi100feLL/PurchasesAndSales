@@ -12,9 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
-import com.PopCorp.Purchases.data.dao.ShopDAO;
 import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.data.net.APIFactory;
 import com.PopCorp.Purchases.data.utils.UIL;
@@ -28,16 +27,14 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
     public static final String FILTER_FAVORITE = "favorite";
 
     private final Context context;
-    private final RecyclerCallback<Shop> callback;
+    private final FavoriteRecyclerCallback<Shop> callback;
     private final ShopComparator comparator = new ShopComparator();
-    private ShopDAO shopDAO = new ShopDAO();
 
     private ArrayList<Shop> objects;
     private final SortedList<Shop> publishItems;
 
-    private String currentFilter;
 
-    public ShopsAdapter(Context context, RecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
+    public ShopsAdapter(Context context, FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
         this.context = context;
         this.callback = callback;
         this.objects = objects;
@@ -135,15 +132,7 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
         holder.favorite.setTag(shop);
         holder.favorite.setOnClickListener(v -> {
             Shop clickedShop = (Shop) v.getTag();
-            clickedShop.setFavorite(!clickedShop.isFavorite());
-            notifyItemChanged(publishItems.indexOf(clickedShop));
-            shopDAO.updateOrAddToDB(clickedShop);
-            if (currentFilter.equals(FILTER_FAVORITE)) {
-                publishItems.remove(clickedShop);
-                if (publishItems.size() == 0){
-                    callback.onEmpty();
-                }
-            }
+            callback.onFavoriteClicked(clickedShop);
         });
 
         holder.setClickListener((v, position1) -> callback.onItemClicked(v, publishItems.get(position1)));
@@ -169,7 +158,6 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
                 FilterResults results = new FilterResults();
                 ArrayList<Shop> FilteredArrayNames = new ArrayList<>();
 
-                currentFilter = (String) constraint;
                 if (constraint.equals(FILTER_ALL)) {
                     results.count = objects.size();
                     results.values = objects;

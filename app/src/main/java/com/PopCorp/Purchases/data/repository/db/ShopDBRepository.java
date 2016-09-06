@@ -20,4 +20,12 @@ public class ShopDBRepository implements ShopRepository {
     public void addAllShops(List<Shop> shops) {
         dao.addAllShops(shops);
     }
+
+    public void remove(Shop shop) {
+        dao.remove(shop);
+    }
+
+    public void update(Shop item) {
+        dao.updateOrAddToDB(item);
+    }
 }

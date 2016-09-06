@@ -23,6 +23,7 @@ import com.PopCorp.Purchases.data.callback.DialogRegionsCallback;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.utils.EmptyView;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
@@ -101,14 +102,15 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
     }
 
     @Override
-    public void showSnackBar(int errorRes) {
-        Snackbar.make(recyclerView, errorRes, Snackbar.LENGTH_SHORT).show();
+    public void showSnackBar(Throwable e) {
+        Snackbar.make(recyclerView, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         toolBar.setTitle("");
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     @Override
@@ -133,6 +135,13 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
     @Override
     public void showError(int textRes, int drawableRes, int textButtonRes, View.OnClickListener listener) {
         emptyView.showEmpty(textRes, drawableRes, textButtonRes, listener);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgainLoadShops();
+        });
     }
 
     @Override
@@ -189,22 +198,29 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
 
     @Override
     public void showRegionEmpty() {
-        showError(R.string.empty_categories_select_region, R.drawable.ic_menu_gallery, R.string.button_select_region, v -> {
+        showError(R.string.empty_categories_select_region, R.drawable.ic_globe, R.string.button_select_region, v -> {
             presenter.loadRegions();
         });
     }
 
     @Override
     public void showFavoriteCategoriesEmpty() {
-        showError(R.string.empty_no_favorite_categories, R.drawable.ic_menu_gallery, R.string.button_show_all_categories, v -> {
+        showError(R.string.empty_no_favorite_categories, R.drawable.ic_file_favorite, R.string.button_show_all_categories, v -> {
             spinner.setSelection(0);
         });
     }
 
     @Override
     public void showCategoriesEmpty() {
-        showError(R.string.empty_no_categgories, R.drawable.ic_menu_gallery, R.string.button_update, v -> {
+        showError(R.string.empty_no_categgories, R.drawable.ic_tag, R.string.button_update, v -> {
             presenter.tryAgainLoadShops();
+        });
+    }
+
+    @Override
+    public void showEmptyRegions() {
+        showError(R.string.empty_no_regions, R.drawable.ic_globe, R.string.button_try_again, view -> {
+            presenter.loadRegions();
         });
     }
 
@@ -213,7 +229,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
         DialogController.showDialogWithRegions(getActivity(), regions, new DialogRegionsCallback() {
 
             @Override
-            public void onSelected() {
+            public void onSelected(Region region) {
                 presenter.onRegionSelected();
             }
 

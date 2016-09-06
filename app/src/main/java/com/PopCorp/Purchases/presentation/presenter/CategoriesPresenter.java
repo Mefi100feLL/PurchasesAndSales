@@ -17,6 +17,7 @@ import com.arellomobile.mvp.MvpPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,8 +54,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
                         loadFromNetwork();
                     }
 
@@ -62,20 +62,25 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
                     public void onNext(List<Category> categories) {
                         if (categories.size() != 0){
                             objects.addAll(categories);
-                            boolean isFavorite = false;
-                            for (Category category : categories){
-                                if (category.isFavorite()){
-                                    isFavorite = true;
-                                    currentFilter = CategoriesAdapter.FILTER_FAVORITE;
-                                    break;
-                                }
-                            }
+                            boolean isFavorite = findFavoriteCategories(categories);
                             getViewState().showData();
                             getViewState().selectSpinner(isFavorite ? 1 : 0);
                         }
                         loadFromNetwork();
                     }
                 });
+    }
+
+    private boolean findFavoriteCategories(List<Category> categories) {
+        boolean result = false;
+        for (Category category : categories){
+            if (category.isFavorite()){
+                result = true;
+                currentFilter = CategoriesAdapter.FILTER_FAVORITE;
+                break;
+            }
+        }
+        return result;
     }
 
     private void loadFromNetwork(){
@@ -91,40 +96,70 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
                             getViewState().showCategoriesEmpty();
+                        } else {
+                            getViewState().showSnackBar(e);
                         }
                     }
 
                     @Override
                     public void onNext(List<Category> categories) {
                         getViewState().refreshing(false);
-                        if (categories.size() == 0) {
-                            if (objects.size() == 0) {
-                                getViewState().showCategoriesEmpty();
-                            }
-                        } else {
-                            ArrayList<Category> newShops = new ArrayList<>();
-                            for (Category category : categories){
-                                if (!objects.contains(category)){
-                                    newShops.add(category);
-                                    objects.add(category);
-                                }
-                            }
-                            if (newShops.size() > 0) {
+                        getViewState().refreshing(false);
+                        if (categories != null) {
+                            if (categories.size() == 0) {
+                                removeAllCategories();
+                            } else {
+                                ArrayList<Category> newCategories = findNewCategories(categories);
+                                //removeNotExistsCategories(categories);
                                 getViewState().showData();
                                 getViewState().filter(currentFilter);
-                                if (newShops.size() > 1) {
-                                    getViewState().showSnackBarWithNewCategories(newShops.size(), currentFilter.equals(ShopsAdapter.FILTER_FAVORITE));
-                                } else if (newShops.size() == 1) {
-                                    getViewState().showSnackBarWithNewCategory(newShops.get(0), currentFilter.equals(ShopsAdapter.FILTER_FAVORITE));
+                                if (newCategories.size() > 1) {
+                                    getViewState().showSnackBarWithNewCategories(newCategories.size(), currentFilter.equals(ShopsAdapter.FILTER_FAVORITE));
+                                } else if (newCategories.size() == 1) {
+                                    getViewState().showSnackBarWithNewCategory(newCategories.get(0), currentFilter.equals(ShopsAdapter.FILTER_FAVORITE));
                                 }
                             }
                         }
                     }
                 });
+    }
+
+    private void removeNotExistsCategories(List<Category> shops) {
+        ListIterator<Category> iterator = objects.listIterator();
+        while (iterator.hasNext()) {
+            Category category = iterator.next();
+            if (!shops.contains(category)) {
+                interactor.remove(category);
+                iterator.remove();
+            }
+        }
+    }
+
+    private ArrayList<Category> findNewCategories(List<Category> shops) {
+        ArrayList<Category> result = new ArrayList<>();
+        for (Category category : shops) {
+            if (!objects.contains(category)) {
+                result.add(category);
+                objects.add(category);
+            } else {
+                Category exist = objects.get(objects.indexOf(category));
+                category.setFavorite(exist.isFavorite());
+                objects.remove(exist);
+                objects.add(category);
+            }
+        }
+        return result;
+    }
+
+    private void removeAllCategories() {
+        for (Category category : objects) {
+            interactor.remove(category);
+        }
+        objects.clear();
+        getViewState().showCategoriesEmpty();
     }
 
     public void onRefresh() {
@@ -143,7 +178,12 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
             }
             getViewState().showData();
             getViewState().filter(currentFilter);
+            selectSpinner(position);
         }
+    }
+
+    public void selectSpinner(int position) {
+        getViewState().selectSpinner(position);
     }
 
     @Override
@@ -168,7 +208,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
     @Override
     public void onEmpty() {
-        if (!PreferencesManager.getInstance().getRegionId().isEmpty()) { // чтобы не убрать empty с невыбранным регионом
+        if (!isRegionEmpty()) { // чтобы не убрать empty с невыбранным регионом
             if (currentFilter.equals(ShopsAdapter.FILTER_ALL)) {
                 getViewState().showCategoriesEmpty();
             } else {
@@ -188,8 +228,8 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
-                        getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                        e.printStackTrace();
+                        getViewState().showSnackBar(e);
+                        ErrorManager.printStackTrace(e);
                     }
 
                     @Override
@@ -197,6 +237,8 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
                         getViewState().showRegionEmpty();
                         if (regions.size() != 0) {
                             getViewState().showSelectingRegions(regions);
+                        } else {
+                            getViewState().showEmptyRegions();
                         }
                     }
                 });

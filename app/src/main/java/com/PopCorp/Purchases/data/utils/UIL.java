@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.data.utils;
 
 import android.graphics.Bitmap;
 
+import com.PopCorp.Purchases.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
@@ -20,7 +21,11 @@ public class UIL {
         return new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY)
                 .cacheOnDisk(true)
+                .cacheInMemory(true)
                 .considerExifParams(true)
+                .showImageOnLoading(R.drawable.ic_image_media)
+                .showImageOnFail(R.drawable.ic_image_media_alert)
+                .showImageForEmptyUri(R.drawable.ic_image_media_alert)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }

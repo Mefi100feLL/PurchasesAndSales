@@ -2,4 +2,12 @@
     <integer name="visibility_toolbar_show_image">2</integer>
     <dimen name="margin_top_bottom_card_of_api_version">4dp</dimen>
     <dimen name="margin_card">4dp</dimen>
+    <dimen name="margin_toolbar">24dp</dimen>
+    <dimen name="margin_bottom_fab">48dp</dimen>
+    <dimen name="margin_right_fab">16dp</dimen>
+    <dimen name="margin_top_fab">-28dp</dimen>
+
+    <dimen name="toolbar_background_gradient_height">80dp</dimen>
+    <dimen name="toolbar_padding_top">24dp</dimen>
+    <dimen name="statusbar_height">24dp</dimen>
 </resources>

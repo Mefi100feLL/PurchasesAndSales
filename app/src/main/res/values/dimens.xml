@@ -20,4 +20,5 @@
     <dimen name="padding_recycler_top">8dp</dimen>
     <dimen name="padding_recycler_left">4dp</dimen>
     <dimen name="padding_recycler_right">4dp</dimen>
+    <dimen name="padding_recycler_bottom_with_fab">88dp</dimen>
 </resources>

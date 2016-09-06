@@ -14,13 +14,15 @@ public class ShoppingListActivity extends MvpAppCompatActivity {
 
     public static final String CURRENT_LIST = "current_list";
 
+    private ShoppingListFragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
 
-        Fragment fragment = new ShoppingListFragment();
+        fragment = new ShoppingListFragment();
         Bundle args = new Bundle();
         args.putLong(ShoppingListFragment.CURRENT_LIST, getIntent().getLongExtra(CURRENT_LIST, -1));
         fragment.setArguments(args);
@@ -30,5 +32,13 @@ public class ShoppingListActivity extends MvpAppCompatActivity {
         if (manager.findFragmentByTag(tag) == null) {
             transaction.replace(R.id.content, fragment, tag).commit();
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (fragment != null && fragment.onBackPressed()){
+            return;
+        }
+        super.onBackPressed();
     }
 }

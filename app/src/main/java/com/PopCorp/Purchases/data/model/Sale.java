@@ -17,10 +17,10 @@ public class Sale {
     private String subTitle;
 
     @SerializedName("periodStart")
-    private String periodStart;
+    private long periodStart;
 
     @SerializedName("periodEnd")
-    private String periodEnd;
+    private long periodEnd;
 
     @SerializedName("coast")
     private String coast;
@@ -46,6 +46,9 @@ public class Sale {
     @SerializedName("categoryType")
     private int categoryType;
 
+    @SerializedName("countComments")
+    private int countComments;
+
     private Category category;
     private Shop shop;
 
@@ -56,7 +59,7 @@ public class Sale {
     private List<SameSale> sameSales = new ArrayList<>();
 
 
-    public Sale(int id, String title, String subTitle, String periodStart, String periodEnd, String coast, String quantity, String coastForQuantity, String image, int cityId, int shopId, int categoryId, int categoryType) {
+    public Sale(int id, String title, String subTitle, long periodStart, long periodEnd, String coast, String quantity, String coastForQuantity, String image, int cityId, int shopId, int categoryId, int categoryType, int countComments) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
@@ -70,6 +73,7 @@ public class Sale {
         this.shopId = shopId;
         this.categoryId = categoryId;
         this.categoryType = categoryType;
+        this.countComments = countComments;
     }
 
     @Override
@@ -103,19 +107,19 @@ public class Sale {
         this.subTitle = subTitle;
     }
 
-    public String getPeriodStart() {
+    public long getPeriodStart() {
         return periodStart;
     }
 
-    public void setPeriodStart(String periodStart) {
+    public void setPeriodStart(long periodStart) {
         this.periodStart = periodStart;
     }
 
-    public String getPeriodEnd() {
+    public long getPeriodEnd() {
         return periodEnd;
     }
 
-    public void setPeriodEnd(String periodEnd) {
+    public void setPeriodEnd(long periodEnd) {
         this.periodEnd = periodEnd;
     }
 
@@ -213,5 +217,13 @@ public class Sale {
 
     public void setShop(Shop shop) {
         this.shop = shop;
+    }
+
+    public int getCountComments() {
+        return countComments;
+    }
+
+    public void setCountComments(int countComments) {
+        this.countComments = countComments;
     }
 }

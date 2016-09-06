@@ -43,4 +43,8 @@ public class RegionInteractor {
                     }).materialize().observeOn(AndroidSchedulers.mainThread()).<List<Region>>dematerialize();
                 });
     }
+
+    public Region getRegionWithId(String regionId) {
+        return dbRepository.getWithId(regionId);
+    }
 }
