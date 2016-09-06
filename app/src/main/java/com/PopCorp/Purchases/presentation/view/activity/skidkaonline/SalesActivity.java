@@ -20,10 +20,7 @@ public class SalesActivity extends MvpAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
-        Fragment fragment = new SalesFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(CURRENT_SHOP, getIntent().getParcelableExtra(CURRENT_SHOP));
-        fragment.setArguments(args);
+        Fragment fragment = SalesFragment.create(getIntent().getParcelableExtra(CURRENT_SHOP));
         String tag = fragment.getClass().getSimpleName();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

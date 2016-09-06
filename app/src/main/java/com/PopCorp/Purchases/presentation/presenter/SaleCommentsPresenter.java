@@ -5,7 +5,6 @@ import android.view.View;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.dao.SaleCommentDAO;
-import com.PopCorp.Purchases.data.dto.CommentResult;
 import com.PopCorp.Purchases.data.model.SaleComment;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
@@ -46,7 +45,7 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
     }
 
     private void loadData() {
-        interactor.getData(currentSaleId)
+        interactor.getData(currentSaleId, Integer.parseInt(PreferencesManager.getInstance().getRegionId()))
                 .subscribe(new Observer<List<SaleComment>>() {
                     @Override
                     public void onCompleted() {
@@ -106,7 +105,7 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
         interactor.sendComment(comment.getAuthor(), "", comment.getText(), Integer.parseInt(PreferencesManager.getInstance().getRegionId()), currentSaleId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<CommentResult>() {
+                .subscribe(new Observer<SaleComment>() {
                     @Override
                     public void onCompleted() {
 
@@ -120,15 +119,13 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     }
 
                     @Override
-                    public void onNext(CommentResult commentResult) {
-                        if (commentResult.isResult()) {
-                            comment.setDateTime(commentResult.getDateTime());
+                    public void onNext(SaleComment saleComment) {
+                        if (saleComment != null) {
+                            comment.setDateTime(saleComment.getDateTime());
                             comment.setError(0);
                             comment.setErrorText(null);
                             comment.setTmpText(0);
                             new SaleCommentDAO().updateOrAddToDB(comment);
-                        } else{
-                            comment.setErrorText(commentResult.getMessage());
                         }
                         getViewState().showData();
                     }

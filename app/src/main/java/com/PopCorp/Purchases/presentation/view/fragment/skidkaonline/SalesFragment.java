@@ -37,6 +37,8 @@ import java.util.ArrayList;
 
 public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
+    private static final String CURRENT_SHOP = "current_shop";
+
     @InjectPresenter
     SalesPresenter presenter;
 
@@ -52,6 +54,15 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
     private String[] arraySizesTable;
 
     private String title;
+
+
+    public static SalesFragment create(Shop shop) {
+        SalesFragment result = new SalesFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(CURRENT_SHOP, shop);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +106,6 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
         return rootView;
     }
-
 
     @Override
     public void showSpinner() {
@@ -164,7 +174,9 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public void showError(Throwable e) {
-
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgain();
+        });
     }
 
     @Override
@@ -211,13 +223,6 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
     }
 
     @Override
-    public void showErrorLoadingSales(Throwable e) {
-        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), ErrorManager.getErrorButtonTextResource(e), view -> {
-            presenter.onRefresh();
-        });
-    }
-
-    @Override
     public void selectSpinner(int filterPosition) {
         spinner.setSelection(filterPosition);
     }
@@ -246,4 +251,5 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
     public void filter(String filter) {
         adapter.getFilter().filter(filter);
     }
+
 }

@@ -63,11 +63,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         @Override
         public Fragment getItem(int position) {
-            SaleFragment fragment = new SaleFragment();
-            Bundle args = new Bundle();
-            args.putInt(SaleFragment.CURRENT_SALE, presenter.getSalesIds().get(position));
-            fragment.setArguments(args);
-            return fragment;
+            return SaleFragment.create(presenter.getSalesIds().get(position));
         }
 
         @Override
@@ -77,10 +73,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         @Override
         public void onPageSelected(int position) {
-            /*if (Build.VERSION.SDK_INT >= 21) {
-                image.setTransitionName(String.valueOf(presenter.getSalesIds().get(position)));
-                ImageLoader.getInstance().displayImage(sales.get(position).getImageUrl(), image, UIL.getScaleImageOptions());
-            }*/
+
         }
 
         @Override

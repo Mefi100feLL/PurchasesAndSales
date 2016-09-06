@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.view.fragment.ListItemSaleFragment;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -16,16 +17,16 @@ public class ListItemSaleActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
+        setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
-        new MaterializeBuilder()
+        /*new MaterializeBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBarProgrammatically(true)
                 .withTransparentStatusBar(true)
                 .withStatusBarColorRes(android.R.color.transparent)
-                .build();
+                .build();*/
 
         Fragment fragment = ListItemSaleFragment.create(getIntent().getParcelableExtra(CURRENT_LISTITEM_SALE));
         String tag = fragment.getClass().getSimpleName();

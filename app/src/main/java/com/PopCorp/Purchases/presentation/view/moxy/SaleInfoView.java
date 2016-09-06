@@ -33,5 +33,5 @@ public interface SaleInfoView extends MvpView {
 
     void showItemAdded();
 
-    void openSameSale(View view, int saleId);
+    void openSameSale(View v, int saleId);
 }

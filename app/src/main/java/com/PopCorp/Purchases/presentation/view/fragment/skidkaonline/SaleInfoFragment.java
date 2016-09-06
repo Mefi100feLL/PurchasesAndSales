@@ -3,9 +3,9 @@ package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -24,7 +24,6 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
-import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleInfoPresenterFactory;
@@ -32,7 +31,6 @@ import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsPr
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleInfoPresenter;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
-import com.PopCorp.Purchases.presentation.view.fragment.InputListItemFragment;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleInfoView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -40,8 +38,6 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -51,17 +47,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class SaleInfoFragment extends MvpAppCompatFragment
-        implements Toolbar.OnMenuItemClickListener,
+        implements
+        Toolbar.OnMenuItemClickListener,
         SaleChildCallback,
         View.OnClickListener,
         SaleInfoView,
         SaleParamsProvider {
 
-    public static final String CURRENT_SALE = "current_sale";
+    private static final String CURRENT_SALE = "current_sale";
 
     private static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
 
-    @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = "SaleInfoPresenter")
+    @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = SaleInfoPresenter.PRESENTER_ID)
     SaleInfoPresenter presenter;
 
     private int saleId;
@@ -86,7 +83,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        saleId = getArguments().getInt(SaleFragment.CURRENT_SALE);
+        saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
     }
@@ -105,11 +102,14 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
         ImageView comments = (ImageView) rootView.findViewById(R.id.comments);
-        ImageView sendToList = (ImageView) rootView.findViewById(R.id.send_to_list);
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         ImageView cropImage = (ImageView) rootView.findViewById(R.id.crop);
 
+        image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
+        image.setMaxScale(getResources().getDimension(R.dimen.image_maximum_scale));
+
         comments.setOnClickListener(view -> parent.showComments());
-        sendToList.setOnClickListener(view -> presenter.loadShoppingLists());
+        fab.setOnClickListener(view -> presenter.loadShoppingLists());
         cropImage.setOnClickListener(view -> openCropActivity());
 
         return rootView;
@@ -144,9 +144,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         switch (item.getItemId()) {
             case R.id.action_share:
                 shareSale(presenter.getSale());
-                break;
-            case R.id.action_comments:
-                parent.showComments();
                 break;
             case android.R.id.home:
                 getActivity().onBackPressed();
@@ -192,71 +189,31 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         return String.valueOf(saleId);
     }
 
-    private void loadBigImage(Sale sale) {
-        ImageLoader.getInstance().loadImage(sale.getImageBig(), null, UIL.getScaleImageOptions(), new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String s, View view) {
-                progressLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onLoadingFailed(String s, View view, FailReason failReason) {
-                progressLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                File file = ImageLoader.getInstance().getDiskCache().get(sale.getImageBig());
-                if (file != null) {
-                    image.setImage(ImageSource.uri(file.getAbsolutePath()));
-                }
-                progressLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String s, View view) {
-
-            }
-        }, (s, view, progress, size) -> progressView.setProgress(500 + progress * 500 / size));
+    @Override
+    public void showInfo(Sale sale) {
+        SimpleDateFormat format = new SimpleDateFormat("d MMMM ", new Locale("ru"));
+        String title = format.format(new Date(sale.getPeriodStart())) + " - " + format.format(new Date(sale.getPeriodEnd()));
+        toolBar.setTitle(title);
     }
 
     @Override
-    public void showInfo(Sale sale) {
-        image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
-        image.setMaxScale(getResources().getDimension(R.dimen.image_maximum_scale));
+    public void showError(Throwable e) {
 
-        File smallFile = ImageLoader.getInstance().getDiskCache().get(sale.getImageSmall());
-        if (smallFile != null) {
-            image.setImage(ImageSource.uri(smallFile.getAbsolutePath()));
-            loadBigImage(sale);
-        } else {
-            ImageLoader.getInstance().loadImage(sale.getImageSmall(), null, UIL.getScaleImageOptions(), new ImageLoadingListener() {
-                @Override
-                public void onLoadingStarted(String s, View view) {
-                    progressLayout.setVisibility(View.VISIBLE);
-                }
+    }
 
-                @Override
-                public void onLoadingFailed(String s, View view, FailReason failReason) {
-                    progressLayout.setVisibility(View.GONE);
-                }
+    @Override
+    public void showSaleEmpty() {
 
-                @Override
-                public void onLoadingComplete(String s, View view, Bitmap bitmap) {
-                    File smallFile = ImageLoader.getInstance().getDiskCache().get(sale.getImageSmall());
-                    if (smallFile != null) {
-                        image.setImage(ImageSource.uri(smallFile.getAbsolutePath()));
-                    }
-                    bitmap.recycle();
-                    loadBigImage(sale);
-                }
+    }
 
-                @Override
-                public void onLoadingCancelled(String s, View view) {
+    @Override
+    public void showProgress() {
+        progressLayout.setVisibility(View.VISIBLE);
+    }
 
-                }
-            }, (s, view, progress, size) -> progressView.setProgress(progress * 500 / size));
-        }
+    @Override
+    public void hideProgress() {
+        progressLayout.setVisibility(View.GONE);
     }
 
 
@@ -299,16 +256,36 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     @Override
     public void openInputListItemFragment(ListItem item, long[] listsIds) {
         Intent intent = new Intent(getActivity(), InputListItemActivity.class);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTS, listsIds);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, item);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTS, listsIds);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTITEM, item);
         startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
+    }
+
+    @Override
+    public void showErrorLoadingLists(Throwable e) {
+        showToast(R.string.error_can_not_load_lists);
+    }
+
+    @Override
+    public void showItemAdded() {
+        showToast(R.string.notification_sale_sended_in_lists);
+    }
+
+    @Override
+    public void showImage(ImageSource uri) {
+        image.setImage(uri);
+    }
+
+    @Override
+    public void setProgress(int progress) {
+        progressView.setProgress(progress);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
-                ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
+                ListItem item = data.getParcelableExtra(InputListItemActivity.CURRENT_LISTITEM);
                 if (item != null) {
                     presenter.onItemsRerurned(item);
                 }
@@ -317,7 +294,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showToast(int error_select_lists) {
-        Toast.makeText(getActivity(), error_select_lists, Toast.LENGTH_SHORT).show();
+    private void showToast(int textRes) {
+        Toast.makeText(getActivity(), textRes, Toast.LENGTH_SHORT).show();
     }
 }

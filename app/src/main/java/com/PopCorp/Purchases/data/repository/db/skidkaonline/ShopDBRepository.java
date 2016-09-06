@@ -29,4 +29,8 @@ public class ShopDBRepository implements ShopRepository {
     public String getForUrl(String shopUrl, int cityId) {
         return dao.getWithUrl(shopUrl, cityId).getName();
     }
+
+    public void remove(Shop shop) {
+        dao.remove(shop);
+    }
 }

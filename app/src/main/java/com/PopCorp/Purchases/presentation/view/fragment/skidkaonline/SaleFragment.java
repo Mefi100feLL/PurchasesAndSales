@@ -20,13 +20,21 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallback, SaleView, SaleParamsProvider, BackPressedCallback {
 
-    public static final String CURRENT_SALE = "current_sale";
+    private static final String CURRENT_SALE = "current_sale";
 
-    @InjectPresenter(factory = SalePresenterFactory.class, presenterId = "SalePresenter")
+    @InjectPresenter(factory = SalePresenterFactory.class, presenterId = SalePresenter.PRESENTER_ID)
     SalePresenter presenter;
 
     private int saleId;
     private boolean showedComments = false;
+
+    public static SaleFragment create(int saleId) {
+        SaleFragment result = new SaleFragment();
+        Bundle args = new Bundle();
+        args.putInt(SaleFragment.CURRENT_SALE, saleId);
+        result.setArguments(args);
+        return result;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

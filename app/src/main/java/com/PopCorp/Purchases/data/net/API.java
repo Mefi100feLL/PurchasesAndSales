@@ -45,11 +45,11 @@ public interface API {
 
     @FormUrlEncoded
     @POST("/mestoskidki/comments")
-    Observable<UniversalDTO<List<SaleComment>>> getComments(@Field("sale") int saleId);
+    Observable<UniversalDTO<List<SaleComment>>> getComments(@Field("sale") int saleId, @Field("city") int cityId);
 
     @FormUrlEncoded
     @POST("/mestoskidki//comments/new")
-    Observable<CommentResult> sendComment(@Field("author") String author,
+    Observable<UniversalDTO<SaleComment>> sendComment(@Field("author") String author,
                                           @Field("whom") String whom,
                                           @Field("text") String text,
                                           @Field("city") int regionId,

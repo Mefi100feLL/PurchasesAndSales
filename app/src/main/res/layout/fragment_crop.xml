@@ -7,13 +7,10 @@
     android:background="@android:color/black"
     android:orientation="vertical">
 
-    <com.yalantis.ucrop.view.GestureCropImageView
-        android:id="@+id/crop_view"
+    <com.yalantis.ucrop.view.UCropView
+        android:id="@+id/ucrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/black"
-        app:ucrop_show_frame="false"
-        app:ucrop_show_grid="false"/>
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/cropped_image"
@@ -71,7 +68,22 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <include
-        layout="@layout/content_progressbar"/>
+    <FrameLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:background="#64000000"
+        android:padding="24dp">
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView
+            android:id="@+id/progress"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:cpv_color="@android:color/white"
+            app:cpv_animAutostart="true"
+            app:cpv_indeterminate="true"/>
+    </FrameLayout>
 
 </FrameLayout>

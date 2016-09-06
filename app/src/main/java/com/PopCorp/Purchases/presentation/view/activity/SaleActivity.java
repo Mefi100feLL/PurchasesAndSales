@@ -87,7 +87,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         for (Fragment frag : fm.getFragments()) {
-            if (frag != null && frag.isVisible()) {
+            if (frag != null && frag.isVisible() && frag.isMenuVisible()) {
                 if (((BackPressedCallback) frag).onBackPressed()){
                     return;
                 }

@@ -73,7 +73,7 @@ public class InputListItemPresenter extends MvpPresenter<InputListItemView> {
         return categories;
     }
 
-    public void onFabClicked(String name, String count, String unit, String coast, boolean important, String shop, int category, String comment) {
+    public void buildItem(String name, String count, String unit, String coast, boolean important, String shop, int category, String comment) {
         if (name.isEmpty()){
             getViewState().showNameEmpty();
             return;

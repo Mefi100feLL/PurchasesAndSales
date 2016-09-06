@@ -34,6 +34,13 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
         getViewState().showProgress();
     }
 
+    public void setCurrentShop(Shop shop) {
+        if (currentShop == null){
+            currentShop = shop;
+            loadData();
+        }
+    }
+
     private void loadData(){
         interactor.getData(currentShop.getCityId(), currentShop.getUrl())
                 .subscribe(new Observer<List<Sale>>() {
@@ -45,9 +52,9 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
                         if (objects.size() == 0){
-                            getViewState().showErrorLoadingSales(e);
+                            getViewState().showError(e);
                         } else{
                             getViewState().showSnackBar(e);
                         }
@@ -69,13 +76,28 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
                 });
     }
 
-    public void setCurrentShop(Shop shop) {
-        if (currentShop == null){
-            currentShop = shop;
-            loadData();
+    private void initFilters() {
+        filterCatalogs.clear();
+        boolean added = false;
+        for (Sale sale : objects) {
+            if (!filterCatalogs.contains(sale.getCatalog())) {
+                filterCatalogs.add(sale.getCatalog());
+                added = true;
+            }
+        }
+        Collections.sort(filterCatalogs);
+        if (added && filterPosition != 0){
+            for (String catalog : filterCatalogs){
+                if (catalog.equals(currentFilter)){
+                    filterPosition = filterCatalogs.indexOf(catalog) + 1;
+                }
+            }
+        }
+        if (filterCatalogs.size() > 1) {
+            getViewState().showSpinner();
+            getViewState().selectSpinner(filterPosition);
         }
     }
-
 
     @Override
     public void onItemClicked(View view, Sale item) {
@@ -100,29 +122,6 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
     @Override
     public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
 
-    }
-
-    private void initFilters() {
-        filterCatalogs.clear();
-        boolean added = false;
-        for (Sale sale : objects) {
-            if (!filterCatalogs.contains(sale.getCatalog())) {
-                filterCatalogs.add(sale.getCatalog());
-                added = true;
-            }
-        }
-        Collections.sort(filterCatalogs);
-        if (added && filterPosition != 0){
-            for (String catalog : filterCatalogs){
-                if (catalog.equals(currentFilter)){
-                    filterPosition = filterCatalogs.indexOf(catalog) + 1;
-                }
-            }
-        }
-        if (filterCatalogs.size() > 1) {
-            getViewState().showSpinner();
-            getViewState().selectSpinner(filterPosition);
-        }
     }
 
     public ArrayList<String> getFilterStrings() {

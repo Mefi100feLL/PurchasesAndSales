@@ -26,9 +26,9 @@ public class ListItem implements Parcelable, ContentSame<ListItem> {
         this.id = id;
         this.listId = listId;
         this.name = name;
-        this.count = new BigDecimal(count);
+        this.count = new BigDecimal(count != null && !count.isEmpty() ? count : "0");
         this.edizm = edizm;
-        this.coast = new BigDecimal(coast);
+        this.coast = new BigDecimal(coast != null && !coast.isEmpty() ? coast : "0");
         this.category = category;
         this.shop = shop;
         this.comment = comment;
@@ -61,14 +61,15 @@ public class ListItem implements Parcelable, ContentSame<ListItem> {
                     count.equals(object.getCount()) &&
                     edizm.equals(object.getEdizm()) &&
                     coast.equals(object.getCoast()) &&
-                    category.equals(object.getCategory()) &&
                     shop.equals(object.getShop()) &&
                     comment.equals(object.getComment()) &&
                     buyed == object.isBuyed() &&
                     important == object.isImportant()) {
-                if (sale != null && object.getSale() != null){
-                    if (sale.equals(object.getSale())){
-                        return true;
+                if ((category != null && object.getCategory() != null && category.equals(object.getCategory())) || (category == null && object.getCategory() == null)) {
+                    if (sale != null && object.getSale() != null) {
+                        if (sale.equals(object.getSale())) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -93,9 +94,9 @@ public class ListItem implements Parcelable, ContentSame<ListItem> {
         dest.writeLong(id);
         dest.writeLong(listId);
         dest.writeString(name);
-        dest.writeString(getCountString());
+        dest.writeString(count.toString());
         dest.writeString(edizm);
-        dest.writeString(getCoastString());
+        dest.writeString(coast.toString());
         dest.writeParcelable(category, flags);
         dest.writeString(shop);
         dest.writeString(comment);

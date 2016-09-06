@@ -11,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.callback.BackPressedCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
@@ -27,18 +30,21 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.CropPresenter;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
-import com.PopCorp.Purchases.presentation.view.fragment.InputListItemFragment;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.CropView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yalantis.ucrop.view.GestureCropImageView;
+import com.yalantis.ucrop.view.UCropView;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class CropFragment extends MvpAppCompatFragment implements CropView {
+public class CropFragment extends MvpAppCompatFragment implements CropView, BackPressedCallback {
 
     private static final String CURRENT_SALE = "current_sale";
     private static final String CURRENT_FILE_PATH = "current_file_path";
@@ -50,11 +56,13 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
 
     private GestureCropImageView cropView;
     private ImageView image;
-    private View progressBar;
+    private View progress;
     private FloatingActionButton fab;
     private Toolbar toolBar;
     private View rotateSkip;
     private View scaleSkip;
+
+    private Menu menu;
 
 
     public static Fragment create(int saleId, String filePath) {
@@ -86,9 +94,10 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
         }
 
         image = (ImageView) rootView.findViewById(R.id.cropped_image);
-        cropView = (GestureCropImageView) rootView.findViewById(R.id.crop_view);
-        progressBar = rootView.findViewById(R.id.progress);
+        UCropView uCropView = (UCropView) rootView.findViewById(R.id.ucrop);
+        progress = rootView.findViewById(R.id.progress_layout);
 
+        cropView = uCropView.getCropImageView();
         cropView.setTargetAspectRatio(1);
         rotateSkip = rootView.findViewById(R.id.rotate_skip);
         scaleSkip = rootView.findViewById(R.id.scale_skip);
@@ -108,6 +117,7 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
 
         try {
             cropView.setImageUri(Uri.fromFile(new File(getArguments().getString(CURRENT_FILE_PATH))));
+            cropView.setTransformImageListener(presenter);
         } catch (Exception e) {
             e.printStackTrace();
             showToast(R.string.error_when_openning_image_file);
@@ -131,34 +141,21 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            getActivity().onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void showImage(Bitmap bitmap) {
         image.setImageBitmap(bitmap);
         cropView.setVisibility(View.INVISIBLE);
         image.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.INVISIBLE);
+        progress.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-        progressBar.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void showError(int errorRes) {
-        showToast(errorRes);
+        progress.setVisibility(View.INVISIBLE);
     }
 
     public void showToast(int errorRes) {
@@ -168,6 +165,16 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
     @Override
     public void showErrorCanNotCropImage() {
         Toast.makeText(getActivity(), R.string.error_can_not_crop_image, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showItemAdded() {
+        showToast(R.string.notification_sale_sended_in_lists);
+    }
+
+    @Override
+    public void showErrorLoadingLists(Throwable e) {
+        showToast(R.string.error_can_not_load_lists);
     }
 
     @Override
@@ -196,14 +203,18 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
     public void showSendingButton() {
         fab.setImageResource(R.drawable.ic_shopping_cart_white_24dp);
         fab.setVisibility(View.VISIBLE);
-        fab.setOnClickListener(view -> {
-            presenter.loadShoppingLists();
-        });
+        fab.setOnClickListener(view -> presenter.loadShoppingLists());
+        fab.post(() -> menu.findItem(R.id.action_share).setVisible(true));
     }
 
     @Override
     public void showImage(String imageUri) {
         ImageLoader.getInstance().displayImage(imageUri, image, UIL.getImageOptions());
+    }
+
+    @Override
+    public void showError(Throwable e) {
+
     }
 
 
@@ -246,8 +257,8 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
     @Override
     public void openInputListItemFragment(ListItem item, long[] listsIds) {
         Intent intent = new Intent(getActivity(), InputListItemActivity.class);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTS, listsIds);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, item);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTS, listsIds);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTITEM, item);
         startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
     }
 
@@ -255,12 +266,72 @@ public class CropFragment extends MvpAppCompatFragment implements CropView {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
-                ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
+                ListItem item = data.getParcelableExtra(InputListItemActivity.CURRENT_LISTITEM);
                 if (item != null) {
                     presenter.onItemsRerurned(item);
                 }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        presenter.clearImage();
+        return false;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.skidkaonline_sale, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        this.menu = menu;
+        menu.findItem(R.id.action_share).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                shareSale(presenter.getSale());
+                break;
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+        }
+        return false;
+    }
+
+    private void shareSale(Sale sale) {
+        SimpleDateFormat format = new SimpleDateFormat("d MMMM", new Locale("ru"));
+        File image = ImageLoader.getInstance().getDiskCache().get(sale.getImageBig());
+        if (image == null) {
+            Toast.makeText(getActivity(), R.string.toast_no_founded_sale_image, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        String string = getString(R.string.string_for_share_sale_skidkaonline);
+        string = string.replace("shop", presenter.getShopNameForUrl(sale.getShopUrl()));
+        String periodBegin = format.format(new Date(sale.getPeriodStart()));
+        String periodFinish = format.format(new Date(sale.getPeriodEnd()));
+        string = string.replace("period", periodBegin.equals(periodFinish) ? periodBegin : "c " + periodBegin + " по " + periodFinish);
+
+        shareIntent.putExtra(Intent.EXTRA_TEXT, string);
+
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
+        shareIntent.setType("image/jpeg");
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.string_send_sale_with_app)));
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), R.string.notification_no_apps_for_share_sale, Toast.LENGTH_SHORT).show();
+        }
     }
 }

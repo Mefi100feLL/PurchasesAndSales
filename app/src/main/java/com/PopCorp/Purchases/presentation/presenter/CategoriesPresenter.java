@@ -113,7 +113,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
                                 removeAllCategories();
                             } else {
                                 ArrayList<Category> newCategories = findNewCategories(categories);
-                                removeNotExistsCategories(categories);
+                                //removeNotExistsCategories(categories);
                                 getViewState().showData();
                                 getViewState().filter(currentFilter);
                                 if (newCategories.size() > 1) {

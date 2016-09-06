@@ -280,6 +280,7 @@
     <string name="error_when_openning_image_file">Ошибка при открытии картинки</string>
     <string name="error_when_cropping_image">Ошибка при обрезке картинки. Попробуйте еще раз</string>
     <string name="empty_no_regions">Не получилось загрузить регионы\nПопробуйте загрузить еще раз или попозже</string>
+    <string name="error_can_not_load_lists">Не получилось загрузить списки. Попробуйте позже</string>
 
 
 </resources>

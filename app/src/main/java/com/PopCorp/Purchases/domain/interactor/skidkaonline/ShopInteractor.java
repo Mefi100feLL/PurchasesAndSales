@@ -57,4 +57,8 @@ public class ShopInteractor {
     public String getForUrl(String shopUrl, int cityId) {
         return dbRepository.getForUrl(shopUrl, cityId);
     }
+
+    public void remove(Shop shop) {
+        dbRepository.remove(shop);
+    }
 }

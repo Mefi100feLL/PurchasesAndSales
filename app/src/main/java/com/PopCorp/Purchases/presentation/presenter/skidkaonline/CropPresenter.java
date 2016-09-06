@@ -1,17 +1,13 @@
 package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 
 import android.graphics.Bitmap;
-import android.os.Parcelable;
 
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
-import com.PopCorp.Purchases.data.dao.ListItemCategoryDAO;
-import com.PopCorp.Purchases.data.dao.skidkaonline.ShopDAO;
+import com.PopCorp.Purchases.data.mapper.SaleToListItemMapper;
 import com.PopCorp.Purchases.data.model.ListItem;
-import com.PopCorp.Purchases.data.model.ListItemCategory;
-import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
-import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
@@ -22,16 +18,12 @@ import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.CropView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yalantis.ucrop.view.TransformImageView;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import rx.Observer;
 import rx.Subscriber;
@@ -39,24 +31,24 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class CropPresenter extends MvpPresenter<CropView> implements CreateEditListCallback {
+public class CropPresenter extends MvpPresenter<CropView> implements CreateEditListCallback, TransformImageView.TransformImageListener {
 
     private SaleInteractor saleInteractor = new SaleInteractor();
     private CropInteractor interactor = new CropInteractor();
     private ShoppingListInteractor listInteractor = new ShoppingListInteractor();
     private ListItemInteractor listItemInteractor = new ListItemInteractor();
-    private ListItemCategoryDAO listItemCategoryDAO = new ListItemCategoryDAO();
 
     private Sale currentSale;
     private String croppedImageUri;
 
-
     public List<ShoppingList> lists = new ArrayList<>();
     private ArrayList<ShoppingList> selectedLists = new ArrayList<>();
 
+    private boolean imageSended = false;
+
     public void setSaleId(int saleId) {
         if (currentSale == null) {
-            saleInteractor.getSale(Integer.valueOf(PreferencesManager.getInstance().getRegionId()), saleId)
+            saleInteractor.getSale(Integer.valueOf(PreferencesManager.getInstance().getCity()), saleId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<Sale>() {
@@ -67,7 +59,7 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
                         @Override
                         public void onError(Throwable e) {
-
+                            getViewState().showError(e);
                         }
 
                         @Override
@@ -131,7 +123,8 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
                     @Override
                     public void onError(Throwable e) {
-
+                        ErrorManager.printStackTrace(e);
+                        getViewState().showErrorLoadingLists(e);
                     }
 
                     @Override
@@ -157,10 +150,12 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
     }
 
     public void onItemsRerurned(ListItem item) {
+        imageSended = true;
         for (ShoppingList list : selectedLists) {
             item.setListId(list.getId());
             listItemInteractor.addItem(item);
         }
+        getViewState().showItemAdded();
     }
 
 
@@ -179,41 +174,8 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
     }
 
     private void openInputListItem() {
-        SimpleDateFormat format = new SimpleDateFormat("d MMM yyyy", new Locale("ru"));
-        List<ListItemCategory> categories = listItemCategoryDAO.getAllCategories();
-        ListItemCategory listItemCategory = null;
-        if (categories != null && categories.size() > 0) {
-            listItemCategory = categories.get(0);
-            for (ListItemCategory category : categories) {
-                if (category.getName().contains("Акци")) {
-                    listItemCategory = category;
-                }
-            }
-        }
-        String count = "1";
-        String edizm = "шт ";
-        String coast = "0";
-        String shopName = "";
-        Shop shop = new ShopDAO().getWithUrl(currentSale.getShopUrl(), currentSale.getCityId());
-        if (shop != null) {
-            shopName = shop.getName();
-        }
-        String comment = format.format(new Date(currentSale.getPeriodStart())) + " - " + format.format(new Date(currentSale.getPeriodEnd()));
-
-        ListItem item = new ListItem(
-                -1,
-                -1,
-                "",
-                count,
-                edizm,
-                coast,
-                listItemCategory,
-                shopName,
-                comment,
-                false,
-                false,
-                new ListItemSale(-1, croppedImageUri, format.format(new Date(currentSale.getPeriodStart())), format.format(new Date(currentSale.getPeriodEnd())))
-        );
+        currentSale.setImageBig(croppedImageUri);
+        ListItem item = SaleToListItemMapper.getListItem(currentSale);
         long[] ids = new long[selectedLists.size()];
         for (int i = 0; i < selectedLists.size(); i++) {
             ids[i] = selectedLists.get(i).getId();
@@ -223,5 +185,25 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
     public String getShopNameForUrl(String shopUrl) {
         return new ShopInteractor().getForUrl(shopUrl, Integer.parseInt(PreferencesManager.getInstance().getCity()));
+    }
+
+    public void clearImage() {
+        if (croppedImageUri != null && !imageSended) {
+            ImageLoader.getInstance().getDiskCache().remove(croppedImageUri);
+        }
+    }
+
+    @Override
+    public void onRotate(float currentAngle) {
+
+    }
+
+    @Override
+    public void onScale(float currentScale) {
+
+    }
+
+    public Sale getSale() {
+        return currentSale;
     }
 }

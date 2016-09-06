@@ -27,7 +27,7 @@ import java.io.File;
 
 public class ListItemSaleFragment extends MvpAppCompatFragment implements View.OnClickListener, ListItemSaleView {
 
-    public static final String CURRENT_LISTITEM_SALE = "current_listitem_sale";
+    private static final String CURRENT_LISTITEM_SALE = "current_listitem_sale";
 
     @InjectPresenter
     ListItemSalePresenter presenter;
@@ -39,7 +39,7 @@ public class ListItemSaleFragment extends MvpAppCompatFragment implements View.O
     private TextView period;
 
 
-    public static ListItemSaleFragment create(ListItemSale sale){
+    public static ListItemSaleFragment create(ListItemSale sale) {
         ListItemSaleFragment result = new ListItemSaleFragment();
         Bundle args = new Bundle();
         args.putParcelable(CURRENT_LISTITEM_SALE, sale);

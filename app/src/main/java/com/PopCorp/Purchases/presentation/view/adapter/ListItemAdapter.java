@@ -234,11 +234,17 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             holder.image.setTag(item.getSale());
             holder.image.setOnClickListener(v -> callback.onItemSaleClicked(v, (ListItemSale) v.getTag()));
             holder.image.setBackgroundResource(android.R.color.transparent);
+            holder.image.setVisibility(View.VISIBLE);
         } else {
-            ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
-            coloredCircle.getPaint().setColor(item.getCategory().getColor());
-            holder.image.setBackgroundDrawable(coloredCircle);
-            holder.image.setImageResource(android.R.color.transparent);
+            if (item.getCategory() != null) {
+                ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
+                coloredCircle.getPaint().setColor(item.getCategory().getColor());
+                holder.image.setVisibility(View.VISIBLE);
+                holder.image.setBackgroundDrawable(coloredCircle);
+                holder.image.setImageResource(android.R.color.transparent);
+            } else {
+                holder.image.setVisibility(View.GONE);
+            }
         }
 
         if (selectedItems.contains(item)) {

@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.domain.interactor;
 
-import com.PopCorp.Purchases.data.dto.CommentResult;
 import com.PopCorp.Purchases.data.model.SaleComment;
 import com.PopCorp.Purchases.data.repository.db.SaleCommentDBRepository;
 import com.PopCorp.Purchases.data.repository.net.SaleCommentNetRepository;
@@ -19,8 +18,8 @@ public class SaleCommentInteractor {
 
     private List<SaleComment> result;
 
-    public Observable<List<SaleComment>> getData(int saleId) {
-        return netRepository.getData(saleId)
+    public Observable<List<SaleComment>> getData(int saleId, int cityId) {
+        return netRepository.getData(saleId, cityId)
                 .subscribeOn(Schedulers.io())
                 .map(comments -> {
                     if (comments.size() != 0) {
@@ -29,7 +28,7 @@ public class SaleCommentInteractor {
                     return comments;
                 })
                 .onErrorResumeNext(throwable -> {
-                    return dbRepository.getData(saleId)
+                    return dbRepository.getData(saleId, cityId)
                             .doOnNext(comments -> result = comments)
                             .flatMap(comments -> Observable.error(throwable));
                 })
@@ -45,7 +44,7 @@ public class SaleCommentInteractor {
                 });
     }
 
-    public Observable<CommentResult> sendComment(String author, String whom, String text, int regionId, int saleId){
+    public Observable<SaleComment> sendComment(String author, String whom, String text, int regionId, int saleId){
         return netRepository.sendComment(author, whom, text, regionId, saleId);
     }
 

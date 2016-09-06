@@ -2,10 +2,9 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.model.Shop;
-import com.PopCorp.Purchases.data.utils.AnalitycsManager;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.RegionInteractor;
@@ -24,7 +23,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerCallback<Shop> {
+public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteRecyclerCallback<Shop> {
 
     private ShopsInteractor interactor = new ShopsInteractor();
     private RegionInteractor regionsInteractor = new RegionInteractor();
@@ -112,7 +111,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
                                 removeAllShops();
                             } else {
                                 ArrayList<Shop> newShops = findNewShops(shops);
-                                removeNotExistsShops(shops);
+                                //removeNotExistsShops(shops);
                                 getViewState().showData();
                                 getViewState().filter(currentFilter);
                                 if (newShops.size() > 1) {
@@ -259,5 +258,12 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements RecyclerC
 
     public ArrayList<Shop> getObjects() {
         return objects;
+    }
+
+    @Override
+    public void onFavoriteClicked(Shop item) {
+        item.setFavorite(item.isFavorite() ? false : true);
+        interactor.update(item);
+        getViewState().filter(currentFilter);
     }
 }

@@ -125,8 +125,8 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void showInputFragment(ListItem listItem) {
         Intent intent = new Intent(getActivity(), InputListItemActivity.class);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTS, new long[] {presenter.getList().getId()});
-        intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, listItem);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTS, new long[] {presenter.getList().getId()});
+        intent.putExtra(InputListItemActivity.CURRENT_LISTITEM, listItem);
         startActivityForResult(intent, REQUEST_CODE_FOR_INPUT_LISTITEM);
     }
 
@@ -411,7 +411,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_FOR_INPUT_LISTITEM) {
-                ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
+                ListItem item = data.getParcelableExtra(InputListItemActivity.CURRENT_LISTITEM);
                 if (item != null) {
                     presenter.onItemsRerurned(item);
                 }

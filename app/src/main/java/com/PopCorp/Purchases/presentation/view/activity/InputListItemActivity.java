@@ -12,6 +12,9 @@ import com.PopCorp.Purchases.presentation.view.fragment.InputListItemFragment;
 
 public class InputListItemActivity extends MvpAppCompatActivity {
 
+    public static final String CURRENT_LISTS = "current_list";
+    public static final String CURRENT_LISTITEM = "current_listitem";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(ThemeManager.getInstance().getThemeRes());
@@ -19,8 +22,8 @@ public class InputListItemActivity extends MvpAppCompatActivity {
         setContentView(R.layout.activity_input_listitem);
 
         Fragment fragment = InputListItemFragment.create(
-                getIntent().getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM),
-                getIntent().getLongArrayExtra(InputListItemFragment.CURRENT_LISTS)
+                getIntent().getParcelableExtra(CURRENT_LISTITEM),
+                getIntent().getLongArrayExtra(CURRENT_LISTS)
         );
 
         String tag = fragment.getClass().getSimpleName();

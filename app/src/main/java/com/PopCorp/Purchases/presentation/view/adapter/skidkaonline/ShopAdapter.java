@@ -3,7 +3,6 @@ package com.PopCorp.Purchases.presentation.view.adapter.skidkaonline;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
     public static final String FILTER_FAVORITE = "favorite";
 
     private final FavoriteRecyclerCallback<Shop> callback;
+
     private final ShopDecoratorComparator comparator = new ShopDecoratorComparator();
 
     private ArrayList<Shop> objects;

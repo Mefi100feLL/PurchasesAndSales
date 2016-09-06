@@ -8,5 +8,5 @@ import rx.Observable;
 
 public interface SaleCommentRepository {
 
-    Observable<List<SaleComment>> getData(int saleId);
+    Observable<List<SaleComment>> getData(int saleId, int cityId);
 }

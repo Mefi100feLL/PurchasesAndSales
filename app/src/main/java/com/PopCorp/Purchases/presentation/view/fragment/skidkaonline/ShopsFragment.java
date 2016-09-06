@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -138,8 +137,8 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), ErrorManager.getErrorButtonTextResource(e), view -> {
-            presenter.onRefresh();
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgainLoadShops();
         });
     }
 
@@ -217,7 +216,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showShopsEmpty() {
-        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_update, v -> {
+        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_try_again, v -> {
             presenter.tryAgainLoadShops();
         });
     }

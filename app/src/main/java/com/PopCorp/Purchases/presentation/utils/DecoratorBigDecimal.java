@@ -11,10 +11,9 @@ public class DecoratorBigDecimal {
     static {
         df.setMaximumFractionDigits(2);
         df.setMinimumFractionDigits(0);
-        df.setGroupingUsed(true);
+        df.setGroupingUsed(false);
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols();
         otherSymbols.setDecimalSeparator('.');
-        otherSymbols.setGroupingSeparator(' ');
         df.setDecimalFormatSymbols(otherSymbols);
     }
 

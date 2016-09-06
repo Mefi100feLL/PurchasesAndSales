@@ -53,4 +53,8 @@ public class ShopsInteractor {
     public void remove(Shop shop) {
         dbRepository.remove(shop);
     }
+
+    public void update(Shop item) {
+        dbRepository.update(item);
+    }
 }

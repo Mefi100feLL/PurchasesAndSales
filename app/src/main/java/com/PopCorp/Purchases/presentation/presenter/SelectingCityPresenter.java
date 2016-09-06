@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.skidkaonline.City;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.skidkaonline.CityInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.SelectingCityView;
@@ -43,7 +44,7 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        e.printStackTrace();
+                        ErrorManager.printStackTrace(e);
                         if (objects.size() == 0){
                             getViewState().showError(e);
                         } else {
@@ -111,11 +112,7 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
         loadData();
     }
 
-    public ArrayList<City> getObjects() {
-        return objects;
-    }
-
-    public void update() {
+    public void tryAgainLoad() {
         getViewState().showProgress();
         loadData();
     }
@@ -147,5 +144,9 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
             getViewState().showProgress();
             loadData();
         }
+    }
+
+    public ArrayList<City> getObjects() {
+        return objects;
     }
 }

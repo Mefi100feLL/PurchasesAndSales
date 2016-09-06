@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.callback.BackPressedCallback;
 import com.PopCorp.Purchases.presentation.view.fragment.skidkaonline.CropFragment;
 import com.mikepenz.materialize.MaterializeBuilder;
 
@@ -35,5 +36,18 @@ public class CropActivity extends AppCompatActivity {
         if (manager.findFragmentByTag(tag) == null) {
             transaction.replace(R.id.content, fragment, tag).commit();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        for (Fragment frag : fm.getFragments()) {
+            if (frag != null && frag.isVisible()) {
+                if (((BackPressedCallback) frag).onBackPressed()){
+                    return;
+                }
+            }
+        }
+        super.onBackPressed();
     }
 }

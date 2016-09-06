@@ -11,6 +11,7 @@ import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.Shop;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 

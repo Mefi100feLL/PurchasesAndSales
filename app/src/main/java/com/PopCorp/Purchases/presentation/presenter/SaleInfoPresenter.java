@@ -37,6 +37,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     private ListItemInteractor listItemInteractor = new ListItemInteractor();
 
     private Sale sale;
+
     private List<ShoppingList> lists = new ArrayList<>();
     private ArrayList<ShoppingList> selectedLists = new ArrayList<>();
 

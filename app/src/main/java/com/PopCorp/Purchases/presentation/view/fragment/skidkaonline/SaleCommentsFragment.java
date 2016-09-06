@@ -84,7 +84,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        saleId = getArguments().getInt(SaleFragment.CURRENT_SALE);
+        saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
     }

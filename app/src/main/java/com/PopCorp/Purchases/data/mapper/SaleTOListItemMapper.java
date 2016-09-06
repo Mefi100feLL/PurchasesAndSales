@@ -1,10 +1,12 @@
 package com.PopCorp.Purchases.data.mapper;
 
 import com.PopCorp.Purchases.data.dao.ListItemCategoryDAO;
+import com.PopCorp.Purchases.data.dao.skidkaonline.ShopDAO;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
 import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.model.Sale;
+import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -82,5 +84,44 @@ public class SaleToListItemMapper {
             result = countDecimal.multiply(coastDecimal).toString();
         }
         return result;
+    }
+
+    public static ListItem getListItem(com.PopCorp.Purchases.data.model.skidkaonline.Sale sale) {
+        SimpleDateFormat format = new SimpleDateFormat("d MMM yyyy", new Locale("ru"));
+        List<ListItemCategory> categories = new ListItemCategoryDAO().getAllCategories();
+        ListItemCategory listItemCategory = null;
+        if (categories != null && categories.size() > 0) {
+            listItemCategory = categories.get(0);
+            for (ListItemCategory category : categories) {
+                if (category.getName().contains("Акци")) {
+                    listItemCategory = category;
+                }
+            }
+        }
+        String count = "1";
+        String edizm = "шт ";
+        String coast = "0";
+        String shopName = "";
+        Shop shop = new ShopDAO().getWithUrl(sale.getShopUrl(), sale.getCityId());
+        if (shop != null) {
+            shopName = shop.getName();
+        }
+        String comment = format.format(new Date(sale.getPeriodStart())) + " - " + format.format(new Date(sale.getPeriodEnd()));
+
+        ListItem item = new ListItem(
+                -1,
+                -1,
+                "",
+                count,
+                edizm,
+                coast,
+                listItemCategory,
+                shopName,
+                comment,
+                false,
+                false,
+                new ListItemSale(-1, sale.getImageBig(), format.format(new Date(sale.getPeriodStart())), format.format(new Date(sale.getPeriodEnd())))
+        );
+        return item;
     }
 }

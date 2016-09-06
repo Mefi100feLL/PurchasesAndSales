@@ -13,7 +13,7 @@ public class SaleCommentDBRepository implements SaleCommentRepository {
     private SaleCommentDAO dao = new SaleCommentDAO();
 
     @Override
-    public Observable<List<SaleComment>> getData(int saleId) {
+    public Observable<List<SaleComment>> getData(int saleId, int cityId) {
         return Observable.just(dao.getForSale(saleId));
     }
 

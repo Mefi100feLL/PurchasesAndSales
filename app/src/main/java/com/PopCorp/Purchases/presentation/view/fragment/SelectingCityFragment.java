@@ -41,10 +41,11 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     private View progressBar;
     private EmptyView emptyView;
 
-    private CityAdapter adapter;
-
     private FloatingActionButton fab;
     private SearchView searchView;
+
+    private CityAdapter adapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,8 +91,8 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
 
     @Override
     public void showCitiesEmpty() {
-        showError(R.string.empty_no_cities, R.drawable.ic_skyscraper, R.string.button_update, view -> {
-            presenter.update();
+        showError(R.string.empty_no_cities, R.drawable.ic_skyscraper, R.string.button_try_again, view -> {
+            presenter.tryAgainLoad();
         });
     }
 
@@ -173,8 +174,8 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), ErrorManager.getErrorButtonTextResource(e), view -> {
-            presenter.onErrorButtonClicked(e);
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
+            presenter.tryAgainLoad();
         });
     }
 

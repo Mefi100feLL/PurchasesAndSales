@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,6 +152,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public void onResume() {
         super.onResume();
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        hideKeyboard();
     }
 
     @Override
@@ -213,6 +216,11 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         showSameSales(sale);
     }
 
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(fab.getWindowToken(), 0);
+    }
+
     @Override
     public void showError(Throwable e) {
         Snackbar.make(fab, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_SHORT).show();
@@ -262,26 +270,26 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     @Override
     public void openInputListItemFragment(ListItem item, long[] listsIds) {
         Intent intent = new Intent(getActivity(), InputListItemActivity.class);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTS, listsIds);
-        intent.putExtra(InputListItemFragment.CURRENT_LISTITEM, item);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTS, listsIds);
+        intent.putExtra(InputListItemActivity.CURRENT_LISTITEM, item);
         startActivityForResult(intent, SaleActivity.REQUEST_CODE_FOR_INPUT_LISTITEM);
     }
 
     @Override
     public void showErrorLoadingLists(Throwable e) {
-
+        Snackbar.make(toolBar, R.string.error_can_not_load_lists, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showItemAdded() {
-        Snackbar.make(fab, R.string.notification_sale_sended_in_lists, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(toolBar, R.string.notification_sale_sended_in_lists, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SaleActivity.REQUEST_CODE_FOR_INPUT_LISTITEM) {
-                ListItem item = data.getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM);
+                ListItem item = data.getParcelableExtra(InputListItemActivity.CURRENT_LISTITEM);
                 if (item != null) {
                     presenter.onItemsRerurned(item);
                 }

@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -27,6 +29,7 @@ import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.InputListItemPresenter;
+import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.ListItemSaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemCategoriesAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.InputListItemView;
@@ -39,12 +42,13 @@ import java.util.List;
 
 public class InputListItemFragment extends MvpAppCompatFragment implements InputListItemView {
 
-    public static final String CURRENT_LISTS = "current_list";
-    public static final String CURRENT_LISTITEM = "current_listitem";
+    private static final String CURRENT_LISTS = "current_list";
+    private static final String CURRENT_LISTITEM = "current_listitem";
 
     @InjectPresenter
     InputListItemPresenter presenter;
 
+    private Toolbar toolbar;
     private EditText count;
     private AutoCompleteTextView name;
     private TextInputLayout nameLayout;
@@ -62,7 +66,6 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
     private ArrayAdapter<String> adapterUnits;
     private ArrayAdapter<String> productsAdapter;
     private ArrayAdapter<String> adapterShop;
-    private Toolbar toolbar;
 
     private View saleLayout;
     private ImageView saleImage;
@@ -148,7 +151,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         if (shopSpinner.getSelectedItemPosition() == 0){
             shop = "";
         }
-        presenter.onFabClicked(name.getText().toString(),
+        presenter.buildItem(name.getText().toString(),
                 count.getText().toString(),
                 (String) unitSpinner.getSelectedItem(),
                 coast.getText().toString(),
@@ -193,9 +196,15 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
     @Override
     public void returnItemAndClose(ListItem item) {
         Intent result = new Intent();
-        result.putExtra(CURRENT_LISTITEM, item);
+        result.putExtra(InputListItemActivity.CURRENT_LISTITEM, item);
         getActivity().setResult(Activity.RESULT_OK, result);
         getActivity().finish();
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(name.getWindowToken(), 0);
     }
 
     @Override
@@ -251,11 +260,11 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
 
     private int getPositionForShop(String shop){
         if (shop == null) {
-            return adapterUnits.getCount() - 1;
+            return adapterShop.getCount() - 1;
         }
         if (!shops.contains(shop)) {
             if (shop.equals("")) {
-                return adapterUnits.getCount() - 1;
+                return adapterShop.getCount() - 1;
             }
             shops.add(shop);
             addNewShopToPrefs(shop);
