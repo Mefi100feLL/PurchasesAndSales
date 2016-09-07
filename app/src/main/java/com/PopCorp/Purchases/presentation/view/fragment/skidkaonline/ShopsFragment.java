@@ -26,6 +26,7 @@ import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.ShopsPresenter;
+import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SelectingCityActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SalesActivity;
@@ -87,13 +88,13 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
         swipeRefresh.setOnRefreshListener(presenter::onRefresh);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), PreferencesManager.getInstance().getSkidkaonlineShopTableSize());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), TableSizes.getSkidkaonlineShopTableSize(getActivity()));
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
         adapter = new ShopAdapter(presenter, presenter.getObjects());
-        adapter.setLayoutManager(layoutManager, PreferencesManager.getInstance().getSkidkaonlineShopTableSize());
+        adapter.setLayoutManager(layoutManager, TableSizes.getSkidkaonlineShopTableSize(getActivity()));
         recyclerView.setAdapter(adapter);
 
         return rootView;
@@ -167,7 +168,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
         for (String filterItem : arraySizesTable) {
             MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(PreferencesManager.getInstance().getSkidkaonlineShopTableSize()))) {
+            if (filterItem.equals(String.valueOf(TableSizes.getSkidkaonlineShopTableSize(getActivity())))) {
                 addedItem.setChecked(true);
             }
         }
@@ -180,7 +181,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     public boolean onOptionsItemSelected(MenuItem item) {
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
-                PreferencesManager.getInstance().putSkidkaonlineShopTableSize(Integer.parseInt(filterItem));
+                TableSizes.putSkidkaonlineShopTableSize(getActivity(), Integer.parseInt(filterItem));
                 item.setChecked(true);
                 GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), Integer.parseInt(filterItem));
                 adapter.setLayoutManager(layoutManager, Integer.parseInt(filterItem));

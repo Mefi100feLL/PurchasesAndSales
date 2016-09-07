@@ -7,7 +7,6 @@ import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,13 +18,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.SaleChildCallback;
@@ -38,6 +35,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleCommentsPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleCommentsPresenter;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.SaleCommentAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleCommentsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -107,7 +105,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
         snackBarLayout = rootView.findViewById(R.id.snackbar_layout);
         View navigationBarView = rootView.findViewById(R.id.navigation_bar_view);
-        navigationBarView.setVisibility(isNavigationBarExists() ? View.VISIBLE : View.GONE);
+        navigationBarView.setVisibility(WindowUtils.isNavigationBarExists(getActivity()) ? View.VISIBLE : View.GONE);
 
         commentAuthor = (EditText) rootView.findViewById(R.id.comment_author);
         commentAuthorLayout = (TextInputLayout) rootView.findViewById(R.id.comment_author_layout);
@@ -172,13 +170,6 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         recyclerView.setAdapter(adapter);
 
         return rootView;
-    }
-
-    public boolean isNavigationBarExists()
-    {
-        boolean hasMenuKey = ViewConfiguration.get(getActivity()).hasPermanentMenuKey();
-        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-        return resourceId > 0 && !hasMenuKey;
     }
 
     @Override

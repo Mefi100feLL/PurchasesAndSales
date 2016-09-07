@@ -11,6 +11,7 @@ import com.PopCorp.Purchases.data.callback.BackPressedCallback;
 import com.PopCorp.Purchases.data.utils.ZoomOutPageTransformer;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.presenter.SaleActivityPresenter;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.fragment.SaleFragment;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleActivityView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -31,12 +32,18 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
 
-        new MaterializeBuilder()
+        MaterializeBuilder builder = new MaterializeBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBarProgrammatically(true)
                 .withTransparentStatusBar(true)
-                .withStatusBarColorRes(android.R.color.transparent)
-                .build();
+                .withTransparentNavigationBar(!WindowUtils.isLandscape(this));
+
+        if (WindowUtils.isLandscape(this)){
+            builder.withStatusBarColorRes(R.color.bars_color);
+        } else {
+            builder.withStatusBarColorRes(android.R.color.transparent);
+        }
+        builder.build();
 
         presenter.setCurrentId(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)));
         presenter.setSalesIds(getIntent().getStringArrayExtra(ARRAY_SALES));

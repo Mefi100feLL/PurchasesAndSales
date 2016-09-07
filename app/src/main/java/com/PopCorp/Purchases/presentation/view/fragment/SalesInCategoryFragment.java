@@ -30,6 +30,7 @@ import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInCategoryPresenter;
+import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesAdapter;
@@ -101,13 +102,13 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
         swipeRefresh.setOnRefreshListener(presenter::onRefresh);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), PreferencesManager.getInstance().getSaleTableSize());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), TableSizes.getSaleTableSize(getActivity()));
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
         adapter = new SalesInCategoryAdapter(presenter, presenter.getObjects(), new SalesShopComparator());
-        adapter.setLayoutManager(layoutManager, PreferencesManager.getInstance().getSaleTableSize());
+        adapter.setLayoutManager(layoutManager, TableSizes.getSaleTableSize(getActivity()));
         recyclerView.setAdapter(adapter);
 
         return rootView;
@@ -260,7 +261,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
         for (String filterItem : arraySizesTable) {
             MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(PreferencesManager.getInstance().getSaleTableSize()))) {
+            if (filterItem.equals(String.valueOf(TableSizes.getSaleTableSize(getActivity())))) {
                 addedItem.setChecked(true);
             }
         }
@@ -276,7 +277,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         }
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
-                PreferencesManager.getInstance().putSaleTableSize(Integer.parseInt(filterItem));
+                TableSizes.putSaleTableSize(getActivity(), Integer.parseInt(filterItem));
                 item.setChecked(true);
                 GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), Integer.parseInt(filterItem));
                 adapter.setLayoutManager(layoutManager, Integer.parseInt(filterItem));

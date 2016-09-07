@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
 import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SameSaleActivity;
@@ -88,6 +90,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private RecyclerView sameSalesRecycler;
 
     private FloatingActionButton fab;
+    private CoordinatorLayout snackbarlayout;
 
 
     public static Fragment create(SaleMainCallback parent, int saleId) {
@@ -141,6 +144,11 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
         sameSalesRecycler = (RecyclerView) rootView.findViewById(R.id.same_sales_recycler);
         sameSalesLayout = rootView.findViewById(R.id.same_sales_layout);
+
+        snackbarlayout = (CoordinatorLayout) rootView.findViewById(R.id.snackbar_layout);
+        if (!WindowUtils.isLandscape(getActivity())) {
+            snackbarlayout.setPadding(0, 0, 0, WindowUtils.getNavigationBarHeight(getActivity()));
+        }
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> presenter.loadShoppingLists());
@@ -205,7 +213,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         if (sale.getPeriodStart() == 0 && sale.getPeriodEnd() == 0) {
             periodLayout.setVisibility(View.GONE);
         } else {
-            SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy", new Locale("ru"));
+            SimpleDateFormat format = new SimpleDateFormat("d MMMM", new Locale("ru"));
             periodLayout.setVisibility(View.VISIBLE);
             String periodString = format.format(new Date(sale.getPeriodStart()));
             if (sale.getPeriodStart() != sale.getPeriodEnd()) {
@@ -223,7 +231,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showError(Throwable e) {
-        Snackbar.make(fab, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(snackbarlayout, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -233,7 +241,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showEmptyLists() {
-        Snackbar.make(fab, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
+        Snackbar.make(snackbarlayout, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
                 .setAction(R.string.button_create, view -> {
                     DialogController.showDialogForNewList(getActivity(), presenter);
                 })
@@ -277,12 +285,12 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showErrorLoadingLists(Throwable e) {
-        Snackbar.make(toolBar, R.string.error_can_not_load_lists, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(snackbarlayout, R.string.error_can_not_load_lists, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void showItemAdded() {
-        Snackbar.make(toolBar, R.string.notification_sale_sended_in_lists, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(snackbarlayout, R.string.notification_sale_sended_in_lists, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.PopCorp.Purchases.presentation.common;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.PopCorp.Purchases.AnalyticsTrackers;
+import com.PopCorp.Purchases.data.utils.AnalitycsManager;
 import com.arellomobile.mvp.MvpDelegate;
 
 public class MvpAppCompatFragment extends Fragment {

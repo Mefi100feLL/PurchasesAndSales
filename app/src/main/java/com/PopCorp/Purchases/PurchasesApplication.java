@@ -22,6 +22,7 @@ public class PurchasesApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        AnalyticsTrackers.initialize(this);
         PreferencesManager.setInstance(this);
         ThemeManager.setInstance(this);
         DB.setInstance(this);

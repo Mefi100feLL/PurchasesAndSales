@@ -15,6 +15,7 @@
             style="@style/ToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:elevation="0dp"
             app:contentInsetStart="@dimen/mcab_default_content_inset"/>
 
         <ViewStub
@@ -22,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"/>
     </FrameLayout>
-
 
     <LinearLayout
         android:id="@+id/total_layout"

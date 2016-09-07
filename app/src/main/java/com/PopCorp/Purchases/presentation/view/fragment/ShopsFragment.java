@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.ShopsPresenter;
+import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ShopsAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
@@ -90,7 +91,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
         swipeRefresh.setOnRefreshListener(presenter::onRefresh);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), PreferencesManager.getInstance().getShopTableSize());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), TableSizes.getShopTableSize(getActivity()));
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -176,7 +177,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
         for (String filterItem : arraySizesTable) {
             MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(PreferencesManager.getInstance().getShopTableSize()))) {
+            if (filterItem.equals(String.valueOf(TableSizes.getShopTableSize(getActivity())))) {
                 addedItem.setChecked(true);
             }
         }
@@ -189,7 +190,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     public boolean onOptionsItemSelected(MenuItem item) {
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
-                PreferencesManager.getInstance().putShopTableSize(Integer.parseInt(filterItem));
+                TableSizes.putShopTableSize(getActivity(), Integer.parseInt(filterItem));
                 item.setChecked(true);
                 GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), Integer.parseInt(filterItem));
                 recyclerView.setLayoutManager(layoutManager);

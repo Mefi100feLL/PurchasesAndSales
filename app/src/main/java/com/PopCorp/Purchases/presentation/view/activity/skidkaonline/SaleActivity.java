@@ -14,6 +14,7 @@ import com.PopCorp.Purchases.data.callback.BackPressedCallback;
 import com.PopCorp.Purchases.data.utils.ZoomOutPageTransformer;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.presenter.SaleActivityPresenter;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.fragment.skidkaonline.SaleFragment;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleActivityView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -32,7 +33,6 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
         //setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
@@ -95,7 +95,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
     public void onBackPressed() {
         FragmentManager fm = getSupportFragmentManager();
         for (Fragment frag : fm.getFragments()) {
-            if (frag != null && frag.isVisible()) {
+            if (frag != null && frag.isVisible() && frag.isMenuVisible()) {
                 if (((BackPressedCallback) frag).onBackPressed()){
                     return;
                 }

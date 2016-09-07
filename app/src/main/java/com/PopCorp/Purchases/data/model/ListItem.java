@@ -30,7 +30,13 @@ public class ListItem implements Parcelable, ContentSame<ListItem> {
         this.edizm = edizm;
         this.coast = new BigDecimal(coast != null && !coast.isEmpty() ? coast : "0");
         this.category = category;
+        if (shop == null){
+            shop = "";
+        }
         this.shop = shop;
+        if (comment == null){
+            comment = "";
+        }
         this.comment = comment;
         this.buyed = buyed;
         this.important = important;
@@ -38,7 +44,7 @@ public class ListItem implements Parcelable, ContentSame<ListItem> {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String result = "";
         /*result += "id=" + id + ", ";
         result += "listId=" + listId + ", ";*/
@@ -61,14 +67,15 @@ public class ListItem implements Parcelable, ContentSame<ListItem> {
                     count.equals(object.getCount()) &&
                     edizm.equals(object.getEdizm()) &&
                     coast.equals(object.getCoast()) &&
-                    shop.equals(object.getShop()) &&
                     comment.equals(object.getComment()) &&
                     buyed == object.isBuyed() &&
                     important == object.isImportant()) {
                 if ((category != null && object.getCategory() != null && category.equals(object.getCategory())) || (category == null && object.getCategory() == null)) {
-                    if (sale != null && object.getSale() != null) {
-                        if (sale.equals(object.getSale())) {
-                            return true;
+                    if (shop != null && object.getShop() != null && shop.equals(object.getShop()) || (shop == null && object.getShop() == null)) {
+                        if (sale != null && object.getSale() != null) {
+                            if (sale.equals(object.getSale())) {
+                                return true;
+                            }
                         }
                     }
                 }

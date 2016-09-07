@@ -63,7 +63,7 @@ android {
             debuggable true
         }
         release {
-            debuggable false
+            debuggable true
             signingConfig signingConfigs.release
         }
     }

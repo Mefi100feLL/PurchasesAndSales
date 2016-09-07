@@ -35,6 +35,14 @@ public class PreferencesManager {
     public static final String PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE = "size_table_shops_skidkaonline";
     public static final String PREFS_SIZE_TABLE_SALES_SKIDKAONLINE = "size_table_sales_sakidkaonline";
 
+
+    public static final String PREFS_SIZE_TABLE_LISTS_LANDSCAPE = "size_table_lists_landscape";
+    public static final String PREFS_SIZE_TABLE_SHOPS_LANDSCAPE = "size_table_shops_landscape";
+    public static final String PREFS_SIZE_TABLE_SALES_LANDSCAPE = "size_table_sales_landscape";
+    public static final String PREFS_SIZE_TABLE_CATEGS_LANDSCAPE = "size_table_categs_landscape";
+    public static final String PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE_LANDSCAPE = "size_table_shops_skidkaonline_landscape";
+    public static final String PREFS_SIZE_TABLE_SALES_SKIDKAONLINE_LANDSCAPE = "size_table_sales_sakidkaonline_landscape";
+
     public static final String PREFS_DISPLAY_NO_OFF = "displaynooff";
     public static final String PREFS_LIST_ITEM_FONT_SIZE = "listsize";
     public static final String PREFS_LIST_ITEM_FONT_SIZE_SMALL = "listsizesmall";
@@ -146,6 +154,71 @@ public class PreferencesManager {
     }
 
 
+    public int getListTableSize() {
+        return sPref.getInt(PREFS_SIZE_TABLE_LISTS, context.getResources().getInteger(R.integer.default_size_table_lists));
+    }
+
+    public void putListTableSize(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_LISTS, size).commit();
+    }
+
+
+
+
+    //////////////////////////////////table sizes for landscape
+
+    public int getShopTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_SHOPS_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
+    }
+
+    public void putShopTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_SHOPS_LANDSCAPE, size).commit();
+    }
+
+    public int getCategoryTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_CATEGS_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
+    }
+
+    public void putCategoryTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_CATEGS_LANDSCAPE, size).commit();
+    }
+
+    public int getSaleTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_SALES_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
+    }
+
+    public void putSaleTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_SALES_LANDSCAPE, size).commit();
+    }
+
+
+    public int getSkidkaonlineSaleTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_SALES_SKIDKAONLINE_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
+    }
+
+    public void putSkidkaonlineSaleTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_SALES_SKIDKAONLINE_LANDSCAPE, size).commit();
+    }
+
+    public int getSkidkaonlineShopTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
+    }
+
+    public void putSkidkaonlineShopTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE_LANDSCAPE, size).commit();
+    }
+
+
+    public int getListTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_LISTS_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
+    }
+
+    public void putListTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_LISTS_LANDSCAPE, size).commit();
+    }
+
+
+
     public boolean isDisplayNoOff() {
         return sPref.getBoolean(PREFS_DISPLAY_NO_OFF, true);
     }
@@ -162,13 +235,6 @@ public class PreferencesManager {
         editor.putString(PREFS_SKIDKAONLINE_CITY, city).commit();
     }
 
-    public int getListTableSize() {
-        return sPref.getInt(PREFS_SIZE_TABLE_LISTS, context.getResources().getInteger(R.integer.default_size_table_lists));
-    }
-
-    public void putListTableSize(int size) {
-        editor.putInt(PREFS_SIZE_TABLE_LISTS, size).commit();
-    }
 
     public Set<String> getCurrencies() {
         return sPref.getStringSet(PREFS_CURRENCYS, new LinkedHashSet<String>());
@@ -382,4 +448,5 @@ public class PreferencesManager {
     public String getAuthorCOmment(){
         return sPref.getString(PREFS_AUTHOR_COMMENT, "");
     }
+
 }

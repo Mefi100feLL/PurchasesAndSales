@@ -57,14 +57,16 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/md_black_1000"/>
+        android:background="@color/md_black_1000"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/input_comment_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/navigation_bar_view"
-        android:background="@color/md_white_1000">
+        android:background="@color/md_white_1000"
+        android:layout_alignWithParentIfMissing="true">
 
         <include
             layout="@layout/content_sale_input_comment"

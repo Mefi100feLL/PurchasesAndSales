@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentTransaction;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.fragment.SalesInCategoryFragment;
 import com.PopCorp.Purchases.presentation.view.fragment.SalesInShopFragment;
+import com.mikepenz.materialize.MaterializeBuilder;
 
 public class SalesActivity extends MvpAppCompatActivity {
 
@@ -21,6 +23,12 @@ public class SalesActivity extends MvpAppCompatActivity {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales);
+
+        new MaterializeBuilder()
+                .withActivity(this)
+                .withStatusBarPadding(!WindowUtils.isLandscape(this))
+                .withTransparentNavigationBar(!WindowUtils.isLandscape(this))
+                .build();
 
         Fragment fragment;
         if (getIntent().getParcelableExtra(CURRENT_SHOP) != null) {

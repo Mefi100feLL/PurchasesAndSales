@@ -206,4 +206,8 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
     public Sale getSale() {
         return currentSale;
     }
+
+    public boolean isCropped(){
+        return croppedImageUri != null;
+    }
 }

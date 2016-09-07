@@ -6,15 +6,6 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:required="false" />
     <uses-permission
-        android:name="android.permission.READ_SMS"
-        android:required="false" />
-    <uses-permission
-        android:name="android.permission.RECEIVE_SMS"
-        android:required="false" />
-    <uses-permission
-        android:name="android.permission.READ_CONTACTS"
-        android:required="false" />
-    <uses-permission
         android:name="android.permission.INTERNET"
         android:required="false" />
     <uses-permission

@@ -3,19 +3,24 @@ package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -32,18 +37,20 @@ import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleInfoPresenter;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleInfoView;
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
-import com.mikepenz.materialize.MaterializeBuilder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,6 +79,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private CircularProgressView progressView;
     private View progressLayout;
     private SubsamplingScaleImageView image;
+    private CoordinatorLayout snackbarlayout;
 
     private Toolbar toolBar;
 
@@ -106,12 +114,17 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
-        LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
+        snackbarlayout = (CoordinatorLayout) rootView.findViewById(R.id.snackbar_layout);
         ImageView comments = (ImageView) rootView.findViewById(R.id.comments);
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         ImageView cropImage = (ImageView) rootView.findViewById(R.id.crop);
 
-        buttonslayout.setPadding(0,0,0, getNavigationBarHeight());
+        LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
+        if (!WindowUtils.isLandscape(getActivity())) {
+            buttonslayout.setPadding(0, 0, 0, WindowUtils.getNavigationBarHeight(getActivity()));
+        } else {
+            toolBar.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);
+        }
 
         image.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         image.setMaxScale(getResources().getDimension(R.dimen.image_maximum_scale));
@@ -121,17 +134,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         cropImage.setOnClickListener(view -> openCropActivity());
 
         return rootView;
-    }
-
-    public int getNavigationBarHeight()
-    {
-        boolean hasMenuKey = ViewConfiguration.get(getActivity()).hasPermanentMenuKey();
-        int resourceId = getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0 && !hasMenuKey)
-        {
-            return getResources().getDimensionPixelSize(resourceId);
-        }
-        return 0;
     }
 
     @Override
@@ -238,11 +240,15 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showEmptyLists() {
-        Snackbar.make(image, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
-                .setAction(R.string.button_create, view -> {
-                    DialogController.showDialogForNewList(getActivity(), presenter);
-                })
-                .show();
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.dialog_title_no_shopping_lists);
+        builder.content(R.string.dialog_content_no_shopping_lists_create_new);
+        builder.positiveText(R.string.dialog_button_create);
+        builder.negativeText(R.string.dialog_button_cancel);
+        builder.onPositive((dialog, which) -> DialogController.showDialogForNewList(getActivity(), presenter));
+        MaterialDialog dialog = builder.build();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override

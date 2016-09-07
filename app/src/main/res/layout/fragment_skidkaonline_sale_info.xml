@@ -79,5 +79,4 @@
             android:src="@drawable/ic_crop_white_24dp"/>
     </LinearLayout>
 
-
 </RelativeLayout>

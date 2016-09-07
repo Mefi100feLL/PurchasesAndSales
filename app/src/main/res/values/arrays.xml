@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="sizes_table_lists">
-        <item >1</item>
-        <item >2</item>
-    </string-array>
-
-
     <string-array name="sortarray">
         <item>@string/prefs_default_sort_listitem_one</item>
         <item>@string/prefs_default_sort_listitem_two</item>
