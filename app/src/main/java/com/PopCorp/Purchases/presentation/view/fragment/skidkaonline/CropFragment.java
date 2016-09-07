@@ -15,8 +15,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.PopCorp.Purchases.R;
@@ -29,6 +31,7 @@ import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.CropPresenter;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.CropView;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -96,12 +99,20 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
         image = (ImageView) rootView.findViewById(R.id.cropped_image);
         UCropView uCropView = (UCropView) rootView.findViewById(R.id.ucrop);
         progress = rootView.findViewById(R.id.progress_layout);
+        rotateSkip = rootView.findViewById(R.id.rotate_skip);
+        scaleSkip = rootView.findViewById(R.id.scale_skip);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+
+        LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
+        if (!WindowUtils.isLandscape(getActivity())) {
+            buttonslayout.setPadding(0, 0, 0, WindowUtils.getNavigationBarHeight(getActivity()));
+        } else {
+            buttonslayout.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);
+            toolBar.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);
+        }
 
         cropView = uCropView.getCropImageView();
         cropView.setTargetAspectRatio(1);
-        rotateSkip = rootView.findViewById(R.id.rotate_skip);
-        scaleSkip = rootView.findViewById(R.id.scale_skip);
-
         rotateSkip.setOnClickListener(view -> {
             cropView.postRotate(-cropView.getCurrentAngle());
             cropView.setImageToWrapCropBounds();
@@ -112,7 +123,6 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
             cropView.setImageToWrapCropBounds();
         });
 
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(v -> cropImageAndSaveInFile());
 
         try {
@@ -210,6 +220,9 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
     @Override
     public void showImage(String imageUri) {
         ImageLoader.getInstance().displayImage(imageUri, image, UIL.getImageOptions());
+        cropView.setVisibility(View.INVISIBLE);
+        image.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -220,11 +233,15 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
 
     @Override
     public void showEmptyLists() {
-        Snackbar.make(image, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
-                .setAction(R.string.button_create, view -> {
-                    DialogController.showDialogForNewList(getActivity(), presenter);
-                })
-                .show();
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.dialog_title_no_shopping_lists);
+        builder.content(R.string.dialog_content_no_shopping_lists_create_new);
+        builder.positiveText(R.string.dialog_button_create);
+        builder.negativeText(R.string.dialog_button_cancel);
+        builder.onPositive((dialog, which) -> DialogController.showDialogForNewList(getActivity(), presenter));
+        MaterialDialog dialog = builder.build();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override

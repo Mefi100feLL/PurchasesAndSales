@@ -113,7 +113,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     private void calculateShops() {
         shops.clear();
         for (ListItem item : getObjects()) {
-            if (!item.getShop().isEmpty() && !shops.contains(item.getShop())) {
+            if (item.getShop() != null && !item.getShop().isEmpty() && !shops.contains(item.getShop())) {
                 shops.add(item.getShop());
             }
         }

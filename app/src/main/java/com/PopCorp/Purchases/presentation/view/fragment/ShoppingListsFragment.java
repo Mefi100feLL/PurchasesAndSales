@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.data.utils.sharing.SharingListBuilderFactory;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.ShoppingListsPresenter;
+import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.view.activity.ShoppingListActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ShoppingListsAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListsView;
@@ -70,7 +71,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         progressBar = rootView.findViewById(R.id.progress);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(PreferencesManager.getInstance().getListTableSize(), StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(TableSizes.getListTableSize(getActivity()), StaggeredGridLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -143,7 +144,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
         arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
         for (String filterItem : arraySizesTable) {
             MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(PreferencesManager.getInstance().getListTableSize()))) {
+            if (filterItem.equals(String.valueOf(TableSizes.getListTableSize(getActivity())))) {
                 addedItem.setChecked(true);
             }
         }
@@ -156,7 +157,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
     public boolean onOptionsItemSelected(MenuItem item) {
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
-                PreferencesManager.getInstance().putListTableSize(Integer.parseInt(filterItem));
+                TableSizes.putListTableSize(getActivity(), Integer.parseInt(filterItem));
                 item.setChecked(true);
                 StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(Integer.parseInt(filterItem), StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(layoutManager);

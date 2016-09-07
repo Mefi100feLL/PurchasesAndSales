@@ -35,6 +35,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SaleCommentsPresenter;
 import com.PopCorp.Purchases.presentation.presenter.factory.SaleCommentsPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.adapter.SaleCommentAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleCommentsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -110,6 +111,8 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         commentTextLayout = (TextInputLayout) rootView.findViewById(R.id.comment_text_layout);
         ImageView commentSend = (ImageView) rootView.findViewById(R.id.comment_send);
         commentTopStroke = rootView.findViewById(R.id.comment_top_stroke);
+        View navigationBarView = rootView.findViewById(R.id.navigation_bar_view);
+        navigationBarView.setVisibility(WindowUtils.isNavigationBarExists(getActivity()) && !WindowUtils.isLandscape(getActivity()) ? View.VISIBLE : View.GONE);
 
         commentText.addTextChangedListener(new TextWatcher() {
             @Override

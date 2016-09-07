@@ -2,9 +2,9 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:animateLayoutChanges="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -12,13 +12,14 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:background="?attr/colorPrimary"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            style="@style/ToolbarStyle"
             android:elevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
@@ -28,9 +29,9 @@
             android:id="@+id/toolbar_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
             android:layout_marginLeft="56dp"
             android:background="?attr/colorPrimary"
+            android:minHeight="56dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:visibility="gone"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
@@ -64,7 +65,6 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@integer/visibility_toolbar_show_image"
             android:src="@drawable/shadow_top"/>
     </FrameLayout>
 

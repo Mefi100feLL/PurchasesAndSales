@@ -11,13 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_background_gradient_height"
+        android:background="@drawable/shadow_toolbar"
+        android:fitsSystemWindows="true"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyle"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@drawable/shadow_toolbar"
-        android:paddingTop="@dimen/toolbar_padding_top"/>
+        android:background="@android:color/transparent"
+        android:layout_marginTop="@dimen/toolbar_padding_top"/>
 
     <FrameLayout
         android:id="@+id/progress_layout"
@@ -36,15 +42,5 @@
             app:cpv_indeterminate="false"
             app:cpv_maxProgress="1000"/>
     </FrameLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sale_period"
-        style="@style/PrimaryTextInvert"
-        android:background="@drawable/shadow_bottom"
-        android:layout_gravity="bottom"
-        android:padding="24dp"
-        android:gravity="center"/>
 
 </FrameLayout>

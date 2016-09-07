@@ -8,7 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.fragment.skidkaonline.SalesFragment;
+import com.mikepenz.materialize.MaterializeBuilder;
 
 public class SalesActivity extends MvpAppCompatActivity {
 
@@ -19,6 +21,12 @@ public class SalesActivity extends MvpAppCompatActivity {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+
+        new MaterializeBuilder()
+                .withActivity(this)
+                .withStatusBarPadding(!WindowUtils.isLandscape(this))
+                .withTransparentNavigationBar(!WindowUtils.isLandscape(this))
+                .build();
 
         Fragment fragment = SalesFragment.create(getIntent().getParcelableExtra(CURRENT_SHOP));
         String tag = fragment.getClass().getSimpleName();

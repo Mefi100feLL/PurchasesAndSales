@@ -260,11 +260,11 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
 
     private int getPositionForShop(String shop){
         if (shop == null) {
-            return adapterShop.getCount() - 1;
+            return 0;
         }
         if (!shops.contains(shop)) {
             if (shop.equals("")) {
-                return adapterShop.getCount() - 1;
+                return 0;
             }
             shops.add(shop);
             addNewShopToPrefs(shop);

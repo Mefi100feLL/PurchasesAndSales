@@ -35,6 +35,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleCommentsPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleCommentsPresenter;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.SaleCommentAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleCommentsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -103,6 +104,8 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
         snackBarLayout = rootView.findViewById(R.id.snackbar_layout);
+        View navigationBarView = rootView.findViewById(R.id.navigation_bar_view);
+        navigationBarView.setVisibility(WindowUtils.isNavigationBarExists(getActivity()) ? View.VISIBLE : View.GONE);
 
         commentAuthor = (EditText) rootView.findViewById(R.id.comment_author);
         commentAuthorLayout = (TextInputLayout) rootView.findViewById(R.id.comment_author_layout);
@@ -168,7 +171,6 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
         return rootView;
     }
-
 
     @Override
     public void onResume() {

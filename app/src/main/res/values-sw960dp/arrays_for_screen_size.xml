@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="sizes_table_lists">
+        <item >5</item>
+        <item >6</item>
+        <item >7</item>
+    </string-array>
+
+</resources>

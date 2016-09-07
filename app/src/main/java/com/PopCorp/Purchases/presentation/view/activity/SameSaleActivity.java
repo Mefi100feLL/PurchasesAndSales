@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.BackPressedCallback;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
+import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.fragment.SaleFragment;
 import com.mikepenz.materialize.MaterializeBuilder;
 
@@ -20,12 +21,19 @@ public class SameSaleActivity extends MvpAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_same_sale);
 
-        new MaterializeBuilder()
+        MaterializeBuilder builder = new MaterializeBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBarProgrammatically(true)
                 .withTransparentStatusBar(true)
-                .withStatusBarColorRes(android.R.color.transparent)
-                .build();
+                .withStatusBarPadding(false)
+                .withTransparentNavigationBar(!WindowUtils.isLandscape(this));
+
+        if (WindowUtils.isLandscape(this)){
+            builder.withStatusBarColorRes(R.color.bars_color);
+        } else {
+            builder.withStatusBarColorRes(android.R.color.transparent);
+        }
+        builder.build();
 
         Fragment fragment = SaleFragment.create(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)));
         String tag = fragment.getClass().getSimpleName();

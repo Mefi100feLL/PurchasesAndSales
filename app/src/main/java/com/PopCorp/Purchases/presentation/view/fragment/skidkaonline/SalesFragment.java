@@ -26,6 +26,7 @@ import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SalesPresenter;
+import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
@@ -96,7 +97,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
         swipeRefresh.setOnRefreshListener(presenter::onRefresh);
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(PreferencesManager.getInstance().getSkidkaonlineShopTableSize(), StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(TableSizes.getSkidkaonlineShopTableSize(getActivity()), StaggeredGridLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -197,7 +198,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
         for (String filterItem : arraySizesTable) {
             MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(PreferencesManager.getInstance().getSkidkaonlineSaleTableSize()))) {
+            if (filterItem.equals(String.valueOf(TableSizes.getSkidkaonlineSaleTableSize(getActivity())))) {
                 addedItem.setChecked(true);
             }
         }
@@ -213,7 +214,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         }
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
-                PreferencesManager.getInstance().putSkidkaonlineSaleTableSize(Integer.parseInt(filterItem));
+                TableSizes.putSkidkaonlineSaleTableSize(getActivity(), Integer.parseInt(filterItem));
                 item.setChecked(true);
                 StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(Integer.parseInt(filterItem), StaggeredGridLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(layoutManager);

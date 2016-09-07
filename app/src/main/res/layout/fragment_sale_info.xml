@@ -108,4 +108,10 @@
         android:src="@drawable/ic_shopping_cart_white_24dp"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/snackbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.CategoriesPresenter;
+import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.CategoriesAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
@@ -90,7 +91,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
         swipeRefresh.setOnRefreshListener(presenter::onRefresh);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), PreferencesManager.getInstance().getCategoryTableSize());
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), TableSizes.getCategoryTableSize(getActivity()));
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -169,7 +170,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
         arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
         for (String filterItem : arraySizesTable) {
             MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(PreferencesManager.getInstance().getCategoryTableSize()))) {
+            if (filterItem.equals(String.valueOf(TableSizes.getCategoryTableSize(getActivity())))) {
                 addedItem.setChecked(true);
             }
         }
@@ -182,7 +183,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
     public boolean onOptionsItemSelected(MenuItem item) {
         for (String filterItem : arraySizesTable) {
             if (item.getItemId() == filterItem.hashCode()) {
-                PreferencesManager.getInstance().putCategoryTableSize(Integer.parseInt(filterItem));
+                TableSizes.putCategoryTableSize(getActivity(), Integer.parseInt(filterItem));
                 item.setChecked(true);
                 GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), Integer.parseInt(filterItem));
                 recyclerView.setLayoutManager(layoutManager);

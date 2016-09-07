@@ -11,13 +11,13 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="8dp">
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            style="@style/ToolbarStyle"
             android:elevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways"/>
 
@@ -25,9 +25,9 @@
             android:id="@+id/toolbar_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="56dp"
             android:layout_marginLeft="56dp"
             android:background="@android:color/transparent"
+            android:minHeight="56dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:visibility="gone"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
@@ -61,9 +61,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/app_bar"
-            android:src="@drawable/shadow_top"
-            android:visibility="@integer/visibility_toolbar_show_image"/>
+            android:src="@drawable/shadow_top"/>
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
