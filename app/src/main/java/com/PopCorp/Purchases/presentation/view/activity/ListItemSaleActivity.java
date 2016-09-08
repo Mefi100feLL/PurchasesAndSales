@@ -17,7 +17,7 @@ public class ListItemSaleActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //setTheme(ThemeManager.getInstance().getTranslucentThemeRes());
+        setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 

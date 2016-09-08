@@ -120,7 +120,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         ImageView cropImage = (ImageView) rootView.findViewById(R.id.crop);
 
         LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
-        if (!WindowUtils.isLandscape(getActivity())) {
+        if (!WindowUtils.isLandscape(getActivity()) || WindowUtils.isTablet(getActivity())) {
             buttonslayout.setPadding(0, 0, 0, WindowUtils.getNavigationBarHeight(getActivity()));
         } else {
             toolBar.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);

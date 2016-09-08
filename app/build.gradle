@@ -17,7 +17,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '23.0.1'
 
     signingConfigs {
         release {
@@ -63,7 +63,7 @@ android {
             debuggable true
         }
         release {
-            debuggable false
+            debuggable true
             signingConfig signingConfigs.release
         }
     }
@@ -108,6 +108,7 @@ dependencies {
     compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:gridlayout-v7:$supportVersion"
+    compile "com.android.support:support-core-ui:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
     compile "com.android.support:support-fragment:$supportVersion"
     compile "com.android.support:percent:$supportVersion"

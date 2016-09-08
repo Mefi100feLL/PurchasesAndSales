@@ -1,0 +1,8 @@
+<resources>
+    <dimen name="app_bar_height">160dp</dimen>
+    <dimen name="scrollbar_overlap">60dp</dimen>
+    <dimen name="toolbar_spinner_margin_left">56dp</dimen>
+    <dimen name="padding_list_items">16dp</dimen>
+    <dimen name="padding_list_items_without_16dp">0dp</dimen>
+    <dimen name="padding_list_items_with_input_layout">12dp</dimen>
+</resources>
