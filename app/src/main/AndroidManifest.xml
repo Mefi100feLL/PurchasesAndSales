@@ -51,6 +51,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".presentation.view.activity.InputListItemActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:label="" />
         <activity
             android:name=".presentation.view.activity.SelectingCityActivity"
