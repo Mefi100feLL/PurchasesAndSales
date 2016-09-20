@@ -190,6 +190,11 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     }
 
     @Override
+    public void hideSpinner() {
+        spinner.setVisibility(View.GONE);
+    }
+
+    @Override
     public void selectSpinner(int filterPosition) {
         spinner.setSelection(filterPosition);
     }
