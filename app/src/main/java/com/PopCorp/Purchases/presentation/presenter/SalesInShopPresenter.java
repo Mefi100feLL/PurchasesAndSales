@@ -149,7 +149,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                 }
             }
         }
-        if (filterCategories.size() > 1) {
+        if (filterCategories.size() > 1 && !currentFilter.startsWith("query")) {
             getViewState().showSpinner();
             getViewState().selectSpinner(filterPosition);
         }
