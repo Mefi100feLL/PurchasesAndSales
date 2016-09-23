@@ -3,9 +3,6 @@
     package="com.PopCorp.Purchases" >
 
     <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:required="false" />
-    <uses-permission
         android:name="android.permission.INTERNET"
         android:required="false" />
     <uses-permission
@@ -20,12 +17,6 @@
     <uses-permission
         android:name="android.permission.VIBRATE"
         android:required="false" />
-    <uses-permission
-        android:name="android.permission.READ_PHONE_STATE"
-        android:required="false" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:required="false" />
 
     <application
         android:name=".PurchasesApplication"
@@ -33,7 +24,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme.Launcher" >
         <activity
             android:name=".presentation.view.activity.MainActivity"
             android:label="@string/app_name" >
@@ -60,6 +51,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".presentation.view.activity.InputListItemActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:label="" />
         <activity
             android:name=".presentation.view.activity.SelectingCityActivity"

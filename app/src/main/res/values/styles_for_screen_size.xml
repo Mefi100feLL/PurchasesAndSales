@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="ToolbarStyleForSize">
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+</resources>

@@ -149,7 +149,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                 }
             }
         }
-        if (filterCategories.size() > 1) {
+        if (filterCategories.size() > 1 && !currentFilter.startsWith("query")) {
             getViewState().showSpinner();
             getViewState().selectSpinner(filterPosition);
         }
@@ -233,5 +233,17 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
     public String getTitle() {
         return currentShop.getName();
+    }
+
+    public void search(String query) {
+        if (query.isEmpty()) {
+            getViewState().showSpinner();
+            currentFilter = "";
+        } else {
+            getViewState().hideSpinner();
+            currentFilter = "query=" + query;
+        }
+        getViewState().showData();
+        getViewState().filter(currentFilter);
     }
 }

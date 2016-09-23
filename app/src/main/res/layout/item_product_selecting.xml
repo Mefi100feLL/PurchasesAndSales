@@ -6,8 +6,8 @@
     android:animateLayoutChanges="true"
     android:background="@drawable/list_selector"
     android:orientation="horizontal"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:paddingLeft="@dimen/padding_list_items"
+    android:paddingRight="@dimen/padding_list_items_without_16dp">
 
     <CheckBox
         android:id="@+id/item_product_checkbox"

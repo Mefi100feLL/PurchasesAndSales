@@ -7,14 +7,14 @@
     android:background="@drawable/list_selector"
     android:gravity="center_vertical"
     android:minHeight="72dp"
+    android:paddingLeft="@dimen/padding_list_items"
+    android:paddingRight="@dimen/padding_list_items"
     android:orientation="horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"/>
+        android:layout_height="40dp"/>
 
     <LinearLayout
         android:id="@+id/layout_with_text"
@@ -24,7 +24,6 @@
         android:orientation="vertical"
         android:paddingBottom="8dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:paddingTop="8dp">
 
         <LinearLayout

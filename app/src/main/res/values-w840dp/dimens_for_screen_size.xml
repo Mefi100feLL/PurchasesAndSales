@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="recycler_padding_left_right">164dp</dimen>
+    <dimen name="margin_fab_right_for_tablet">54dp</dimen>
+</resources>

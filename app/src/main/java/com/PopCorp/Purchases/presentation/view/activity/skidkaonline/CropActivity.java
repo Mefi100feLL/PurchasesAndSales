@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.BackPressedCallback;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.view.fragment.skidkaonline.CropFragment;
 import com.mikepenz.materialize.MaterializeBuilder;
 
@@ -21,7 +22,7 @@ public class CropActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //setTheme(ThemeManager.getInstance().getThemeRes());
+        setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crop);
 

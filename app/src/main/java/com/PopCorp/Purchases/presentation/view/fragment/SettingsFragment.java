@@ -136,7 +136,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
             listView.setHeaderDividersEnabled(false);
             if (Build.VERSION.SDK_INT < 21) {
                 listView.setSelector(R.drawable.list_selector);
-                //listView.setPadding((int) getResources().getDimension(R.dimen.margin_item), 0, (int) getResources().getDimension(R.dimen.margin_item), 0);
+                //listView.setPadding((int) getResources().getDimension(R.dimen.padding_list_items), 0, (int) getResources().getDimension(R.dimen.padding_list_items), 0);
             }
         }
 

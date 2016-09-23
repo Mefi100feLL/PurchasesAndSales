@@ -102,16 +102,21 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
         rotateSkip = rootView.findViewById(R.id.rotate_skip);
         scaleSkip = rootView.findViewById(R.id.scale_skip);
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        cropView = uCropView.getCropImageView();
 
         LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
         if (!WindowUtils.isLandscape(getActivity())) {
             buttonslayout.setPadding(0, 0, 0, WindowUtils.getNavigationBarHeight(getActivity()));
         } else {
             buttonslayout.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);
-            toolBar.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);
+            if (WindowUtils.isTablet(getActivity())){
+                uCropView.getOverlayView().setPadding(0, WindowUtils.getNavigationBarHeight(getActivity())/2, 0, WindowUtils.getNavigationBarHeight(getActivity()));
+            } else {
+                toolBar.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);
+            }
         }
 
-        cropView = uCropView.getCropImageView();
+
         cropView.setTargetAspectRatio(1);
         rotateSkip.setOnClickListener(view -> {
             cropView.postRotate(-cropView.getCurrentAngle());

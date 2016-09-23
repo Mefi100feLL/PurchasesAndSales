@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.data.utils.sharing;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -52,7 +53,7 @@ public class SharingListAsEmailBuilder implements SharingListBuilder {
     }
 
     private File createFile(String name, String currency, List<ListItem> itemsForSending) throws IOException {
-        File directory = Environment.getExternalStorageDirectory();
+        File directory = Environment.getDownloadCacheDirectory();
         if (!isExternalStorageWritable()) {
             return null;
         }

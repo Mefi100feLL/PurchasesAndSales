@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.presentation.view.adapter;
 
-import android.content.Context;
 import android.support.v7.util.SortedList;
 
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
@@ -23,7 +22,17 @@ public class SalesInShopAdapter extends SalesAdapter {
         if (constraint.equals("")){
             return objects;
         }
+        String query = (String) constraint;
+        if (query.startsWith("query=")){
+            query = query.replace("query=", "").toLowerCase();
+        } else {
+            query = "";
+        }
         for (Sale sale : objects){
+            if (!query.isEmpty() && sale.getTitle().toLowerCase().contains(query)){
+                result.add(sale);
+                continue;
+            }
             if (constraint.equals(String.valueOf(sale.getCategory().getName()))){
                 result.add(sale);
             }

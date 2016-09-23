@@ -24,10 +24,9 @@
         <Spinner
             android:id="@+id/toolbar_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginLeft="@dimen/toolbar_spinner_margin_left"
             android:background="@android:color/transparent"
-            android:minHeight="56dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:visibility="gone"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>

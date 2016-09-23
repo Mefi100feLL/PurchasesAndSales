@@ -17,8 +17,10 @@ public interface SalesView extends SampleDataView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void filter(String filter);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "spinner")
     void showSpinner();
+    @StateStrategyType(value = GroupSingleStrategy.class, tag = "spinner")
+    void hideSpinner();
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void selectSpinner(int filterPosition);
