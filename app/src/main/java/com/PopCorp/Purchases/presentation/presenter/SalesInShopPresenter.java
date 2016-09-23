@@ -189,7 +189,9 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
     @Override
     public void onEmpty() {
-
+        if (currentFilter.startsWith("query")){
+            getViewState().showEmptyForSearch(currentFilter.replace("query=", ""));
+        }
     }
 
     @Override

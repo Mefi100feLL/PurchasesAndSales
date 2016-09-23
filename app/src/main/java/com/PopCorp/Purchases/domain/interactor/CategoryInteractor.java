@@ -55,4 +55,8 @@ public class CategoryInteractor {
     public void remove(Category category) {
         dbRepository.remove(category);
     }
+
+    public void update(Category category) {
+        dbRepository.update(category);
+    }
 }

@@ -93,7 +93,13 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
                         if (shoppingLists != null && shoppingLists.size() > 0) {
                             Collections.sort(shoppingLists, PreferencesManager.getInstance().getShoppingListComparator());
                             lists = shoppingLists;
-                            getViewState().showListsSelecting(shoppingLists);
+                            if (lists.size() > 1) {
+                                getViewState().showListsSelecting(shoppingLists);
+                            } else {
+                                selectedLists.clear();
+                                selectedLists.addAll(lists);
+                                openInputListItem();
+                            }
                         } else {
                             getViewState().showEmptyLists();
                         }

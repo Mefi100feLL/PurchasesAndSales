@@ -11,9 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.CategoryComparator;
-import com.PopCorp.Purchases.data.dao.CategoryDAO;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.net.APIFactory;
 import com.PopCorp.Purchases.data.utils.UIL;
@@ -26,17 +25,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public static final String FILTER_ALL = "";
     public static final String FILTER_FAVORITE = "favorite";
 
-    private final RecyclerCallback<Category> callback;
+    private final FavoriteRecyclerCallback<Category> callback;
     private final CategoryComparator comparator = new CategoryComparator();
-
-    private CategoryDAO categoryDAO = new CategoryDAO();
 
     private ArrayList<Category> objects;
     private final SortedList<Category> publishItems;
 
-    private String currentFilter;
-
-    public CategoriesAdapter(RecyclerCallback<Category> callback, ArrayList<Category> objects) {
+    public CategoriesAdapter(FavoriteRecyclerCallback<Category> callback, ArrayList<Category> objects) {
         this.callback = callback;
         this.objects = objects;
         publishItems = new SortedList<>(Category.class, new SortedList.Callback<Category>() {
@@ -130,14 +125,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         holder.favorite.setTag(category);
         holder.favorite.setOnClickListener(v -> {
             Category clickedCategory = (Category) v.getTag();
-            clickedCategory.setFavorite(!clickedCategory.isFavorite());
-            notifyItemChanged(publishItems.indexOf(clickedCategory));
-            categoryDAO.updateOrAddToDB(clickedCategory);
-            if (currentFilter.equals(FILTER_FAVORITE)) {
-                publishItems.remove(clickedCategory);
-                if (publishItems.size() == 0){
-                    callback.onEmpty();
-                }
+            callback.onFavoriteClicked(clickedCategory);
+            if (category.isFavorite()) {
+                ((ImageView) v).setImageResource(R.drawable.ic_star_amber_24dp);
+            } else {
+                ((ImageView) v).setImageResource(R.drawable.ic_star_border_amber_24dp);
             }
         });
 
@@ -164,7 +156,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                 FilterResults results = new FilterResults();
                 ArrayList<Category> FilteredArrayNames = new ArrayList<>();
 
-                currentFilter = (String) constraint;
                 if (constraint.equals(FILTER_ALL)) {
                     results.count = objects.size();
                     results.values = objects;
@@ -192,9 +183,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             int index = publishItems.indexOf(category);
             if (index == SortedList.INVALID_POSITION) {
                 publishItems.add(category);
-            } else {
+            }/* else {
                 publishItems.updateItemAt(index, category);
-            }
+            }*/
         }
 
         ArrayList<Category> arrayForRemoving = new ArrayList<>();

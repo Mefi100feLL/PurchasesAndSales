@@ -86,6 +86,9 @@ public class SalesInShopAdapter extends SalesAdapter {
         for (SaleDecorator header : arrayForRemoving) {
             publishItems.remove(header);
         }
+        if (publishItems.size() == 0){
+            callback.onEmpty();
+        }
         publishItems.endBatchedUpdates();
     }
 

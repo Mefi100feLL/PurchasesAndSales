@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,6 +56,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     private SwipeRefreshLayout swipeRefresh;
     private View progressBar;
     private EmptyView emptyView;
+    private SearchView searchView;
 
     private SalesAdapter adapter;
 
@@ -213,6 +215,16 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     }
 
     @Override
+    public void showEmptyForSearch(String query) {
+        showError(getString(R.string.empty_sales_for_search).replace("query", query), R.drawable.ic_file_favorite, R.string.button_show_all_sales, v -> {
+            presenter.search("");
+            if (searchView != null) {
+                searchView.onActionViewCollapsed();
+            }
+        });
+    }
+
+    @Override
     public void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
@@ -258,6 +270,19 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.sales, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                presenter.search(newText);
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
 
         int groupId = 12;

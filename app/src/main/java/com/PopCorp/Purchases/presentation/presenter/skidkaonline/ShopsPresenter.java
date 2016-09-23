@@ -142,9 +142,8 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                 objects.add(shop);
             } else {
                 Shop exist = objects.get(objects.indexOf(shop));
-                shop.setFavorite(exist.isFavorite());
-                objects.remove(exist);
-                objects.add(shop);
+                exist.setImage(shop.getImage());
+                exist.setName(shop.getName());
             }
         }
         return result;
@@ -229,7 +228,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
     @Override
     public void onFavoriteClicked(Shop item) {
         item.setFavorite(!item.isFavorite());
-        getViewState().filter(currentFilter);
         interactor.update(item);
+        getViewState().filter(currentFilter);
     }
 }

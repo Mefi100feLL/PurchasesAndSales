@@ -174,6 +174,16 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     }
 
     @Override
+    public void showEmptyForSearch(String query) {
+        showError(getString(R.string.empty_sales_for_search).replace("query", query), R.drawable.ic_zoom, R.string.button_show_all_sales, v -> {
+            presenter.search("");
+            if (searchView != null) {
+                searchView.onActionViewCollapsed();
+            }
+        });
+    }
+
+    @Override
     public void showSalesEmpty() {
         showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
             getActivity().onBackPressed();

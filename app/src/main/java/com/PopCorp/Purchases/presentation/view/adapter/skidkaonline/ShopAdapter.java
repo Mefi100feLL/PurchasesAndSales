@@ -146,10 +146,15 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
                 holder.favorite.setImageResource(R.drawable.ic_star_border_amber_24dp);
             }
 
-            holder.favorite.setTag(shop);
+            holder.favorite.setTag(decorator);
             holder.favorite.setOnClickListener(v -> {
-                Shop clickedShop = (Shop) v.getTag();
+                Shop clickedShop = ((ShopDecorator) v.getTag()).getShop();
                 callback.onFavoriteClicked(clickedShop);
+                if (clickedShop.isFavorite()) {
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_amber_24dp);
+                } else {
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_border_amber_24dp);
+                }
             });
         }
 
@@ -232,7 +237,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
                     }
                     if (decorator.getShop().equals(shop)) {
                         finded = true;
-                        publishItems.updateItemAt(i, decorator);
+                        //publishItems.updateItemAt(i, decorator);
                     }
                 }
                 if (!finded) {

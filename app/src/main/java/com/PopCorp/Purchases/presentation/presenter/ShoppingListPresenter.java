@@ -181,6 +181,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
 
     public void onItemsRerurned(ListItem... items) {
         for (ListItem listItem : items){
+            listItem.setListId(currentList.getId());
             if (getObjects().contains(listItem)){
                 getObjects().remove(listItem);
                 getObjects().add(listItem);

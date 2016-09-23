@@ -19,10 +19,20 @@ public class SalesInCategoryAdapter extends SalesAdapter {
     @Override
     protected ArrayList<Sale> getFilterResults(CharSequence constraint) {
         ArrayList<Sale> result = new ArrayList<>();
-        if (constraint.equals("")) {
+        if (constraint.equals("")){
             return objects;
         }
+        String query = (String) constraint;
+        if (query.startsWith("query=")){
+            query = query.replace("query=", "").toLowerCase();
+        } else {
+            query = "";
+        }
         for (Sale sale : objects) {
+            if (!query.isEmpty() && sale.getTitle().toLowerCase().contains(query)){
+                result.add(sale);
+                continue;
+            }
             if (constraint.equals(String.valueOf(sale.getShop().getName()))) {
                 result.add(sale);
             }
@@ -32,54 +42,54 @@ public class SalesInCategoryAdapter extends SalesAdapter {
 
     @Override
     protected void update(ArrayList<Sale> sales) {
-        ArrayList<SaleDecorator> arrayForRemove = new ArrayList<>();
+        publishItems.beginBatchedUpdates();
         for (Sale sale : sales) {
-            boolean finded = false;
-            for (int i = 0; i < publishItems.size(); i++) {
-                SaleDecorator decorator = publishItems.get(i);
-                if (decorator.isHeader()) {
-                    continue;
-                }
-                if (!sales.contains(decorator.getSale())) {
-                    arrayForRemove.add(decorator);
-                }
-                if (decorator.getSale().equals(sale)) {
-                    finded = true;
-                }
-            }
-            if (!finded) {
-                publishItems.add(new SaleShopDecorator(sale, false, sale.getShop()));
+            SaleShopDecorator decorator = new SaleShopDecorator(sale, false, sale.getShop());
+            int index = publishItems.indexOf(decorator);
+            if (index == SortedList.INVALID_POSITION) {
+                publishItems.add(decorator);
+            } else {
+                publishItems.updateItemAt(index, decorator);
             }
         }
-        for (SaleDecorator decorator : arrayForRemove) {
-            publishItems.remove(decorator);
-        }
-        ArrayList<SaleShopDecorator> headers = new ArrayList<>();
+
+        ArrayList<SaleDecorator> arrayForRemoving = new ArrayList<>();
         for (int i = 0; i < publishItems.size(); i++) {
             SaleDecorator decorator = publishItems.get(i);
-            if (decorator.isHeader()) {
-                continue;
+            if (!decorator.isHeader() && !sales.contains(decorator.getSale())) {
+                arrayForRemoving.add(decorator);
             }
-            SaleShopDecorator header = new SaleShopDecorator(null, true, decorator.getSale().getShop());
+        }
+        for (SaleDecorator decorator : arrayForRemoving) {
+            publishItems.remove(decorator);
+        }
+
+        ArrayList<SaleShopDecorator> headers = new ArrayList<>();
+        for (Sale sale : sales) {
+            SaleShopDecorator header = new SaleShopDecorator(sale, true, sale.getShop());
             if (!headers.contains(header)) {
                 headers.add(header);
             }
         }
-        for (SaleShopDecorator decorator : headers){
-            if (publishItems.indexOf(decorator) == SortedList.INVALID_POSITION) {
-                publishItems.add(decorator);
+        for (SaleShopDecorator header : headers) {
+            if (publishItems.indexOf(header) == SortedList.INVALID_POSITION) {
+                publishItems.add(header);
             }
         }
-        arrayForRemove.clear();
+        arrayForRemoving.clear();
         for (int i = 0; i < publishItems.size(); i++) {
             SaleDecorator decorator = publishItems.get(i);
             if (decorator.isHeader() && !headers.contains(decorator)) {
-                arrayForRemove.add(decorator);
+                arrayForRemoving.add(decorator);
             }
         }
-        for (SaleDecorator decorator : arrayForRemove) {
-            publishItems.remove(decorator);
+        for (SaleDecorator header : arrayForRemoving) {
+            publishItems.remove(header);
         }
+        if (publishItems.size() == 0){
+            callback.onEmpty();
+        }
+        publishItems.endBatchedUpdates();
     }
 
     @Override

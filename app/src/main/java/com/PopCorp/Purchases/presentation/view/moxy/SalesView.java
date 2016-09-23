@@ -26,4 +26,6 @@ public interface SalesView extends SampleDataView {
     void selectSpinner(int filterPosition);
 
     void showSales(View v, Sale item);
+
+    void showEmptyForSearch(String query);
 }
