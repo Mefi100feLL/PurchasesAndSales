@@ -33,8 +33,6 @@ public class ThemeManager {
         sPref = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-
-
     public int getPrimaryColorRes(){
         final TypedArray ta = context.getResources().obtainTypedArray(R.array.primary_colors);
         final int[] colors = new int[ta.length()];
@@ -174,5 +172,29 @@ public class ThemeManager {
         Color.colorToHSV(color, hsv);
         hsv[2] *= 0.9f;
         return Color.HSVToColor(hsv);
+    }
+
+    public int getColor(String key){
+        int color = 0;
+        switch (key){
+            case PRIMARY_COLOR:
+                color = getPrimaryColor();
+                break;
+            case ACCENT_COLOR:
+                color = getAccentColor();
+                break;
+        }
+        return color;
+    }
+
+    public void putColor(String key, int position) {
+        switch (key){
+            case PRIMARY_COLOR:
+                setPrimaryColor(position);
+                break;
+            case ACCENT_COLOR:
+                setAccentColor(position);
+                break;
+        }
     }
 }

@@ -5,6 +5,16 @@
         android:title="@string/prefs_view"
         android:persistent="false">
 
+        <com.PopCorp.Purchases.presentation.view.view.ColorPreference
+            android:key="primary_color_version_four"
+            android:summary="@string/prefs_color_primary_summary"
+            android:title="@string/prefs_color_primary" />
+
+        <com.PopCorp.Purchases.presentation.view.view.ColorPreference
+            android:key="accent_color_version_four"
+            android:summary="@string/prefs_color_accent_summary"
+            android:title="@string/prefs_color_accent" />
+
         <CheckBoxPreference
             android:key="replacebuyed"
             android:title="@string/prefs_replace_buyed"
