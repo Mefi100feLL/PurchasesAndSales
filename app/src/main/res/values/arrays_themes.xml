@@ -26,115 +26,94 @@
 
     <array name="primary_dark_colors">
         <item>@color/md_indigo_700</item>
-        <item>@color/md_pink_700</item>
-        <item>@color/md_blue_grey_700</item>
-        <item>@color/md_orange_700</item>
-        <item>@color/md_amber_700</item>
-        <item>@color/md_teal_700</item>
-        <item>@color/md_brown_700</item>
-        <item>@color/md_blue_700</item>
-        <item>@color/md_deep_purple_700</item>
-        <item>@color/md_cyan_700</item>
-        <item>@color/md_purple_700</item>
-        <item>@color/md_lime_700</item>
-        <item>@color/md_red_700</item>
         <item>@color/md_grey_700</item>
+        <item>@color/md_grey_800</item>
+        <item>@color/md_black_1000</item>
+        <item>@color/md_blue_grey_700</item>
+        <item>@color/md_brown_700</item>
+        <item>@color/md_red_700</item>
+        <item>@color/md_pink_700</item>
+        <item>@color/md_purple_700</item>
+        <item>@color/md_deep_purple_700</item>
+        <item>@color/md_blue_700</item>
         <item>@color/md_light_blue_700</item>
+        <item>@color/md_cyan_700</item>
+        <item>@color/md_teal_700</item>
+        <item>@color/md_green_700</item>
         <item>@color/md_light_green_700</item>
-    </array>
-
-    <array name="accent_colors">
-        <item>@color/md_pink_500</item>
-        <item>@color/md_indigo_500</item>
-        <item>@color/md_orange_500</item>
-        <item>@color/md_blue_grey_500</item>
-        <item>@color/md_teal_500</item>
-        <item>@color/md_amber_500</item>
-        <item>@color/md_blue_500</item>
-        <item>@color/md_brown_500</item>
-        <item>@color/md_cyan_500</item>
-        <item>@color/md_deep_purple_500</item>
-        <item>@color/md_lime_500</item>
-        <item>@color/md_purple_500</item>
-        <item>@color/md_grey_500</item>
-        <item>@color/md_red_500</item>
-        <item>@color/md_light_green_500</item>
-        <item>@color/md_light_blue_500</item>
+        <item>@color/md_lime_700</item>
+        <item>@color/md_yellow_700</item>
+        <item>@color/md_amber_700</item>
+        <item>@color/md_orange_700</item>
     </array>
 
     <array name="themes">
         <item>@style/IndigoTheme</item>
-        <item>@style/PinkTheme</item>
-        <item>@style/BlueGreyTheme</item>
-        <item>@style/OrangeTheme</item>
-        <item>@style/AmberTheme</item>
-        <item>@style/TealTheme</item>
-        <item>@style/BrownTheme</item>
-        <item>@style/BlueTheme</item>
-        <item>@style/DeepPurpleTheme</item>
-        <item>@style/CyanTheme</item>
-        <item>@style/PurpleTheme</item>
-        <item>@style/LimeTheme</item>
-        <item>@style/RedTheme</item>
         <item>@style/GreyTheme</item>
+        <item>@style/GreyDarkTheme</item>
+        <item>@style/BlackTheme</item>
+        <item>@style/BlueGreyTheme</item>
+        <item>@style/BrownTheme</item>
+        <item>@style/RedTheme</item>
+        <item>@style/PinkTheme</item>
+        <item>@style/PurpleTheme</item>
+        <item>@style/DeepPurpleTheme</item>
+        <item>@style/BlueTheme</item>
         <item>@style/LightBlueTheme</item>
+        <item>@style/CyanTheme</item>
+        <item>@style/TealTheme</item>
+        <item>@style/GreenTheme</item>
         <item>@style/LightGreenTheme</item>
-    </array>
-
-    <array name="translucent_themes">
-        <item>@style/IndigoTranslucentTheme</item>
-        <item>@style/PinkTranslucentTheme</item>
-        <item>@style/BlueGreyTranslucentTheme</item>
-        <item>@style/OrangeTranslucentTheme</item>
-        <item>@style/AmberTranslucentTheme</item>
-        <item>@style/TealTranslucentTheme</item>
-        <item>@style/BrownTranslucentTheme</item>
-        <item>@style/BlueTranslucentTheme</item>
-        <item>@style/DeepPurpleTranslucentTheme</item>
-        <item>@style/CyanTranslucentTheme</item>
-        <item>@style/PurpleTranslucentTheme</item>
-        <item>@style/LimeTranslucentTheme</item>
-        <item>@style/RedTranslucentTheme</item>
-        <item>@style/GreyTranslucentTheme</item>
-        <item>@style/LightBlueTranslucentTheme</item>
-        <item>@style/LightGreenTranslucentTheme</item>
+        <item>@style/LimeTheme</item>
+        <item>@style/YellowTheme</item>
+        <item>@style/AmberTheme</item>
+        <item>@style/OrangeTheme</item>
     </array>
 
     <array name="dialog_themes">
-        <item>@style/IndigoDialogTheme</item>
-        <item>@style/PinkDialogTheme</item>
-        <item>@style/BlueGreyDialogTheme</item>
-        <item>@style/OrangeDialogTheme</item>
-        <item>@style/AmberDialogTheme</item>
-        <item>@style/TealDialogTheme</item>
-        <item>@style/BrownDialogTheme</item>
-        <item>@style/BlueDialogTheme</item>
-        <item>@style/DeepPurpleDialogTheme</item>
-        <item>@style/CyanDialogTheme</item>
-        <item>@style/PurpleDialogTheme</item>
-        <item>@style/LimeDialogTheme</item>
-        <item>@style/RedDialogTheme</item>
-        <item>@style/GreyDialogTheme</item>
-        <item>@style/LightBlueDialogTheme</item>
-        <item>@style/LightGreenDialogTheme</item>
+        <item>@style/IndigoThemeDialog</item>
+        <item>@style/GreyThemeDialog</item>
+        <item>@style/GreyDarkThemeDialog</item>
+        <item>@style/BlackThemeDialog</item>
+        <item>@style/BlueGreyThemeDialog</item>
+        <item>@style/BrownThemeDialog</item>
+        <item>@style/RedThemeDialog</item>
+        <item>@style/PinkThemeDialog</item>
+        <item>@style/PurpleThemeDialog</item>
+        <item>@style/DeepPurpleThemeDialog</item>
+        <item>@style/BlueThemeDialog</item>
+        <item>@style/LightBlueThemeDialog</item>
+        <item>@style/CyanThemeDialog</item>
+        <item>@style/TealThemeDialog</item>
+        <item>@style/GreenThemeDialog</item>
+        <item>@style/LightGreenThemeDialog</item>
+        <item>@style/LimeThemeDialog</item>
+        <item>@style/YellowThemeDialog</item>
+        <item>@style/AmberThemeDialog</item>
+        <item>@style/OrangeThemeDialog</item>
     </array>
 
     <array name="headers">
         <item>@drawable/header_background_indigo</item>
-        <item>@drawable/header_background_pink</item>
-        <item>@drawable/header_background_blue_grey</item>
-        <item>@drawable/header_background_orange</item>
-        <item>@drawable/header_background_amber</item>
-        <item>@drawable/header_background_teal</item>
-        <item>@drawable/header_background_brown</item>
-        <item>@drawable/header_background_blue</item>
-        <item>@drawable/header_background_deep_purple</item>
-        <item>@drawable/header_background_cyan</item>
-        <item>@drawable/header_background_purple</item>
-        <item>@drawable/header_background_lime</item>
-        <item>@drawable/header_background_red</item>
         <item>@drawable/header_background_dark_grey</item>
+        <item>@drawable/header_background_dark_grey</item>
+        <item>@drawable/header_background_black</item>
+        <item>@drawable/header_background_blue_grey</item>
+        <item>@drawable/header_background_brown</item>
+        <item>@drawable/header_background_red</item>
+        <item>@drawable/header_background_pink</item>
+        <item>@drawable/header_background_purple</item>
+        <item>@drawable/header_background_deep_purple</item>
+        <item>@drawable/header_background_blue</item>
         <item>@drawable/header_background_light_blue</item>
+        <item>@drawable/header_background_cyan</item>
+        <item>@drawable/header_background_teal</item>
+        <item>@drawable/header_background_green</item>
         <item>@drawable/header_background_light_green</item>
+        <item>@drawable/header_background_lime</item>
+        <item>@drawable/header_background_yellow</item>
+        <item>@drawable/header_background_amber</item>
+        <item>@drawable/header_background_orange</item>
     </array>
+
 </resources>

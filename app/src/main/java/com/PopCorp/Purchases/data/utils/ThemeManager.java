@@ -1,12 +1,15 @@
 package com.PopCorp.Purchases.data.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
+import android.view.View;
 
 import com.PopCorp.Purchases.R;
+import com.mikepenz.materialize.MaterializeBuilder;
 
 public class ThemeManager {
 
@@ -60,7 +63,7 @@ public class ThemeManager {
 
 
     public int getAccentColorRes(){
-        final TypedArray ta = context.getResources().obtainTypedArray(R.array.accent_colors);
+        final TypedArray ta = context.getResources().obtainTypedArray(R.array.primary_colors);
         final int[] colors = new int[ta.length()];
         for (int i = 0; i < ta.length(); i++) {
             colors[i] = ta.getResourceId(i, 0);
@@ -106,7 +109,7 @@ public class ThemeManager {
             themes[i] = ta.getResourceId(i, 0);
         }
         ta.recycle();
-        int theme = R.style.IndigoTheme;
+        int theme = R.style.PinkTheme;
         int themePosition = sPref.getInt(THEME, -1);
         if (themePosition != -1 && themePosition < themes.length) {
             theme = themes[themePosition];
@@ -116,8 +119,6 @@ public class ThemeManager {
 
     public void setTheme(int position){
         sPref.edit().putInt(THEME, position).commit();
-        setPrimaryColor(position);
-        setAccentColor(position);
     }
 
 
@@ -128,22 +129,7 @@ public class ThemeManager {
             themes[i] = ta.getResourceId(i, 0);
         }
         ta.recycle();
-        int theme = R.style.IndigoDialogTheme;
-        int themePosition = sPref.getInt(THEME, -1);
-        if (themePosition != -1 && themePosition < themes.length) {
-            theme = themes[themePosition];
-        }
-        return theme;
-    }
-
-    public int getTranslucentThemeRes(){
-        final TypedArray ta = context.getResources().obtainTypedArray(R.array.translucent_themes);
-        final int[] themes = new int[ta.length()];
-        for (int i = 0; i < ta.length(); i++) {
-            themes[i] = ta.getResourceId(i, 0);
-        }
-        ta.recycle();
-        int theme = R.style.IndigoTranslucentTheme;
+        int theme = R.style.IndigoThemeDialog;
         int themePosition = sPref.getInt(THEME, -1);
         if (themePosition != -1 && themePosition < themes.length) {
             theme = themes[themePosition];
@@ -159,7 +145,7 @@ public class ThemeManager {
         }
         ta.recycle();
         int header = R.drawable.header_background_indigo;
-        int headerPosition = sPref.getInt(THEME, -1);
+        int headerPosition = sPref.getInt(PRIMARY_COLOR, -1);
         if (headerPosition != -1 && headerPosition < headers.length) {
             header = headers[headerPosition];
         }
@@ -194,7 +180,20 @@ public class ThemeManager {
                 break;
             case ACCENT_COLOR:
                 setAccentColor(position);
+                setTheme(position);
                 break;
         }
+    }
+
+    public void setTheme(View view) {
+        view.setBackgroundColor(getPrimaryColor());
+    }
+
+    public void setStatusBarColor(Activity activity) {
+        new MaterializeBuilder()
+                .withActivity(activity)
+                .withStatusBarPadding(true)
+                .withStatusBarColorRes(getPrimaryDarkColorRes())
+                .build();
     }
 }

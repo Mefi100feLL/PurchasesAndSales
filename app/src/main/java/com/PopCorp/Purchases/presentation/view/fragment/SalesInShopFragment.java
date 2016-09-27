@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInShopPresenter;
@@ -95,6 +96,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
+        ThemeManager.getInstance().setTheme(toolBar);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);

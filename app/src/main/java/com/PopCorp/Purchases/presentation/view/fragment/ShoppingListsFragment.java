@@ -24,6 +24,7 @@ import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.sharing.SharingListBuilderFactory;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
@@ -52,7 +53,6 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
 
     private String[] arraySizesTable;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
@@ -65,6 +65,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         }
+        ThemeManager.getInstance().setTheme(toolBar);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);

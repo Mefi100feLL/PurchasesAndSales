@@ -27,6 +27,7 @@ import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingProductsPresenter;
 import com.PopCorp.Purchases.presentation.view.adapter.SelectingProductsAdapter;
@@ -76,6 +77,7 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
+        ThemeManager.getInstance().setTheme(toolBar);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);

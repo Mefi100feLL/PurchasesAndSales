@@ -134,6 +134,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         }
 
         toolBar = (Toolbar) mainView.findViewById(R.id.toolbar);
+        ThemeManager.getInstance().setTheme(toolBar);
         AppCompatActivity activity = ((AppCompatActivity) getActivity());
         activity.setSupportActionBar(toolBar);
         if (activity.getSupportActionBar() != null) {

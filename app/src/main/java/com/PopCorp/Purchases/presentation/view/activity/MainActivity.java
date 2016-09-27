@@ -40,6 +40,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ThemeManager.getInstance().setStatusBarColor(this);
     }
 
     @Override
