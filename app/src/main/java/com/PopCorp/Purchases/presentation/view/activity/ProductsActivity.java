@@ -17,6 +17,7 @@ public class ProductsActivity extends MvpAppCompatActivity {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+        ThemeManager.getInstance().setStatusBarColor(this);
 
         Fragment fragment = new SelectingProductsFragment();
         Bundle args = new Bundle();

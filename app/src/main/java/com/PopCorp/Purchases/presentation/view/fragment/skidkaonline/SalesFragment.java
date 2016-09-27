@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SalesPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
@@ -87,6 +89,8 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
+        AppBarLayout appBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar);
+        ThemeManager.getInstance().putPrimaryColor(appBarLayout);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);

@@ -67,7 +67,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         }
-        ThemeManager.getInstance().setTheme(toolBar);
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);

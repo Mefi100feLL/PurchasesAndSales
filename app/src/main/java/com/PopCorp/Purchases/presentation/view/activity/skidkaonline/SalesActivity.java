@@ -21,6 +21,7 @@ public class SalesActivity extends MvpAppCompatActivity {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+        ThemeManager.getInstance().setStatusBarColor(this);
 
         new MaterializeBuilder()
                 .withActivity(this)

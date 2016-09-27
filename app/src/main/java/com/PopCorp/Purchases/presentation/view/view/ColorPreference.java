@@ -69,27 +69,6 @@ public class ColorPreference extends Preference implements ColorDialog.ColorCall
                 .show();
     }
 
-    /*
-    @Override
-    public void onBindViewHolder(PreferenceViewHolder holder) {
-        super.onBindViewHolder(holder);
-        holder.itemView.setClickable(false); // disable parent click
-        ImageView image = (ImageView) holder.findViewById(R.id.color_image);
-        ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
-        int color = 0;
-        switch (getKey()){
-            case PreferencesManager.PREFS_COLOR_PRIMARY:
-                color = ThemeManager.getInstance().getPrimaryColor();
-                break;
-            case PreferencesManager.PREFS_COLOR_ACCENT:
-                color = ThemeManager.getInstance().getAccentColor();
-                break;
-        }
-        coloredCircle.getPaint().setColor(color);
-        image.setBackgroundDrawable(coloredCircle);
-    }*/
-
-
     @Override
     protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
         /*if (restorePersistedValue) {
@@ -109,6 +88,8 @@ public class ColorPreference extends Preference implements ColorDialog.ColorCall
 
     @Override
     public void onColorSelection(@NonNull ColorDialog dialog, @ColorInt int selectedColor) {
-        ThemeManager.getInstance().putColor(getKey(), selectedColor);
+        if (ThemeManager.getInstance().putColor(getKey(), selectedColor) && getOnPreferenceChangeListener() != null){
+            getOnPreferenceChangeListener().onPreferenceChange(this, selectedColor);
+        }
     }
 }

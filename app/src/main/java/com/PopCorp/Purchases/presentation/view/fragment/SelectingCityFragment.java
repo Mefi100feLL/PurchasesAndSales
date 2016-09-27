@@ -60,7 +60,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
-        ThemeManager.getInstance().setTheme(toolBar);
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);

@@ -1,5 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,12 +25,15 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialize.MaterializeBuilder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     public static final int REQUEST_CODE_FOR_SELECTING_CITY_ACTIVITY = 1;
     public static final int REQUEST_CODE_FOR_SELECTING_PRODUCTS = 2;
+
+    private static final String SELECTED_DRAWER_ITEM = "selected_drawer_item";
 
     @InjectPresenter
     MainPresenter presenter;
@@ -40,7 +45,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         setTheme(ThemeManager.getInstance().getThemeRes());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ThemeManager.getInstance().setStatusBarColor(this);
+        new MaterializeBuilder()
+                .withActivity(this)
+                .withStatusBarPadding(true)
+                .withStatusBarColorRes(ThemeManager.getInstance().getPrimaryDarkColorRes())
+                .build();
+
+        presenter.setSelectedDrawerItem(getIntent().getIntExtra(SELECTED_DRAWER_ITEM, -1));
     }
 
     @Override
@@ -117,5 +128,11 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
                 .build();
         drawer.setSelection(presenter.getSelectedDrawerItem(), true);
         ImageLoader.getInstance().displayImage("drawable://" + ThemeManager.getInstance().getHeaderRes(), (ImageView) drawer.getHeader().findViewById(R.id.content_header_image), UIL.getImageOptions());
+    }
+
+    public static void show(Context context, int selectedDrawerItem) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(SELECTED_DRAWER_ITEM, selectedDrawerItem);
+        context.startActivity(intent);
     }
 }

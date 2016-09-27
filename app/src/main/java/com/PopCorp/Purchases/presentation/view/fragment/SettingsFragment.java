@@ -39,6 +39,7 @@ import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SelectingCityActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.CategoriesRecyclerViewAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SettingsView;
+import com.PopCorp.Purchases.presentation.view.view.ColorPreference;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
@@ -134,7 +135,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         }
 
         toolBar = (Toolbar) mainView.findViewById(R.id.toolbar);
-        ThemeManager.getInstance().setTheme(toolBar);
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
         AppCompatActivity activity = ((AppCompatActivity) getActivity());
         activity.setSupportActionBar(toolBar);
         if (activity.getSupportActionBar() != null) {
@@ -145,6 +146,22 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     }
 
     private void initializePrefs() {
+        ColorPreference primaryColor = (ColorPreference) findPreference(ThemeManager.PRIMARY_COLOR);
+        if (primaryColor != null){
+            primaryColor.setOnPreferenceChangeListener((preference, newValue) -> {
+                refreshActivity();
+                return true;
+            });
+        }
+
+        ColorPreference accentColor = (ColorPreference) findPreference(ThemeManager.ACCENT_COLOR);
+        if (accentColor != null){
+            accentColor.setOnPreferenceChangeListener((preference, newValue) -> {
+                refreshActivity();
+                return true;
+            });
+        }
+
         final Preference prefSortListItem = findPreference(PreferencesManager.PREFS_SORT_LIST_ITEM);
         if (prefSortListItem != null) {
             prefSortListItem.setSummary(getString(R.string.prefs_default_sort) + " " + PreferencesManager.getInstance().getSortingListItems());
@@ -259,6 +276,12 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
                 return true;
             });
         }
+    }
+
+    private void refreshActivity() {
+        getActivity().finish();
+        MainActivity.show(getActivity(), R.string.navigation_drawer_settings);
+        //getActivity().recreate();
     }
 
     public void selectCurrency(String selectedCurrency) {

@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -96,7 +97,8 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
-        ThemeManager.getInstance().setTheme(toolBar);
+        AppBarLayout appBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar);
+        ThemeManager.getInstance().putPrimaryColor(appBarLayout);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);

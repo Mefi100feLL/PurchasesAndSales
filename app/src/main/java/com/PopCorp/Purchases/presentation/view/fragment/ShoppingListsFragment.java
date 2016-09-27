@@ -65,7 +65,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         }
-        ThemeManager.getInstance().setTheme(toolBar);
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);

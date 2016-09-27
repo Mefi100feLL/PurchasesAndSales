@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,7 @@ import com.PopCorp.Purchases.data.model.ListItemCategory;
 import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.InputListItemPresenter;
@@ -48,7 +50,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
     @InjectPresenter
     InputListItemPresenter presenter;
 
-    private Toolbar toolbar;
+    private Toolbar toolBar;
     private EditText count;
     private AutoCompleteTextView name;
     private TextInputLayout nameLayout;
@@ -92,9 +94,12 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
         View rootView = inflater.inflate(R.layout.fragment_listitem_input, container, false);
         setHasOptionsMenu(true);
         
-        toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-        toolbar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
+        toolBar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+        toolBar.setNavigationOnClickListener(v -> getActivity().onBackPressed());
+        AppBarLayout appBarLayout = (AppBarLayout) rootView.findViewById(R.id.appbar);
+        ThemeManager.getInstance().putPrimaryColor(appBarLayout);
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
 
         ImageView minus = (ImageView) rootView.findViewById(R.id.listitem_count_minus);
         ImageView plus = (ImageView) rootView.findViewById(R.id.listitem_count_plus);
@@ -143,7 +148,7 @@ public class InputListItemFragment extends MvpAppCompatFragment implements Input
     @Override
     public void onResume() {
         super.onResume();
-        toolbar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
     private void onFabClicked() {

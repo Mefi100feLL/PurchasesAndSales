@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.PopCorp.Purchases.R;
-import com.mikepenz.materialize.MaterializeBuilder;
 
 public class ThemeManager {
 
@@ -117,7 +117,7 @@ public class ThemeManager {
         return theme;
     }
 
-    public void setTheme(int position){
+    public void putPrimaryColor(int position){
         sPref.edit().putInt(THEME, position).commit();
     }
 
@@ -173,27 +173,36 @@ public class ThemeManager {
         return color;
     }
 
-    public void putColor(String key, int position) {
+    public boolean putColor(String key, int position) {
         switch (key){
             case PRIMARY_COLOR:
-                setPrimaryColor(position);
+                if (sPref.getInt(PRIMARY_COLOR, -1) != position) {
+                    setPrimaryColor(position);
+                    return true;
+                }
                 break;
             case ACCENT_COLOR:
-                setAccentColor(position);
-                setTheme(position);
+                if (sPref.getInt(ACCENT_COLOR, -1) != position) {
+                    setAccentColor(position);
+                    putPrimaryColor(position);
+                    return true;
+                }
                 break;
         }
+        return false;
     }
 
-    public void setTheme(View view) {
+    public void putPrimaryColor(View view) {
         view.setBackgroundColor(getPrimaryColor());
     }
 
+    public void putPrimaryDarkColor(View view) {
+        view.setBackgroundColor(context.getResources().getColor(getPrimaryDarkColorRes()));
+    }
+
     public void setStatusBarColor(Activity activity) {
-        new MaterializeBuilder()
-                .withActivity(activity)
-                .withStatusBarPadding(true)
-                .withStatusBarColorRes(getPrimaryDarkColorRes())
-                .build();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setStatusBarColor(activity.getResources().getColor(getPrimaryDarkColorRes()));
+        }
     }
 }
