@@ -285,6 +285,7 @@
     <string name="dialog_content_no_shopping_lists_create_new">Хотите создать новый список покупок?</string>
     <string name="button_show_all_sales">Все акции</string>
     <string name="empty_sales_for_search">Не найдено акций по запросу \"query\"</string>
+    <string name="prefs_summary_theme">Текущая тема - theme</string>
 
 
 </resources>

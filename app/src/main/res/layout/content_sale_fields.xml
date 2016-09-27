@@ -31,7 +31,7 @@
         android:layout_marginTop="8dp">
 
         <ImageView
-            android:src="@drawable/scale"
+            android:src="?attr/scaleIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -52,7 +52,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/currency_rub"
+            android:src="?attr/currencyRubIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/weight_kilogram"
+            android:src="?attr/weightKilogramIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -94,7 +94,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/tag"
+            android:src="?attr/tagIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -115,7 +115,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/ic_store_mall_directory_grey600_24dp"
+            android:src="?attr/storeMallDirectoryIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -136,7 +136,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:src="@drawable/ic_calendar_grey600_24dp"
+            android:src="?attr/calendarIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

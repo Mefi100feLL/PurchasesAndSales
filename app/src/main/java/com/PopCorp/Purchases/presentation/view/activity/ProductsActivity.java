@@ -14,7 +14,7 @@ public class ProductsActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getThemeRes());
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
         ThemeManager.getInstance().setStatusBarColor(this);

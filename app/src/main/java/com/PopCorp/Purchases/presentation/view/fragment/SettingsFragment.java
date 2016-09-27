@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -56,7 +55,9 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     private int color;
     private String selectedCurrency;
     private String selectedUnit;
+
     private MaterialDialog progressDialog;
+    private MaterialDialog dialogWithCategories;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -158,6 +159,18 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         if (accentColor != null){
             accentColor.setOnPreferenceChangeListener((preference, newValue) -> {
                 refreshActivity();
+                return true;
+            });
+        }
+
+        Preference themePreference = findPreference(PreferencesManager.PREFS_THEME_LIGHT_DARK);
+        if (themePreference != null){
+            themePreference.setSummary(getString(R.string.prefs_summary_theme).replace("theme", PreferencesManager.getInstance().getThemeLightDark()));
+            themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                themePreference.setSummary(getString(R.string.prefs_summary_theme).replace("theme", (CharSequence) newValue));
+                if (!PreferencesManager.getInstance().getThemeLightDark().equals(newValue)){
+                    refreshActivity();
+                }
                 return true;
             });
         }
@@ -325,16 +338,11 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     @Override
     public void showDialogWithCategories(List<ListItemCategory> categories) {
         MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
-        ArrayList<String> names = new ArrayList<>();
-        for (ListItemCategory category : categories) {
-            names.add(category.getName());
-        }
         builder.adapter(new CategoriesRecyclerViewAdapter(new RecyclerCallback<ListItemCategory>() {
-
             @Override
             public void onItemClicked(View view, ListItemCategory item) {
                 showDialogForCategoryChange(item);
-                //dialog.cancel();
+                dialogWithCategories.cancel();
             }
 
             @Override
@@ -357,17 +365,13 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
 
             }
         }, categories), null);
-        /*builder.adapter(adapter, (dialog, itemView, which, text) -> {
-            showDialogForCategoryChange(categories.get(which));
-            dialog.cancel();
-        });*/
         builder.title(R.string.prefs_categories_of_products);
         builder.negativeText(R.string.dialog_button_cancel);
         builder.positiveText(R.string.dialog_button_add);
         builder.onPositive((dialog, which) -> showDialogForCategoryChange(null));
-        Dialog dialog = builder.build();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+        dialogWithCategories = builder.build();
+        dialogWithCategories.setCanceledOnTouchOutside(false);
+        dialogWithCategories.show();
     }
 
     private void showDialogForCategoryChange(final ListItemCategory category) {
@@ -386,22 +390,16 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         final View categoryColor = layout.findViewById(R.id.category_color);
         final Button selectColor = (Button) layout.findViewById(R.id.select_color);
 
-        final TypedArray ta = getActivity().getResources().obtainTypedArray(com.PopCorp.Purchases.R.array.primary_colors);
-        final int[] colors = new int[ta.length()];
-        for (int i = 0; i < ta.length(); i++) {
-            colors[i] = ta.getResourceId(i, 0);
-        }
-        ta.recycle();
         selectColor.setOnClickListener(v ->
                 new ColorDialog.Builder((AppCompatActivity) getActivity(),
-                        (dialog, selectedColor) -> {
+                        (dialog, selectedColor, selectedPosition) -> {
                             color = selectedColor;
                             categoryColor.setBackgroundColor(selectedColor);
                         }, R.string.dialog_title_selecting_color)
                         .titleSub(R.string.dialog_title_selecting_color)
                         .allowUserColorInput(false)
                         .accentMode(false)
-                        .customColors(colors, null)
+                        .customColors(R.array.primary_colors, null)
                         .doneButton(R.string.dialog_button_select)
                         .backButton(R.string.dialog_button_back)
                         .cancelButton(R.string.dialog_button_cancel)

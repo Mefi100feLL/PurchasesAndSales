@@ -15,7 +15,6 @@ import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.ZoomOutPageTransformer;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.presenter.SaleActivityPresenter;
-import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.fragment.skidkaonline.SaleFragment;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleActivityView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -31,7 +30,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getThemeRes());
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
 

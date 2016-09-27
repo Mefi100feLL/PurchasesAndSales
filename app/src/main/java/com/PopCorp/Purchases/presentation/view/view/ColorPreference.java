@@ -87,9 +87,9 @@ public class ColorPreference extends Preference implements ColorDialog.ColorCall
     }
 
     @Override
-    public void onColorSelection(@NonNull ColorDialog dialog, @ColorInt int selectedColor) {
-        if (ThemeManager.getInstance().putColor(getKey(), selectedColor) && getOnPreferenceChangeListener() != null){
-            getOnPreferenceChangeListener().onPreferenceChange(this, selectedColor);
+    public void onColorSelection(@NonNull ColorDialog dialog, @ColorInt int selectedColor, int selectedPosition) {
+        if (ThemeManager.getInstance().putColor(getKey(), selectedPosition) && getOnPreferenceChangeListener() != null){
+            getOnPreferenceChangeListener().onPreferenceChange(this, selectedPosition);
         }
     }
 }

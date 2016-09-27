@@ -15,6 +15,13 @@
             android:summary="@string/prefs_color_accent_summary"
             android:title="@string/prefs_color_accent" />
 
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+            android:key="theme_light_dark"
+            android:title="@string/prefs_theme"
+            android:entries="@array/themes"
+            android:entryValues="@array/themes"
+            android:defaultValue="@string/prefs_light_theme" />
+
         <CheckBoxPreference
             android:key="replacebuyed"
             android:title="@string/prefs_replace_buyed"

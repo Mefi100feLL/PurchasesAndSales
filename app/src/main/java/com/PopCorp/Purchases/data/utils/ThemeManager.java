@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.PopCorp.Purchases.R;
@@ -103,13 +104,18 @@ public class ThemeManager {
 
 
     public int getThemeRes(){
-        final TypedArray ta = context.getResources().obtainTypedArray(R.array.themes);
+        int array = R.array.themes_light;
+        int theme = R.style.PinkTheme_Light;
+        if (!PreferencesManager.getInstance().getThemeLightDark().equals(context.getString(R.string.prefs_light_theme))){
+            array = R.array.themes_dark;
+            theme = R.style.PinkTheme_Dark;
+        }
+        final TypedArray ta = context.getResources().obtainTypedArray(array);
         final int[] themes = new int[ta.length()];
         for (int i = 0; i < ta.length(); i++) {
             themes[i] = ta.getResourceId(i, 0);
         }
         ta.recycle();
-        int theme = R.style.PinkTheme;
         int themePosition = sPref.getInt(THEME, -1);
         if (themePosition != -1 && themePosition < themes.length) {
             theme = themes[themePosition];
@@ -204,5 +210,9 @@ public class ThemeManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.getWindow().setStatusBarColor(activity.getResources().getColor(getPrimaryDarkColorRes()));
         }
+    }
+
+    public void setTheme(AppCompatActivity activity) {
+        activity.setTheme(getThemeRes());
     }
 }

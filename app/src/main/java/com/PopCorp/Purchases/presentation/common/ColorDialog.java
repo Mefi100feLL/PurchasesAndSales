@@ -244,7 +244,7 @@ public class ColorDialog extends DialogFragment implements View.OnClickListener,
     }
 
     public interface ColorCallback {
-        void onColorSelection(@NonNull ColorDialog dialog, @ColorInt int selectedPosition);
+        void onColorSelection(@NonNull ColorDialog dialog, @ColorInt int selectedColor, int selectedPosition);
     }
 
     private void findSubIndexForColor(int topIndex, int color) {
@@ -320,7 +320,7 @@ public class ColorDialog extends DialogFragment implements View.OnClickListener,
                 .positiveText(builder.mDoneBtn)
                 .neutralText(builder.mAllowUserCustom ? builder.mCustomBtn : 0)
                 .onPositive((dialog, which) -> {
-                    mCallback.onColorSelection(ColorDialog.this, topIndex());
+                    mCallback.onColorSelection(ColorDialog.this, getSelectedColor(), topIndex());
                     dismiss();
                 })
                 .onNegative((dialog, which) -> {

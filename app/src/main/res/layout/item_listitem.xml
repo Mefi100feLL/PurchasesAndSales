@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_selector"
+    android:background="?selectableItemBackground"
     android:gravity="center_vertical"
     android:minHeight="72dp"
     android:paddingLeft="@dimen/padding_list_items"
@@ -32,13 +32,12 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/PrimaryText"
                 android:id="@+id/name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp"/>
+                android:layout_weight="1"/>
 
             <ImageView
                 android:id="@+id/important"
@@ -54,14 +53,13 @@
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/SecondaryText"
                 android:id="@+id/main_info"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="4dp"
-                android:layout_weight="1"
-                android:text="gdsgxdf"
-                android:textColor="@color/secondary_text"/>
+                android:layout_weight="1"/>
 
             <TextView
                 android:id="@+id/total_one"
@@ -71,8 +69,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="8dp"
                 android:gravity="end"
-                android:text="200 RUB"
-                android:textColor="@color/secondary_text"
+                style="@style/SecondaryText"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:ellipsize="end"/>
@@ -87,7 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/secondary_text"/>
+                style="@style/SecondaryText"/>
 
             <TextView
                 android:id="@+id/total_two"
@@ -96,8 +93,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="8dp"
-                android:text="200 RUB"
-                android:textColor="@color/secondary_text"
+                style="@style/SecondaryText"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"/>

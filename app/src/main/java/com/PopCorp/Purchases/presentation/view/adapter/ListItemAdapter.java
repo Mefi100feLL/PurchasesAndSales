@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.adapter;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.util.SortedList;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.ListItemCallback;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
@@ -25,7 +25,6 @@ import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
 import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -250,7 +249,12 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         if (selectedItems.contains(item)) {
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
-            holder.mainLayout.setBackgroundResource(R.drawable.list_selector);
+            int[] attrs = new int[]{R.attr.selectableItemBackground};
+            TypedArray typedArray = context.obtainStyledAttributes(attrs);
+            int backgroundResource = typedArray.getResourceId(0, 0);
+            holder.mainLayout.setBackgroundResource(backgroundResource);
+            typedArray.recycle();/*
+            holder.mainLayout.setBackgroundResource(R.drawable.list_selector);*/
         }
     }
 

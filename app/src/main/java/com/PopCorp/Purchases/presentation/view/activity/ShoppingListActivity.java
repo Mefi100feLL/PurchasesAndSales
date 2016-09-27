@@ -17,7 +17,7 @@ public class ShoppingListActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getThemeRes());
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
         ThemeManager.getInstance().setStatusBarColor(this);

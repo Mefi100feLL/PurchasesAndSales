@@ -47,27 +47,50 @@
         <item>@color/md_orange_700</item>
     </array>
 
-    <array name="themes">
-        <item>@style/IndigoTheme</item>
-        <item>@style/GreyTheme</item>
-        <item>@style/GreyDarkTheme</item>
-        <item>@style/BlackTheme</item>
-        <item>@style/BlueGreyTheme</item>
-        <item>@style/BrownTheme</item>
-        <item>@style/RedTheme</item>
-        <item>@style/PinkTheme</item>
-        <item>@style/PurpleTheme</item>
-        <item>@style/DeepPurpleTheme</item>
-        <item>@style/BlueTheme</item>
-        <item>@style/LightBlueTheme</item>
-        <item>@style/CyanTheme</item>
-        <item>@style/TealTheme</item>
-        <item>@style/GreenTheme</item>
-        <item>@style/LightGreenTheme</item>
-        <item>@style/LimeTheme</item>
-        <item>@style/YellowTheme</item>
-        <item>@style/AmberTheme</item>
-        <item>@style/OrangeTheme</item>
+    <array name="themes_light">
+        <item>@style/IndigoTheme.Light</item>
+        <item>@style/GreyTheme.Light</item>
+        <item>@style/GreyDarkTheme.Light</item>
+        <item>@style/BlackTheme.Light</item>
+        <item>@style/BlueGreyTheme.Light</item>
+        <item>@style/BrownTheme.Light</item>
+        <item>@style/RedTheme.Light</item>
+        <item>@style/PinkTheme.Light</item>
+        <item>@style/PurpleTheme.Light</item>
+        <item>@style/DeepPurpleTheme.Light</item>
+        <item>@style/BlueTheme.Light</item>
+        <item>@style/LightBlueTheme.Light</item>
+        <item>@style/CyanTheme.Light</item>
+        <item>@style/TealTheme.Light</item>
+        <item>@style/GreenTheme.Light</item>
+        <item>@style/LightGreenTheme.Light</item>
+        <item>@style/LimeTheme.Light</item>
+        <item>@style/YellowTheme.Light</item>
+        <item>@style/AmberTheme.Light</item>
+        <item>@style/OrangeTheme.Light</item>
+    </array>
+
+    <array name="themes_dark">
+        <item>@style/IndigoTheme.Dark</item>
+        <item>@style/GreyTheme.Dark</item>
+        <item>@style/GreyDarkTheme.Dark</item>
+        <item>@style/BlackTheme.Dark</item>
+        <item>@style/BlueGreyTheme.Dark</item>
+        <item>@style/BrownTheme.Dark</item>
+        <item>@style/RedTheme.Dark</item>
+        <item>@style/PinkTheme.Dark</item>
+        <item>@style/PurpleTheme.Dark</item>
+        <item>@style/DeepPurpleTheme.Dark</item>
+        <item>@style/BlueTheme.Dark</item>
+        <item>@style/LightBlueTheme.Dark</item>
+        <item>@style/CyanTheme.Dark</item>
+        <item>@style/TealTheme.Dark</item>
+        <item>@style/GreenTheme.Dark</item>
+        <item>@style/LightGreenTheme.Dark</item>
+        <item>@style/LimeTheme.Dark</item>
+        <item>@style/YellowTheme.Dark</item>
+        <item>@style/AmberTheme.Dark</item>
+        <item>@style/OrangeTheme.Dark</item>
     </array>
 
     <array name="dialog_themes">
