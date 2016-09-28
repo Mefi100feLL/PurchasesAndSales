@@ -2,7 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
-import com.PopCorp.Purchases.AnalyticsTrackers;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
 import com.PopCorp.Purchases.data.model.Category;

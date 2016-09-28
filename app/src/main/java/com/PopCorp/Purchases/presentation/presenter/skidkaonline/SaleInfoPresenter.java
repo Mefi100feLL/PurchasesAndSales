@@ -3,7 +3,7 @@ package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import com.PopCorp.Purchases.AnalyticsTrackers;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
 import com.PopCorp.Purchases.data.model.ListItem;

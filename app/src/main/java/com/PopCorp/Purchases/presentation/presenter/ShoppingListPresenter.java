@@ -2,7 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
-import com.PopCorp.Purchases.AnalyticsTrackers;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.AlarmListCallback;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.ListItemCallback;

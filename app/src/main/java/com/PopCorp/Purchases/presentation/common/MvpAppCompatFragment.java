@@ -3,9 +3,8 @@ package com.PopCorp.Purchases.presentation.common;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.PopCorp.Purchases.AnalyticsTrackers;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.arellomobile.mvp.MvpDelegate;
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 public class MvpAppCompatFragment extends Fragment {
@@ -48,8 +47,7 @@ public class MvpAppCompatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        tracker.setScreenName(getClass().getSimpleName());
-        tracker.send(new HitBuilders.ScreenViewBuilder().build());
+        AnalyticsTrackers.getInstance().sendScreenName(getClass().getSimpleName());
     }
 
     @Override
