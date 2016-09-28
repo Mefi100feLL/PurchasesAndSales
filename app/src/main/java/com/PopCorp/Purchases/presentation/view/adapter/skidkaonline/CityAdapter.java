@@ -129,7 +129,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
         if (city.equals(selectedCity)){
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
-            int[] attrs = new int[]{R.attr.selectableItemBackground};
+            int[] attrs = new int[]{R.attr.itemsBackground};
             TypedArray typedArray = context.obtainStyledAttributes(attrs);
             int backgroundResource = typedArray.getResourceId(0, 0);
             holder.mainLayout.setBackgroundResource(backgroundResource);

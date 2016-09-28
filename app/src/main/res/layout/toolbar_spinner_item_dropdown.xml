@@ -3,22 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:minHeight="48dp"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:id="@android:id/text1"
+        style="@style/PrimaryText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawablePadding="8dp"
-        android:gravity="center_vertical|start"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        style="@style/PrimaryText"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:drawablePadding="8dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
         android:maxLines="2"
-        android:ellipsize="end"/>
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"/>
 
 </LinearLayout>

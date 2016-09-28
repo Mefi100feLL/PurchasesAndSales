@@ -18,6 +18,13 @@
 
     <declare-styleable name="colorsAttrs">
         <attr name="dividerColor" format="reference" />
+        <attr name="windowBackground" format="reference" />
+        <attr name="cardBackground" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="drawablesAttrs">
+        <attr name="buttonsBackground" format="reference" />
+        <attr name="itemsBackground" format="reference" />
     </declare-styleable>
 
 

@@ -44,7 +44,7 @@
                             android:id="@+id/listitem_count_minus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="?attr/buttonsBackground"
                             android:padding="16dp"
                             android:src="?attr/minusIcon"/>
 
@@ -67,7 +67,7 @@
                             android:id="@+id/listitem_count_plus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="?attr/buttonsBackground"
                             android:padding="16dp"
                             android:src="?attr/plusIcon"/>
                     </LinearLayout>
@@ -80,8 +80,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="16dp"
                         android:layout_weight="2"
-                        android:minHeight="48dp"
-                        />
+                        android:minHeight="48dp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -99,8 +98,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="18"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/listitem_coast_layout"
@@ -198,8 +196,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="16dp"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    >
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"

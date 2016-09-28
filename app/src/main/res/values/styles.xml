@@ -7,10 +7,19 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
-    <style name="AppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+    <style name="BaseAppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="buttonsBackground">@drawable/background_button</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
 
-        <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo
-        </item>
+    <style name="BaseAppTheme.Dark" parent="MaterialDrawerTheme">
+        <item name="buttonsBackground">@drawable/background_button</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme">
+
+        <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
@@ -22,6 +31,8 @@
         <item name="android:textColorSecondary">@color/secondary_text</item>
 
         <item name="dividerColor">@color/divider</item>
+        <item name="windowBackground">?attr/material_drawer_background</item>
+        <item name="cardBackground">?attr/colorBackgroundFloating</item>
 
         <item name="overflowIcon">@drawable/ic_more_vert_grey600_24dp</item>
         <item name="editIcon">@drawable/ic_create_grey_24dp</item>
@@ -37,9 +48,8 @@
         <item name="plusIcon">@drawable/ic_add_grey600_24dp</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="MaterialDrawerTheme">
-        <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo
-        </item>
+    <style name="AppTheme.Dark" parent="BaseAppTheme.Dark">
+        <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
@@ -51,6 +61,8 @@
         <item name="android:textColorSecondary">@color/secondary_text_invert</item>
 
         <item name="dividerColor">@color/divider_invert</item>
+        <item name="windowBackground">?attr/material_drawer_background</item>
+        <item name="cardBackground">?attr/colorBackgroundFloating</item>
 
         <item name="overflowIcon">@drawable/ic_more_vert_white_24dp</item>
         <item name="editIcon">@drawable/ic_create_white_24dp</item>
@@ -161,7 +173,7 @@
     </style>
 
     <style name="ThreeLineLayout">
-        <item name="android:background">@drawable/list_selector</item>
+        <item name="android:background">?attr/itemsBackground</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">@dimen/padding_list_items</item>
         <item name="android:paddingRight">@dimen/padding_list_items</item>

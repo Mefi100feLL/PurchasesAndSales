@@ -8,6 +8,16 @@
         <item name="android:navigationBarColor">@color/primary_color</item>
     </style>
 
+    <style name="BaseAppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="buttonsBackground">?attr/selectableItemBackgroundBorderless</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="BaseAppTheme.Dark" parent="MaterialDrawerTheme">
+        <item name="buttonsBackground">?attr/selectableItemBackgroundBorderless</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

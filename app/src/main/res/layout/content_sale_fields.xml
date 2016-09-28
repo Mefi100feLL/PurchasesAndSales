@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="24dp"
+    android:paddingBottom="16dp"
     android:paddingLeft="@dimen/padding_list_items"
     android:paddingRight="@dimen/padding_list_items"
-    android:paddingBottom="16dp">
+    android:paddingTop="24dp">
 
     <TextView
         android:id="@+id/title"
@@ -23,129 +23,129 @@
 
     <LinearLayout
         android:id="@+id/quantity_layout"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:minHeight="48dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
 
         <ImageView
-            android:src="?attr/scaleIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="?attr/scaleIcon"/>
+
+        <TextView
+            android:id="@+id/quantity"
             style="@style/PrimaryText"
-            android:id="@+id/quantity"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/coast_layout"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="48dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <ImageView
-            android:src="?attr/currencyRubIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="?attr/currencyRubIcon"/>
+
+        <TextView
+            android:id="@+id/coast"
             style="@style/PrimaryText"
-            android:id="@+id/coast"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/coast_for_quantity_layout"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="48dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <ImageView
-            android:src="?attr/weightKilogramIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="?attr/weightKilogramIcon"/>
+
+        <TextView
+            android:id="@+id/coast_for_quantity"
             style="@style/PrimaryText"
-            android:id="@+id/coast_for_quantity"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/category_layout"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="48dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <ImageView
-            android:src="?attr/tagIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="?attr/tagIcon"/>
+
+        <TextView
+            android:id="@+id/category"
             style="@style/PrimaryText"
-            android:id="@+id/category"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/shop_layout"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="48dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <ImageView
-            android:src="?attr/storeMallDirectoryIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="?attr/storeMallDirectoryIcon"/>
+
+        <TextView
+            android:id="@+id/shop"
             style="@style/PrimaryText"
-            android:id="@+id/shop"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/period_layout"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="48dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <ImageView
-            android:src="?attr/calendarIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="?attr/calendarIcon"/>
+
+        <TextView
+            android:id="@+id/period"
             style="@style/PrimaryText"
-            android:id="@+id/period"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"/>
     </LinearLayout>
 
 </LinearLayout>

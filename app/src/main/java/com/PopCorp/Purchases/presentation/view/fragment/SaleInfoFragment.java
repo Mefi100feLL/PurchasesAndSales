@@ -122,7 +122,9 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         toolBar.setNavigationOnClickListener(this);
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setContentScrimColor(ThemeManager.getInstance().getPrimaryColor());
+        if (collapsingToolbarLayout != null) {
+            collapsingToolbarLayout.setContentScrimColor(ThemeManager.getInstance().getPrimaryColor());
+        }
 
         image = (ImageView) rootView.findViewById(R.id.image);
 
