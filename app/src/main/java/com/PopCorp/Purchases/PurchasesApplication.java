@@ -3,6 +3,7 @@ package com.PopCorp.Purchases;
 import android.app.Application;
 import android.content.Context;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.db.DB;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.SalesCleaner;

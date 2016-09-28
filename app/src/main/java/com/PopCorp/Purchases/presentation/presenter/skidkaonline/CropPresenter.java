@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 
 import android.graphics.Bitmap;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
 import com.PopCorp.Purchases.data.model.ListItem;
@@ -59,6 +60,8 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
                         @Override
                         public void onError(Throwable e) {
+                            AnalyticsTrackers.getInstance().sendError(e);
+                            ErrorManager.printStackTrace(e);
                             getViewState().showError(e);
                         }
 
@@ -88,6 +91,8 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
                         getViewState().hideProgress();
                         getViewState().showSkips();
                         getViewState().showFab();
@@ -123,6 +128,7 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         getViewState().showErrorLoadingLists(e);
                     }

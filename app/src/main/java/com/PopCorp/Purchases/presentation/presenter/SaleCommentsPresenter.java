@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.dao.SaleCommentDAO;
@@ -55,6 +56,7 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() > 0) {
                             getViewState().showSnackBar(e);
@@ -115,6 +117,7 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     public void onError(Throwable e) {
                         comment.setError(ErrorManager.getErrorResource(e));
                         getViewState().showData();
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                     }
 

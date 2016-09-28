@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
@@ -54,6 +55,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         loadFromNetwork();
                     }
@@ -95,6 +97,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         getViewState().refreshing(false);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {

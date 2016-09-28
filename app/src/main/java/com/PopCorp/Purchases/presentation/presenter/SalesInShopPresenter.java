@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.CategoryComparator;
 import com.PopCorp.Purchases.data.model.Category;
@@ -59,6 +60,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (allCategories.size() == 0) {
                             getViewState().showError(e);
@@ -109,6 +111,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
                             getViewState().showError(e);
