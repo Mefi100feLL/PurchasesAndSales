@@ -73,6 +73,7 @@ public class PreferencesManager {
     public static final String PREFS_DIALOG_THEME = "dialog_theme";
     public static final String PREFS_HEADER = "header";
     private static final String PREFS_AUTHOR_COMMENT = "author_comment";
+    public static final String PREFS_THEME_LIGHT_DARK = "theme_light_dark";
 
     private Context context;
     private SharedPreferences sPref;
@@ -449,4 +450,7 @@ public class PreferencesManager {
         return sPref.getString(PREFS_AUTHOR_COMMENT, "");
     }
 
+    public String getThemeLightDark() {
+        return sPref.getString(PREFS_THEME_LIGHT_DARK, context.getString(R.string.prefs_light_theme));
+    }
 }

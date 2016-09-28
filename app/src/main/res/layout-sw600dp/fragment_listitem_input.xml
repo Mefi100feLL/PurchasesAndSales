@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_grey_200"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
@@ -26,12 +25,12 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
+                style="@style/ToolbarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
+                android:background="@android:color/transparent"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:layout_collapseMode="pin"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -104,7 +103,7 @@
                                 android:id="@+id/listitem_count_minus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/background_button"
+                                android:background="?attr/buttonsBackground"
                                 android:padding="16dp"
                                 android:src="@drawable/ic_remove_grey600_24dp"/>
 
@@ -127,7 +126,7 @@
                                 android:id="@+id/listitem_count_plus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/background_button"
+                                android:background="?attr/buttonsBackground"
                                 android:padding="16dp"
                                 android:src="@drawable/ic_add_grey600_24dp"/>
                         </LinearLayout>

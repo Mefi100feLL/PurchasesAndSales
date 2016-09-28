@@ -23,6 +23,7 @@
     <color name="secondary_text_invert">#B2FFFFFF</color>
 
     <color name="divider">#1e000000</color>
+    <color name="divider_invert">#1eFFFFFF</color>
 
 
     <color name="bars_color">#64000000</color>

@@ -4,7 +4,7 @@
 
     <item android:state_pressed="true">
         <shape android:shape="oval">
-            <solid android:color="@color/md_grey_200"/>
+            <solid android:color="#33969696"/>
         </shape>
     </item>
     <item android:drawable="@android:color/transparent"/>

@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/md_grey_50">
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/activity_document_view"
@@ -16,8 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,8 +29,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -45,32 +44,32 @@
                             android:id="@+id/listitem_count_minus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/background_button"
+                            android:background="?attr/buttonsBackground"
                             android:padding="16dp"
-                            android:src="@drawable/ic_remove_grey600_24dp"/>
+                            android:src="?attr/minusIcon"/>
 
                         <EditText
                             android:id="@+id/listitem_count"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:layout_marginTop="3dp"
                             android:layout_weight="1"
                             android:gravity="center"
                             android:hint="@string/hint_listitem_count"
                             android:inputType="numberDecimal"
-                            android:minHeight="48dp"
-                            android:layout_marginTop="3dp"
                             android:maxLength="10"
                             android:maxLines="1"
+                            android:minHeight="48dp"
                             android:singleLine="true"/>
 
                         <ImageView
                             android:id="@+id/listitem_count_plus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/background_button"
+                            android:background="?attr/buttonsBackground"
                             android:padding="16dp"
-                            android:src="@drawable/ic_add_grey600_24dp"/>
+                            android:src="?attr/plusIcon"/>
                     </LinearLayout>
 
                     <Spinner
@@ -81,8 +80,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="16dp"
                         android:layout_weight="2"
-                        android:minHeight="48dp"
-                        />
+                        android:minHeight="48dp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -100,8 +98,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="18"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/listitem_coast_layout"
@@ -114,9 +111,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:inputType="numberDecimal"
-                                android:singleLine="true"
                                 android:maxLength="10"
-                                android:maxLines="1"/>
+                                android:maxLines="1"
+                                android:singleLine="true"/>
                         </android.support.design.widget.TextInputLayout>
 
                     </LinearLayout>
@@ -125,9 +122,9 @@
                         android:id="@+id/listitem_important"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="18dp"
                         android:layout_weight="14"
-                        android:text="@string/checkbox_listitem_important"
-                        android:layout_marginLeft="18dp"/>
+                        android:text="@string/checkbox_listitem_important"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -194,33 +191,32 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:id="@+id/sale_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/sale_layout"
-                    android:visibility="gone"
                     android:layout_marginTop="16dp"
-                    >
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/divider"/>
+                        android:background="?attr/dividerColor"/>
 
                     <TextView
                         style="@style/HeaderText"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:text="@string/header_sale"
-                        android:layout_marginLeft="4dp"/>
+                        android:layout_marginLeft="4dp"
+                        android:text="@string/header_sale"/>
 
                     <LinearLayout
-                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:paddingLeft="20dp"
-                        android:paddingRight="16dp"
-                        android:gravity="center_vertical">
+                        android:paddingRight="16dp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/sale_image"
@@ -228,13 +224,13 @@
                             android:layout_height="40dp"/>
 
                         <TextView
-                            style="@style/PrimaryText"
                             android:id="@+id/sale_period"
+                            style="@style/PrimaryText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="16dp"
                             android:ellipsize="end"
-                            android:maxLines="2"
-                            android:layout_marginLeft="16dp"/>
+                            android:maxLines="2"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -254,38 +250,37 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="28dp"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:paddingBottom="28dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            android:minHeight="?attr/actionBarSize"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/listitem_name_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/WhiteTheme"
-            app:errorTextAppearance="@style/ErrorTextAppearance"
-            android:textColorHint="@color/md_white_1000"
             android:layout_marginLeft="72dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginRight="16dp"
+            android:textColorHint="@color/md_white_1000"
+            android:theme="@style/WhiteTheme"
+            app:errorTextAppearance="@style/ErrorTextAppearance">
 
             <AutoCompleteTextView
                 android:id="@+id/listitem_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_listitem_name"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="@color/md_white_1000"
                 android:textColorHint="@color/md_white_1000"
-                android:maxLines="1"
-                android:textSize="24sp"
-                android:singleLine="true">
+                android:textSize="24sp">
 
                 <requestFocus/>
 

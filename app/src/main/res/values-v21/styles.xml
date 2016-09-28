@@ -8,6 +8,16 @@
         <item name="android:navigationBarColor">@color/primary_color</item>
     </style>
 
+    <style name="BaseAppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="buttonsBackground">?attr/selectableItemBackgroundBorderless</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="BaseAppTheme.Dark" parent="MaterialDrawerTheme">
+        <item name="buttonsBackground">?attr/selectableItemBackgroundBorderless</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -32,6 +42,5 @@
         <item name="android:elevation">8dp</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
     </style>
 </resources>

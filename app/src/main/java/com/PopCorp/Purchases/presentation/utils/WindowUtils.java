@@ -7,15 +7,16 @@ import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.ViewConfiguration;
 import android.view.WindowManager;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class WindowUtils {
 
-    public static int getNavigationBarHeight(Activity context)
-    {
+    public static int getNavigationBarHeight(Activity context){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+            return 0;
+        }
         return !isLandscape(context) || isTablet(context) ? getNavigationBarSize(context).y : getNavigationBarSize(context).x;
     }
 
@@ -63,7 +64,7 @@ public class WindowUtils {
     }
 
     public static boolean isNavigationBarExists(Activity context) {
-        return getNavigationBarHeight(context) > 0;
+        return getNavigationBarHeight(context) > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     public static int getScreenOrientation(Activity context) {

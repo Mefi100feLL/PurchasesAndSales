@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
@@ -118,6 +120,11 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         toolBar.inflateMenu(R.menu.sale);
         toolBar.setOnMenuItemClickListener(this);
         toolBar.setNavigationOnClickListener(this);
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.collapsing_toolbar);
+        if (collapsingToolbarLayout != null) {
+            collapsingToolbarLayout.setContentScrimColor(ThemeManager.getInstance().getPrimaryColor());
+        }
 
         image = (ImageView) rootView.findViewById(R.id.image);
 

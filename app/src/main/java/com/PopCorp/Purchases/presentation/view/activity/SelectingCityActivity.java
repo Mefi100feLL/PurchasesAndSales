@@ -14,9 +14,10 @@ public class SelectingCityActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getThemeRes());
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selecting_city);
+        ThemeManager.getInstance().setStatusBarColor(this);
 
         Fragment fragment = new SelectingCityFragment();
         String tag = fragment.getClass().getSimpleName();

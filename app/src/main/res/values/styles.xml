@@ -7,33 +7,87 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
-    <style name="AppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
-        <item name="colorPrimary">@color/primary_color</item>
-        <item name="colorPrimaryDark">@color/primary_color_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="material_drawer_selected_text">@color/accent</item>
+    <style name="BaseAppTheme" parent="MaterialDrawerTheme.Light.DarkToolbar">
+        <item name="buttonsBackground">@drawable/background_button</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
 
-        <item name="colorButtonNormal">@color/primary_color</item>
+    <style name="BaseAppTheme.Dark" parent="MaterialDrawerTheme">
+        <item name="buttonsBackground">@drawable/background_button</item>
+        <item name="itemsBackground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme">
 
         <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
 
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="mcab_popup_theme">@style/ThemeOverlay.AppCompat.Light</item>
+
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+
+        <item name="dividerColor">@color/divider</item>
+        <item name="windowBackground">?attr/material_drawer_background</item>
+        <item name="cardBackground">?attr/colorBackgroundFloating</item>
+
+        <item name="overflowIcon">@drawable/ic_more_vert_grey600_24dp</item>
+        <item name="editIcon">@drawable/ic_create_grey_24dp</item>
+        <item name="removeIcon">@drawable/ic_delete_grey_24dp</item>
+        <item name="shareIcon">@drawable/ic_share_grey_24dp</item>
+        <item name="scaleIcon">@drawable/scale</item>
+        <item name="currencyRubIcon">@drawable/currency_rub</item>
+        <item name="weightKilogramIcon">@drawable/weight_kilogram</item>
+        <item name="tagIcon">@drawable/tag</item>
+        <item name="storeMallDirectoryIcon">@drawable/ic_store_mall_directory_24dp</item>
+        <item name="calendarIcon">@drawable/ic_calendar_grey600_24dp</item>
+        <item name="minusIcon">@drawable/ic_remove_grey600_24dp</item>
+        <item name="plusIcon">@drawable/ic_add_grey600_24dp</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="BaseAppTheme.Dark">
+        <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat</item>
+        <item name="mcab_popup_theme">@style/ThemeOverlay.AppCompat.Dark</item>
+
+        <item name="android:textColorPrimary">@color/primary_text_invert</item>
+        <item name="android:textColorSecondary">@color/secondary_text_invert</item>
+
+        <item name="dividerColor">@color/divider_invert</item>
+        <item name="windowBackground">?attr/material_drawer_background</item>
+        <item name="cardBackground">?attr/colorBackgroundFloating</item>
+
+        <item name="overflowIcon">@drawable/ic_more_vert_white_24dp</item>
+        <item name="editIcon">@drawable/ic_create_white_24dp</item>
+        <item name="removeIcon">@drawable/ic_delete_white_24dp</item>
+        <item name="shareIcon">@drawable/ic_share_white_24dp</item>
+        <item name="scaleIcon">@drawable/ic_scale_white_24dp</item>
+        <item name="currencyRubIcon">@drawable/ic_currency_rub_white_24dp</item>
+        <item name="weightKilogramIcon">@drawable/ic_weight_kilogram_white_24dp</item>
+        <item name="tagIcon">@drawable/ic_tag_white_24dp</item>
+        <item name="storeMallDirectoryIcon">@drawable/ic_store_mall_directory_white_24dp</item>
+        <item name="calendarIcon">@drawable/ic_calendar_white_24dp</item>
+        <item name="minusIcon">@drawable/ic_remove_white_24dp</item>
+        <item name="plusIcon">@drawable/ic_add_white_24dp</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
     <style name="FilesTheme" parent="AppTheme">
     </style>
 
-    <style name="WhiteTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorAccent">@android:color/white</item>
+    <style name="WhiteTheme" >
+        <!--<item name="colorAccent">@android:color/white</item>-->
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorControlActivated">@android:color/white</item>
-        <item name="colorControlHighlight">@android:color/white</item>
+        <!--<item name="colorControlHighlight">@android:color/white</item>-->
     </style>
 
     <style name="ErrorTextAppearance" parent="@android:style/TextAppearance">
@@ -60,7 +114,7 @@
     </style>
 
     <style name="RecyclerViewWithCards" parent="RecyclerView">
-        <item name="android:background">@color/md_grey_200</item>
+        <!--<item name="android:background">@color/md_grey_200</item>-->
         <item name="android:paddingLeft">@dimen/padding_recycler_left</item>
         <item name="android:paddingRight">@dimen/padding_recycler_right</item>
     </style>
@@ -69,27 +123,27 @@
         <item name="android:paddingBottom">@dimen/padding_recycler_bottom_with_fab</item>
     </style>
 
-    <style name="PrimaryText" >
-        <item name="android:textColor">@color/primary_text</item>
-        <item name="android:textSize">@dimen/size_text_primary</item>
+    <style name="PrimaryText" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <!--<item name="android:textSize">@dimen/size_text_primary</item>-->
     </style>
 
-    <style name="PrimaryBigText" >
+    <style name="PrimaryBigText">
         <item name="android:textColor">@color/primary_text</item>
         <item name="android:textSize">@dimen/size_text_primary_big</item>
     </style>
 
-    <style name="SecondaryText" >
-        <item name="android:textColor">@color/secondary_text</item>
-        <item name="android:textSize">@dimen/size_text_secondary</item>
+    <style name="SecondaryText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <!--<item name="android:textSize">@dimen/size_text_secondary</item>-->
     </style>
 
-    <style name="PrimaryTextInvert" >
+    <style name="PrimaryTextInvert">
         <item name="android:textColor">@color/primary_text_invert</item>
         <item name="android:textSize">@dimen/size_text_primary</item>
     </style>
 
-    <style name="SecondaryTextInvert" >
+    <style name="SecondaryTextInvert">
         <item name="android:textColor">@color/secondary_text_invert</item>
         <item name="android:textSize">@dimen/size_text_secondary</item>
     </style>
@@ -118,8 +172,8 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="ThreeLineLayout" >
-        <item name="android:background">@drawable/list_selector</item>
+    <style name="ThreeLineLayout">
+        <item name="android:background">?attr/itemsBackground</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">@dimen/padding_list_items</item>
         <item name="android:paddingRight">@dimen/padding_list_items</item>
@@ -127,11 +181,11 @@
         <item name="android:paddingBottom">16dp</item>
     </style>
 
-    <style name="RaisedButton" >
+    <style name="RaisedButton">
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="FlatButton" >
+    <style name="FlatButton">
         <item name="android:background">@drawable/list_selector_foreground</item>
     </style>
 
@@ -150,7 +204,7 @@
     <style name="ToolbarStyle" parent="@style/ToolbarStyleForSize">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
+
     </style>
 
 </resources>

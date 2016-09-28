@@ -15,7 +15,9 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void setSelectedDrawerItem(long selectedDrawerItem) {
-        this.selectedDrawerItem = selectedDrawerItem;
+        if (selectedDrawerItem != -1) {
+            this.selectedDrawerItem = selectedDrawerItem;
+        }
     }
 
     public long getSelectedDrawerItem() {

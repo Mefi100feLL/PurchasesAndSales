@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string-array name="themes">
+        <item>@string/prefs_light_theme</item>
+        <item>@string/prefs_dark_theme</item>
+    </string-array>
+
     <string-array name="sortarray">
         <item>@string/prefs_default_sort_listitem_one</item>
         <item>@string/prefs_default_sort_listitem_two</item>
@@ -94,4 +99,6 @@
     <string name="share_list_as_sms">По SMS</string>
     <string name="share_list_as_email">По Email</string>
     <string name="share_list_as_text">Как текст</string>
+    <string name="prefs_light_theme">Светлая</string>
+    <string name="prefs_dark_theme">Тёмная</string>
 </resources>

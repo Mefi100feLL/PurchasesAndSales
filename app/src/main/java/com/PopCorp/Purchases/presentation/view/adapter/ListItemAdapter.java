@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.adapter;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.util.SortedList;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.ListItemCallback;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
@@ -25,7 +25,6 @@ import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
 import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -153,7 +152,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         if (decorator.isHeader()) {
             holder.headerName.setText(decorator.getName());
             if (decorator.getCategory() == null) {
-                holder.headerName.setTextColor(context.getResources().getColor(R.color.primary_text));
+                holder.headerName.setTextColor(context.getResources().getColor(getPrimaryColorForTheme()));
             } else {
                 holder.headerName.setTextColor(decorator.getCategory().getColor());
             }
@@ -179,6 +178,14 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 }
             }
         });
+    }
+
+    private int getPrimaryColorForTheme() {
+        int[] attrs = new int[]{android.R.attr.textColorPrimary};
+        TypedArray typedArray = context.obtainStyledAttributes(attrs);
+        int backgroundResource = typedArray.getResourceId(0, 0);
+        typedArray.recycle();
+        return backgroundResource;
     }
 
     private void showItem(ViewHolder holder, ListItem item) {
@@ -250,7 +257,12 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         if (selectedItems.contains(item)) {
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
-            holder.mainLayout.setBackgroundResource(R.drawable.list_selector);
+            int[] attrs = new int[]{R.attr.itemsBackground};
+            TypedArray typedArray = context.obtainStyledAttributes(attrs);
+            int backgroundResource = typedArray.getResourceId(0, 0);
+            holder.mainLayout.setBackgroundResource(backgroundResource);
+            typedArray.recycle();/*
+            holder.mainLayout.setBackgroundResource(R.drawable.list_selector);*/
         }
     }
 

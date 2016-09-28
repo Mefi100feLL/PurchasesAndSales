@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInCategoryPresenter;
@@ -57,6 +59,8 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     private View progressBar;
     private EmptyView emptyView;
     private SearchView searchView;
+
+    private Menu menu;
 
     private SalesAdapter adapter;
 
@@ -94,6 +98,8 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
+        AppBarLayout appBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar);
+        ThemeManager.getInstance().putPrimaryColor(appBarLayout);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);
@@ -233,6 +239,9 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showData() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            menu.findItem(R.id.action_search).setVisible(true);
+        }
         progressBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.hide();
@@ -283,6 +292,8 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
                 return false;
             }
         });
+        this.menu = menu;
+        menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 
         int groupId = 12;

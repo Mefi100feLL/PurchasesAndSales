@@ -23,6 +23,7 @@ import com.PopCorp.Purchases.data.model.skidkaonline.City;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingCityPresenter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.CityAdapter;
@@ -59,6 +60,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);
@@ -74,7 +76,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        adapter = new CityAdapter(presenter, presenter.getObjects());
+        adapter = new CityAdapter(getActivity(), presenter, presenter.getObjects());
         recyclerView.setAdapter(adapter);
 
         fab.setOnClickListener(v -> presenter.onFabClicked());

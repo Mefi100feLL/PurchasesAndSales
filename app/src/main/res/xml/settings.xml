@@ -5,6 +5,23 @@
         android:title="@string/prefs_view"
         android:persistent="false">
 
+        <com.PopCorp.Purchases.presentation.view.view.ColorPreference
+            android:key="primary_color_version_four"
+            android:summary="@string/prefs_color_primary_summary"
+            android:title="@string/prefs_color_primary" />
+
+        <com.PopCorp.Purchases.presentation.view.view.ColorPreference
+            android:key="accent_color_version_four"
+            android:summary="@string/prefs_color_accent_summary"
+            android:title="@string/prefs_color_accent" />
+
+        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+            android:key="theme_light_dark"
+            android:title="@string/prefs_theme"
+            android:entries="@array/themes"
+            android:entryValues="@array/themes"
+            android:defaultValue="@string/prefs_light_theme" />
+
         <CheckBoxPreference
             android:key="replacebuyed"
             android:title="@string/prefs_replace_buyed"
