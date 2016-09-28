@@ -401,7 +401,6 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public void startActionMode() {
         actionMode = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
                 .setMenu(R.menu.listitem_popup)
-                .setPopupMenuTheme(R.style.ThemeOverlay_AppCompat_Light)
                 .setContentInsetStartRes(R.dimen.mcab_default_content_inset)
                 .setBackgroundColorRes(R.color.md_grey_700)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)

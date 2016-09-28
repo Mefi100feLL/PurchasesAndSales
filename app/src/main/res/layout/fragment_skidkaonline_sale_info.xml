@@ -56,7 +56,7 @@
             android:id="@+id/comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_button_black_background"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="24dp"
             android:src="@drawable/ic_comment_multiple_outline_white_24dp"/>
 
@@ -74,7 +74,7 @@
             android:id="@+id/crop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_button_black_background"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="24dp"
             android:src="@drawable/ic_crop_white_24dp"/>
     </LinearLayout>

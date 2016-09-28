@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/md_white_1000"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -25,7 +24,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:background="@color/md_white_1000"
                 android:fitsSystemWindows="true"
                 android:scaleType="fitCenter"
                 app:layout_collapseMode="parallax"
@@ -47,8 +45,7 @@
                 android:fitsSystemWindows="true"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                app:layout_collapseMode="pin"/>
         </FrameLayout>
 
         <android.support.v4.widget.NestedScrollView
@@ -77,7 +74,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/divider"/>
+                        android:background="?attr/dividerColor"/>
 
                     <TextView
                         style="@style/HeaderText"

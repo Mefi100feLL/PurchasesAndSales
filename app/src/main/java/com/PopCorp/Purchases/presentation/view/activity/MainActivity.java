@@ -52,6 +52,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
                 .build();
 
         presenter.setSelectedDrawerItem(getIntent().getIntExtra(SELECTED_DRAWER_ITEM, -1));
+        getIntent().putExtra(SELECTED_DRAWER_ITEM, -1);
     }
 
     @Override
@@ -93,7 +94,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
                 .addDrawerItems(
                         new SectionDrawerItem().withName(R.string.navigation_drawer_mestoskidki).withDivider(false),
                         new PrimaryDrawerItem().withName(R.string.navigation_drawer_shops).withIdentifier(R.string.navigation_drawer_shops).withIcon(R.drawable.ic_store_mall_directory_grey600_24dp).withIconTintingEnabled(true),
-                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_categories).withIdentifier(R.string.navigation_drawer_categories).withIcon(R.drawable.tag).withIconTintingEnabled(true),
+                        new PrimaryDrawerItem().withName(R.string.navigation_drawer_categories).withIdentifier(R.string.navigation_drawer_categories).withIcon(R.drawable.tag_grey600_24dp).withIconTintingEnabled(true),
                         new SectionDrawerItem().withName(R.string.navigation_drawer_skidkaonline).withDivider(true),
                         new PrimaryDrawerItem().withName(R.string.navigation_drawer_skidkaonline_sales).withIdentifier(R.string.navigation_drawer_skidkaonline_sales).withIcon(R.drawable.sale).withIconTintingEnabled(true),
                         new DividerDrawerItem(),

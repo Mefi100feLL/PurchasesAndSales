@@ -39,7 +39,7 @@
             android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SecondaryText"
+            style="@style/PrimaryText"
             android:id="@+id/quantity"/>
     </LinearLayout>
 
@@ -60,7 +60,7 @@
             android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SecondaryText"
+            style="@style/PrimaryText"
             android:id="@+id/coast"/>
     </LinearLayout>
 
@@ -81,7 +81,7 @@
             android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SecondaryText"
+            style="@style/PrimaryText"
             android:id="@+id/coast_for_quantity"/>
     </LinearLayout>
 
@@ -102,7 +102,7 @@
             android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SecondaryText"
+            style="@style/PrimaryText"
             android:id="@+id/category"/>
     </LinearLayout>
 
@@ -123,7 +123,7 @@
             android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SecondaryText"
+            style="@style/PrimaryText"
             android:id="@+id/shop"/>
     </LinearLayout>
 
@@ -144,7 +144,7 @@
             android:layout_marginLeft="32dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/SecondaryText"
+            style="@style/PrimaryText"
             android:id="@+id/period"/>
     </LinearLayout>
 

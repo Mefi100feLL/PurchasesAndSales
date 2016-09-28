@@ -32,6 +32,5 @@
         <item name="android:elevation">8dp</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="popupTheme">@style/AppTheme.PopupOverlay</item>
     </style>
 </resources>

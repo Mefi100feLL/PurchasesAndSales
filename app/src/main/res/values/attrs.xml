@@ -12,6 +12,13 @@
         <attr name="tagIcon" format="reference" />
         <attr name="storeMallDirectoryIcon" format="reference" />
         <attr name="calendarIcon" format="reference" />
+        <attr name="minusIcon" format="reference" />
+        <attr name="plusIcon" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="colorsAttrs">
+        <attr name="dividerColor" format="reference" />
+    </declare-styleable>
+
 
 </resources>

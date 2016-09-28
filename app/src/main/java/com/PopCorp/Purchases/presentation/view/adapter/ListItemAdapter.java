@@ -152,7 +152,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         if (decorator.isHeader()) {
             holder.headerName.setText(decorator.getName());
             if (decorator.getCategory() == null) {
-                holder.headerName.setTextColor(context.getResources().getColor(R.color.primary_text));
+                holder.headerName.setTextColor(context.getResources().getColor(getPrimaryColorForTheme()));
             } else {
                 holder.headerName.setTextColor(decorator.getCategory().getColor());
             }
@@ -178,6 +178,14 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 }
             }
         });
+    }
+
+    private int getPrimaryColorForTheme() {
+        int[] attrs = new int[]{android.R.attr.textColorPrimary};
+        TypedArray typedArray = context.obtainStyledAttributes(attrs);
+        int backgroundResource = typedArray.getResourceId(0, 0);
+        typedArray.recycle();
+        return backgroundResource;
     }
 
     private void showItem(ViewHolder holder, ListItem item) {

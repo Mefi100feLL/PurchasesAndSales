@@ -60,6 +60,8 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     private EmptyView emptyView;
     private SearchView searchView;
 
+    private Menu menu;
+
     private SalesAdapter adapter;
 
     private String title = "";
@@ -240,6 +242,9 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showData() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            menu.findItem(R.id.action_search).setVisible(true);
+        }
         progressBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.hide();
@@ -290,6 +295,8 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
                 return false;
             }
         });
+        this.menu = menu;
+        menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 
         int groupId = 12;
