@@ -1,9 +1,11 @@
 package com.PopCorp.Purchases.presentation.presenter;
 
+import com.PopCorp.Purchases.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.dao.ListItemCategoryDAO;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
 import com.PopCorp.Purchases.data.model.Product;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
 import com.PopCorp.Purchases.domain.interactor.ProductInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.InputListItemView;
@@ -48,7 +50,8 @@ public class InputListItemPresenter extends MvpPresenter<InputListItemView> {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
                     }
 
                     @Override

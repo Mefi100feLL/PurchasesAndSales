@@ -118,7 +118,7 @@ dependencies {
     compile "com.android.support:preference-v7:$supportVersion"
 
 
-    compile 'com.google.android.gms:play-services-analytics:9.6.0'
+    compile 'com.google.android.gms:play-services-analytics:9.6.1'
 
     //utils
     provided "com.arello-mobile:moxy-compiler:$moxyVersion"

@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
@@ -51,6 +52,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         loadFromNetwork();
                     }
@@ -93,6 +95,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
                             getViewState().showError(e);

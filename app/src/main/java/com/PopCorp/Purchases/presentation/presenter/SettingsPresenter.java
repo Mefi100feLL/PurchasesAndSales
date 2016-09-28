@@ -1,5 +1,6 @@
 package com.PopCorp.Purchases.presentation.presenter;
 
+import com.PopCorp.Purchases.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.dao.ListItemCategoryDAO;
 import com.PopCorp.Purchases.data.dao.skidkaonline.CityDAO;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
@@ -94,7 +95,8 @@ public class SettingsPresenter extends MvpPresenter<SettingsView> {
                     public void onError(Throwable e) {
                         getViewState().hideProgress();
                         getViewState().showSnackBar(ErrorManager.getErrorResource(e));
-                        e.printStackTrace();
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
                     }
 
                     @Override

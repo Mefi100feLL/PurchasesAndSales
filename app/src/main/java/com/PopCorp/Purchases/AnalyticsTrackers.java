@@ -3,6 +3,9 @@ package com.PopCorp.Purchases;
 import android.content.Context;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Logger;
+import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.HashMap;
@@ -33,6 +36,8 @@ public final class AnalyticsTrackers {
         }
 
         sInstance = new AnalyticsTrackers(context);
+        GoogleAnalytics.getInstance(context).setDryRun(BuildConfig.DEBUG);
+        GoogleAnalytics.getInstance(context).getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
     }
 
     public static synchronized AnalyticsTrackers getInstance() {
@@ -63,9 +68,23 @@ public final class AnalyticsTrackers {
                 default:
                     throw new IllegalArgumentException("Unhandled analytics target " + target);
             }
+            tracker.enableExceptionReporting(true);
             mTrackers.put(target, tracker);
         }
 
         return mTrackers.get(target);
+    }
+
+    public synchronized Tracker getDefault() {
+        return get(AnalyticsTrackers.Target.APP);
+    }
+
+    public void sendError(Throwable throwable){
+        getDefault().send(new HitBuilders.ExceptionBuilder()
+                .setDescription(
+                        new StandardExceptionParser(mContext, null)
+                                .getDescription(Thread.currentThread().getName(), throwable))
+                .setFatal(false)
+                .build());
     }
 }

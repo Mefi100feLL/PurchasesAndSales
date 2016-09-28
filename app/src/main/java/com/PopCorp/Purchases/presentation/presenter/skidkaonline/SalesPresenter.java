@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
@@ -52,6 +53,7 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0){
                             getViewState().showError(e);
