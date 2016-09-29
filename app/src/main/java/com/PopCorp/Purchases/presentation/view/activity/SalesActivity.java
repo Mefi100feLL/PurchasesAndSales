@@ -20,9 +20,10 @@ public class SalesActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getThemeRes());
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales);
+        ThemeManager.getInstance().setStatusBarColor(this);
 
         new MaterializeBuilder()
                 .withActivity(this)

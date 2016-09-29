@@ -1,7 +1,6 @@
 package com.PopCorp.Purchases.presentation.view.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -18,9 +17,10 @@ public class ShoppingListActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getThemeRes());
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
+        ThemeManager.getInstance().setStatusBarColor(this);
 
         fragment = new ShoppingListFragment();
         Bundle args = new Bundle();

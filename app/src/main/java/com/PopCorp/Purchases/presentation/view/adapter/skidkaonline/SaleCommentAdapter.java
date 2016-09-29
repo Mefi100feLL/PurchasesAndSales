@@ -137,13 +137,13 @@ public class SaleCommentAdapter extends RecyclerView.Adapter<SaleCommentAdapter.
                 Calendar today = Calendar.getInstance();
                 Calendar dateTime = Calendar.getInstance();
                 dateTime.setTimeInMillis(saleComment.getDateTime());
-                SimpleDateFormat format;
-                if (today.get(Calendar.YEAR) == dateTime.get(Calendar.YEAR)){
-                    format = new SimpleDateFormat("d MMMM, HH:mm", new Locale("ru"));
-                } else{
-                    format = new SimpleDateFormat("d MMM yyyy, HH:mm", new Locale("ru"));
+                if (today.get(Calendar.DAY_OF_YEAR) != dateTime.get(Calendar.DAY_OF_YEAR)) {
+                    SimpleDateFormat format = new SimpleDateFormat("dd MMM, HH:mm", new Locale("ru"));
+                    dateText = format.format(dateTime.getTime());
+                } else {
+                    SimpleDateFormat format = new SimpleDateFormat("HH:mm", new Locale("ru"));
+                    dateText = format.format(dateTime.getTime());
                 }
-                dateText = format.format(dateTime.getTime());
             }
             holder.dateTime.setText(dateText);
             holder.dateTime.setVisibility(View.VISIBLE);

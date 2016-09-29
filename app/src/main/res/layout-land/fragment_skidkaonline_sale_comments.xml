@@ -3,13 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/windowBackground"
     android:orientation="horizontal">
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/md_white_1000"
         android:layout_weight="1">
 
         <View
@@ -63,8 +62,8 @@
             android:id="@+id/input_comment_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/md_white_1000"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:background="?attr/cardBackground">
 
             <include
                 layout="@layout/content_sale_input_comment"

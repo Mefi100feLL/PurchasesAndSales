@@ -97,6 +97,9 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         toolBar = (Toolbar) rootView.findViewById(R.id.toolbar);
         toolBar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         toolBar.setNavigationOnClickListener(this);
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
+        View statusBar = rootView.findViewById(R.id.statusbar);
+        ThemeManager.getInstance().putPrimaryDarkColor(statusBar);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);

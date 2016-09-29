@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.AlarmListCallback;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.ListItemCallback;
@@ -9,6 +10,7 @@ import com.PopCorp.Purchases.data.callback.ShareListCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.model.ShoppingList;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
@@ -56,7 +58,8 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
 
                         @Override
                         public void onError(Throwable e) {
-                            e.printStackTrace();
+                            AnalyticsTrackers.getInstance().sendError(e);
+                            ErrorManager.printStackTrace(e);
                             getViewState().showErrorLoadingList();
                         }
 
@@ -181,6 +184,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
 
     public void onItemsRerurned(ListItem... items) {
         for (ListItem listItem : items){
+            listItem.setListId(currentList.getId());
             if (getObjects().contains(listItem)){
                 getObjects().remove(listItem);
                 getObjects().add(listItem);

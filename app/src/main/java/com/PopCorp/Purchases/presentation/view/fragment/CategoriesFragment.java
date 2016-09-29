@@ -25,6 +25,7 @@ import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.CategoriesPresenter;
@@ -66,6 +67,7 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         }
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);

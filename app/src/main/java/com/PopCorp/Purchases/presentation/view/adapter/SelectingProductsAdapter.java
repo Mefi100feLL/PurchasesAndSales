@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.adapter;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -153,7 +154,7 @@ public class SelectingProductsAdapter extends RecyclerView.Adapter<SelectingProd
         if (decorator.isHeader()) {
             holder.headerName.setText(decorator.getName());
             if (decorator.getCategory() == null) {
-                holder.headerName.setTextColor(context.getResources().getColor(R.color.primary_text));
+                holder.headerName.setTextColor(context.getResources().getColor(getPrimaryColorForTheme()));
             } else {
                 holder.headerName.setTextColor(decorator.getCategory().getColor());
             }
@@ -229,6 +230,14 @@ public class SelectingProductsAdapter extends RecyclerView.Adapter<SelectingProd
                 publishItems.updateItemAt(position1, decor);
             }
         });
+    }
+
+    private int getPrimaryColorForTheme() {
+        int[] attrs = new int[]{android.R.attr.textColorPrimary};
+        TypedArray typedArray = context.obtainStyledAttributes(attrs);
+        int backgroundResource = typedArray.getResourceId(0, 0);
+        typedArray.recycle();
+        return backgroundResource;
     }
 
     @Override

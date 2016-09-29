@@ -1,9 +1,11 @@
 package com.PopCorp.Purchases.presentation.presenter;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.AlarmListCallback;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.ShareListCallback;
 import com.PopCorp.Purchases.data.model.ShoppingList;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListsView;
 import com.arellomobile.mvp.InjectViewState;
@@ -42,7 +44,8 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
                     @Override
                     public void onError(Throwable e) {
                         getViewState().showSnackBar(e);
-                        e.printStackTrace();
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
                     }
 
                     @Override

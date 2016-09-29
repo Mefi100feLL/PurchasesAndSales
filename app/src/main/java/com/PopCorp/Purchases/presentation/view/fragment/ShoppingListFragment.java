@@ -93,6 +93,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
 
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         emptyView = new EmptyView(rootView);
@@ -105,6 +106,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         totalBuyed = (TextView) rootView.findViewById(R.id.total_buyed);
         totalBuyedDesc = (TextView) rootView.findViewById(R.id.total_buyed_desc);
 
+        ThemeManager.getInstance().putPrimaryColor(totallayout);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -399,7 +401,6 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public void startActionMode() {
         actionMode = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
                 .setMenu(R.menu.listitem_popup)
-                .setPopupMenuTheme(R.style.ThemeOverlay_AppCompat_Light)
                 .setContentInsetStartRes(R.dimen.mcab_default_content_inset)
                 .setBackgroundColorRes(R.color.md_grey_700)
                 .setCloseDrawableRes(R.drawable.ic_close_white_24dp)

@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:orientation="horizontal"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingLeft="@dimen/padding_list_items_with_input_layout"
+        android:paddingRight="@dimen/padding_list_items_with_input_layout"
         android:visibility="gone">
 
         <android.support.design.widget.TextInputLayout
@@ -48,8 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="12dp"
-        android:paddingRight="16dp">
+        android:paddingLeft="@dimen/padding_list_items_with_input_layout"
+        android:paddingRight="@dimen/padding_list_items">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/comment_text_layout"
@@ -67,11 +67,11 @@
 
         <ImageView
             android:id="@+id/comment_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="4dp"
-            android:padding="12dp"
+            android:scaleType="center"
             android:src="@drawable/ic_send_white_24dp"/>
     </LinearLayout>
 

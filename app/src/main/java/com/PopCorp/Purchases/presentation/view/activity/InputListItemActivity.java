@@ -17,9 +17,10 @@ public class InputListItemActivity extends MvpAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(ThemeManager.getInstance().getThemeRes());
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input_listitem);
+        ThemeManager.getInstance().setStatusBarColor(this);
 
         Fragment fragment = InputListItemFragment.create(
                 getIntent().getParcelableExtra(CURRENT_LISTITEM),

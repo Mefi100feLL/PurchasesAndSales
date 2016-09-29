@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.model.Shop;
@@ -53,6 +54,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         loadFromNetwork();
                     }
@@ -95,6 +97,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
                             getViewState().showError(e);
@@ -144,9 +147,9 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                 objects.add(shop);
             } else {
                 Shop exist = objects.get(objects.indexOf(shop));
-                shop.setFavorite(exist.isFavorite());
-                objects.remove(exist);
-                objects.add(shop);
+                exist.setImageUrl(shop.getImageUrl());
+                exist.setCountSales(shop.getCountSales());
+                exist.setName(shop.getName());
             }
         }
         return result;
@@ -227,6 +230,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                     @Override
                     public void onError(Throwable e) {
                         getViewState().showSnackBar(e);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                     }
 
@@ -262,7 +266,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
 
     @Override
     public void onFavoriteClicked(Shop item) {
-        item.setFavorite(item.isFavorite() ? false : true);
+        item.setFavorite(!item.isFavorite());
         interactor.update(item);
         getViewState().filter(currentFilter);
     }

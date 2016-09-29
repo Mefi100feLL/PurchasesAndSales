@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
 import com.PopCorp.Purchases.data.model.Category;
@@ -59,6 +60,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (allShops.size() == 0) {
                             getViewState().showError(e);
@@ -108,6 +110,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
                             getViewState().showError(e);
@@ -148,7 +151,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                 }
             }
         }
-        if (filterShops.size() > 1) {
+        if (!currentFilter.startsWith("query") && filterShops.size() > 1) {
             getViewState().showSpinner();
             getViewState().selectSpinner(filterPosition);
         }
@@ -188,7 +191,9 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
     @Override
     public void onEmpty() {
-
+        if (currentFilter.startsWith("query")){
+            getViewState().showEmptyForSearch(currentFilter.replace("query=", ""));
+        }
     }
 
     @Override
@@ -230,5 +235,17 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
 
     public String getTitle() {
         return currentCategory.getName();
+    }
+
+    public void search(String query) {
+        if (query.isEmpty()) {
+            getViewState().showSpinner();
+            currentFilter = "";
+        } else {
+            getViewState().hideSpinner();
+            currentFilter = "query=" + query;
+        }
+        getViewState().showData();
+        getViewState().filter(currentFilter);
     }
 }

@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.CategoryComparator;
 import com.PopCorp.Purchases.data.model.Category;
@@ -59,6 +60,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (allCategories.size() == 0) {
                             getViewState().showError(e);
@@ -109,6 +111,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
                             getViewState().showError(e);
@@ -149,7 +152,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                 }
             }
         }
-        if (filterCategories.size() > 1) {
+        if (filterCategories.size() > 1 && !currentFilter.startsWith("query")) {
             getViewState().showSpinner();
             getViewState().selectSpinner(filterPosition);
         }
@@ -189,7 +192,9 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
     @Override
     public void onEmpty() {
-
+        if (currentFilter.startsWith("query")){
+            getViewState().showEmptyForSearch(currentFilter.replace("query=", ""));
+        }
     }
 
     @Override
@@ -233,5 +238,17 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
     public String getTitle() {
         return currentShop.getName();
+    }
+
+    public void search(String query) {
+        if (query.isEmpty()) {
+            getViewState().showSpinner();
+            currentFilter = "";
+        } else {
+            getViewState().hideSpinner();
+            currentFilter = "query=" + query;
+        }
+        getViewState().showData();
+        getViewState().filter(currentFilter);
     }
 }

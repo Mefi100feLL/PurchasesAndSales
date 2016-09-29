@@ -1,5 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.adapter.skidkaonline;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
@@ -22,13 +24,15 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
 
     private final RecyclerCallback<City> callback;
     private final CityComparator comparator = new CityComparator();
+    private final Context context;
 
     private ArrayList<City> objects;
     private final SortedList<City> publishItems;
 
     private City selectedCity;
 
-    public CityAdapter(RecyclerCallback<City> callback, ArrayList<City> objects) {
+    public CityAdapter(Context context, RecyclerCallback<City> callback, ArrayList<City> objects) {
+        this.context = context;
         this.callback = callback;
         this.objects = objects;
         publishItems = new SortedList<>(City.class, new SortedList.Callback<City>() {
@@ -125,7 +129,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
         if (city.equals(selectedCity)){
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
-            holder.mainLayout.setBackgroundResource(R.drawable.list_selector);
+            int[] attrs = new int[]{R.attr.itemsBackground};
+            TypedArray typedArray = context.obtainStyledAttributes(attrs);
+            int backgroundResource = typedArray.getResourceId(0, 0);
+            holder.mainLayout.setBackgroundResource(backgroundResource);
+            typedArray.recycle();
         }
 
         holder.setClickListener((v, pos) -> {

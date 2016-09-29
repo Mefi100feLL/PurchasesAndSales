@@ -19,9 +19,8 @@ public class UIL {
 
     public static DisplayImageOptions getImageOptions(){
         return new DisplayImageOptions.Builder()
-                .imageScaleType(ImageScaleType.EXACTLY)
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .cacheOnDisk(true)
-                .cacheInMemory(true)
                 .considerExifParams(true)
                 .showImageOnLoading(R.drawable.ic_image_media)
                 .showImageOnFail(R.drawable.ic_image_media_alert)

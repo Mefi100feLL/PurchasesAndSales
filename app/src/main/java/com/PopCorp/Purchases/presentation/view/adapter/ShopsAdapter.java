@@ -133,6 +133,11 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
         holder.favorite.setOnClickListener(v -> {
             Shop clickedShop = (Shop) v.getTag();
             callback.onFavoriteClicked(clickedShop);
+            if (clickedShop.isFavorite()) {
+                ((ImageView) v).setImageResource(R.drawable.ic_star_amber_24dp);
+            } else {
+                ((ImageView) v).setImageResource(R.drawable.ic_star_border_amber_24dp);
+            }
         });
 
         holder.setClickListener((v, position1) -> callback.onItemClicked(v, publishItems.get(position1)));
@@ -185,9 +190,9 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
             int index = publishItems.indexOf(shop);
             if (index == SortedList.INVALID_POSITION) {
                 publishItems.add(shop);
-            } else {
+            }/* else {
                 publishItems.updateItemAt(index, shop);
-            }
+            }*/
         }
 
         ArrayList<Shop> arrayForRemoving = new ArrayList<>();

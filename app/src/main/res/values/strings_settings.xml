@@ -15,9 +15,11 @@
     <string name="prefs_show_categories">Показывать категории</string>
     <string name="prefs_categories_of_products">Категории продуктов</string>
     <string name="prefs_color_accent">Цвет акцента</string>
+    <string name="prefs_color_accent_summary">Цвет кнопок и элементов управления</string>
     <string name="prefs_color_navigation_bar">Цвет панели навигации</string>
     <string name="prefs_color_primary_dark">Цвет статус панели</string>
     <string name="prefs_color_primary">Основной цвет</string>
+    <string name="prefs_color_primary_summary">Цвет панелей и подсказок</string>
     <string name="prefs_view">Внешний вид</string>
     <string name="prefs_filter_list">Фильтр по магазинам</string>
 

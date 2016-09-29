@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
-    android:foreground="@drawable/list_selector_foreground">
+    android:foreground="?attr/itemsBackground">
 
     <ImageView
         android:id="@+id/sale_image"

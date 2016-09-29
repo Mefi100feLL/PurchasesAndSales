@@ -3,23 +3,16 @@ package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,7 +34,6 @@ import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SaleInfoView;
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -50,7 +42,6 @@ import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -120,7 +111,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         ImageView cropImage = (ImageView) rootView.findViewById(R.id.crop);
 
         LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
-        if (!WindowUtils.isLandscape(getActivity())) {
+        if (!WindowUtils.isLandscape(getActivity()) || WindowUtils.isTablet(getActivity())) {
             buttonslayout.setPadding(0, 0, 0, WindowUtils.getNavigationBarHeight(getActivity()));
         } else {
             toolBar.setPadding(0, 0, WindowUtils.getNavigationBarHeight(getActivity()), 0);

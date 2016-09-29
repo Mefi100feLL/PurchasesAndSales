@@ -1,146 +1,301 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="IndigoTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_indigo_500</item>
-        <item name="colorPrimaryDark">@color/md_indigo_700</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="material_drawer_selected_text">@color/accent</item>
+    <style name="IndigoTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_indigo_500</item>
+        <item name="material_drawer_selected_text">@color/md_indigo_500</item>
         <item name="colorButtonNormal">@color/md_indigo_500</item>
         <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo</item>
     </style>
 
-    <style name="PinkTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_pink_500</item>
-        <item name="colorPrimaryDark">@color/md_pink_700</item>
+    <style name="IndigoTheme.Dark" parent="AppTheme.Dark">
         <item name="colorAccent">@color/md_indigo_500</item>
         <item name="material_drawer_selected_text">@color/md_indigo_500</item>
-        <item name="colorButtonNormal">@color/md_pink_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/pinktheme_fastscroll_thumb_holo</item>
+        <item name="colorButtonNormal">@color/md_indigo_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/indigotheme_fastscroll_thumb_holo</item>
     </style>
 
-    <style name="BlueGreyTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_blue_grey_500</item>
-        <item name="colorPrimaryDark">@color/md_blue_grey_700</item>
-        <item name="colorAccent">@color/md_orange_500</item>
-        <item name="material_drawer_selected_text">@color/md_orange_500</item>
-        <item name="colorButtonNormal">@color/md_blue_grey_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/bluegreytheme_fastscroll_thumb_holo</item>
-    </style>
 
-    <style name="OrangeTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_orange_500</item>
-        <item name="colorPrimaryDark">@color/md_orange_700</item>
-        <item name="colorAccent">@color/md_blue_grey_500</item>
-        <item name="material_drawer_selected_text">@color/md_blue_grey_500</item>
-        <item name="colorButtonNormal">@color/md_orange_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/orangetheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="AmberTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_amber_500</item>
-        <item name="colorPrimaryDark">@color/md_amber_700</item>
-        <item name="colorAccent">@color/md_teal_500</item>
-        <item name="material_drawer_selected_text">@color/md_teal_500</item>
-        <item name="colorButtonNormal">@color/md_amber_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/ambertheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="TealTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_teal_500</item>
-        <item name="colorPrimaryDark">@color/md_teal_700</item>
-        <item name="colorAccent">@color/md_amber_500</item>
-        <item name="material_drawer_selected_text">@color/md_amber_500</item>
-        <item name="colorButtonNormal">@color/md_teal_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/tealtheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="BrownTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_brown_500</item>
-        <item name="colorPrimaryDark">@color/md_brown_700</item>
-        <item name="colorAccent">@color/md_blue_500</item>
-        <item name="material_drawer_selected_text">@color/md_blue_500</item>
-        <item name="colorButtonNormal">@color/md_brown_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/browntheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="BlueTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_blue_500</item>
-        <item name="colorPrimaryDark">@color/md_blue_700</item>
-        <item name="colorAccent">@color/md_brown_500</item>
-        <item name="material_drawer_selected_text">@color/md_brown_500</item>
-        <item name="colorButtonNormal">@color/md_blue_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/bluetheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="DeepPurpleTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_deep_purple_500</item>
-        <item name="colorPrimaryDark">@color/md_deep_purple_700</item>
-        <item name="colorAccent">@color/md_cyan_500</item>
-        <item name="material_drawer_selected_text">@color/md_cyan_500</item>
-        <item name="colorButtonNormal">@color/md_deep_purple_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/deeppurpletheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="CyanTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_cyan_500</item>
-        <item name="colorPrimaryDark">@color/md_cyan_700</item>
-        <item name="colorAccent">@color/md_deep_purple_500</item>
-        <item name="material_drawer_selected_text">@color/md_deep_purple_500</item>
-        <item name="colorButtonNormal">@color/md_cyan_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/cyantheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="PurpleTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_purple_500</item>
-        <item name="colorPrimaryDark">@color/md_purple_700</item>
-        <item name="colorAccent">@color/md_lime_500</item>
-        <item name="material_drawer_selected_text">@color/md_lime_500</item>
-        <item name="colorButtonNormal">@color/md_purple_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/purpletheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="LimeTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_lime_500</item>
-        <item name="colorPrimaryDark">@color/md_lime_700</item>
-        <item name="colorAccent">@color/md_purple_500</item>
-        <item name="material_drawer_selected_text">@color/md_purple_500</item>
-        <item name="colorButtonNormal">@color/md_lime_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/limetheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="RedTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_red_500</item>
-        <item name="colorPrimaryDark">@color/md_red_700</item>
+    <style name="GreyTheme.Light" parent="AppTheme">
         <item name="colorAccent">@color/md_grey_500</item>
         <item name="material_drawer_selected_text">@color/md_grey_500</item>
-        <item name="colorButtonNormal">@color/md_red_500</item>
-        <item name="android:fastScrollThumbDrawable">@drawable/redtheme_fastscroll_thumb_holo</item>
-    </style>
-
-    <style name="GreyTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_grey_500</item>
-        <item name="colorPrimaryDark">@color/md_grey_700</item>
-        <item name="colorAccent">@color/md_red_500</item>
-        <item name="material_drawer_selected_text">@color/md_red_500</item>
         <item name="colorButtonNormal">@color/md_grey_500</item>
         <item name="android:fastScrollThumbDrawable">@drawable/greytheme_fastscroll_thumb_holo</item>
     </style>
 
-    <style name="LightBlueTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_light_blue_500</item>
-        <item name="colorPrimaryDark">@color/md_light_blue_700</item>
-        <item name="colorAccent">@color/md_light_green_500</item>
-        <item name="material_drawer_selected_text">@color/md_light_green_500</item>
+    <style name="GreyTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_grey_500</item>
+        <item name="material_drawer_selected_text">@color/md_grey_500</item>
+        <item name="colorButtonNormal">@color/md_grey_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/greytheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="GreyDarkTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_grey_800</item>
+        <item name="material_drawer_selected_text">@color/md_grey_800</item>
+        <item name="colorButtonNormal">@color/md_grey_800</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="GreyDarkTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_grey_800</item>
+        <item name="material_drawer_selected_text">@color/md_grey_800</item>
+        <item name="colorButtonNormal">@color/md_grey_800</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="BlackTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_black_1000</item>
+        <item name="material_drawer_selected_text">@color/md_black_1000</item>
+        <item name="colorButtonNormal">@color/md_black_1000</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="BlackTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_black_1000</item>
+        <item name="material_drawer_selected_text">@color/md_black_1000</item>
+        <item name="colorButtonNormal">@color/md_black_1000</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="BlueGreyTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_blue_grey_500</item>
+        <item name="material_drawer_selected_text">@color/md_blue_grey_500</item>
+        <item name="colorButtonNormal">@color/md_blue_grey_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/bluegreytheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="BlueGreyTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_blue_grey_500</item>
+        <item name="material_drawer_selected_text">@color/md_blue_grey_500</item>
+        <item name="colorButtonNormal">@color/md_blue_grey_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/bluegreytheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="PinkTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_pink_500</item>
+        <item name="material_drawer_selected_text">@color/md_pink_500</item>
+        <item name="colorButtonNormal">@color/md_pink_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/pinktheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="PinkTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_pink_500</item>
+        <item name="material_drawer_selected_text">@color/md_pink_500</item>
+        <item name="colorButtonNormal">@color/md_pink_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/pinktheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="OrangeTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_orange_500</item>
+        <item name="material_drawer_selected_text">@color/md_orange_500</item>
+        <item name="colorButtonNormal">@color/md_orange_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/orangetheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="OrangeTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_orange_500</item>
+        <item name="material_drawer_selected_text">@color/md_orange_500</item>
+        <item name="colorButtonNormal">@color/md_orange_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/orangetheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="AmberTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_amber_500</item>
+        <item name="material_drawer_selected_text">@color/md_amber_500</item>
+        <item name="colorButtonNormal">@color/md_amber_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/ambertheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="AmberTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_amber_500</item>
+        <item name="material_drawer_selected_text">@color/md_amber_500</item>
+        <item name="colorButtonNormal">@color/md_amber_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/ambertheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="TealTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_teal_500</item>
+        <item name="material_drawer_selected_text">@color/md_teal_500</item>
+        <item name="colorButtonNormal">@color/md_teal_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/tealtheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="TealTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_teal_500</item>
+        <item name="material_drawer_selected_text">@color/md_teal_500</item>
+        <item name="colorButtonNormal">@color/md_teal_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/tealtheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="BrownTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_brown_500</item>
+        <item name="material_drawer_selected_text">@color/md_brown_500</item>
+        <item name="colorButtonNormal">@color/md_brown_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/browntheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="BrownTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_brown_500</item>
+        <item name="material_drawer_selected_text">@color/md_brown_500</item>
+        <item name="colorButtonNormal">@color/md_brown_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/browntheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="BlueTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_blue_500</item>
+        <item name="material_drawer_selected_text">@color/md_blue_500</item>
+        <item name="colorButtonNormal">@color/md_blue_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/bluetheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="BlueTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_blue_500</item>
+        <item name="material_drawer_selected_text">@color/md_blue_500</item>
+        <item name="colorButtonNormal">@color/md_blue_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/bluetheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="DeepPurpleTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_deep_purple_500</item>
+        <item name="material_drawer_selected_text">@color/md_deep_purple_500</item>
+        <item name="colorButtonNormal">@color/md_deep_purple_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/deeppurpletheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="DeepPurpleTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_deep_purple_500</item>
+        <item name="material_drawer_selected_text">@color/md_deep_purple_500</item>
+        <item name="colorButtonNormal">@color/md_deep_purple_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/deeppurpletheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="CyanTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_cyan_500</item>
+        <item name="material_drawer_selected_text">@color/md_cyan_500</item>
+        <item name="colorButtonNormal">@color/md_cyan_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/cyantheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="CyanTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_cyan_500</item>
+        <item name="material_drawer_selected_text">@color/md_cyan_500</item>
+        <item name="colorButtonNormal">@color/md_cyan_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/cyantheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="PurpleTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_purple_500</item>
+        <item name="material_drawer_selected_text">@color/md_purple_500</item>
+        <item name="colorButtonNormal">@color/md_purple_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/purpletheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="PurpleTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_purple_500</item>
+        <item name="material_drawer_selected_text">@color/md_purple_500</item>
+        <item name="colorButtonNormal">@color/md_purple_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/purpletheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="LimeTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_lime_500</item>
+        <item name="material_drawer_selected_text">@color/md_lime_500</item>
+        <item name="colorButtonNormal">@color/md_lime_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/limetheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="LimeTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_lime_500</item>
+        <item name="material_drawer_selected_text">@color/md_lime_500</item>
+        <item name="colorButtonNormal">@color/md_lime_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/limetheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="RedTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_red_500</item>
+        <item name="material_drawer_selected_text">@color/md_red_500</item>
+        <item name="colorButtonNormal">@color/md_red_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/redtheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="RedTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_red_500</item>
+        <item name="material_drawer_selected_text">@color/md_red_500</item>
+        <item name="colorButtonNormal">@color/md_red_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/redtheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="LightBlueTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_light_blue_500</item>
+        <item name="material_drawer_selected_text">@color/md_light_blue_500</item>
         <item name="colorButtonNormal">@color/md_light_blue_500</item>
         <item name="android:fastScrollThumbDrawable">@drawable/lightbluetheme_fastscroll_thumb_holo</item>
     </style>
 
-    <style name="LightGreenTheme" parent="AppTheme">
-        <item name="colorPrimary">@color/md_light_green_500</item>
-        <item name="colorPrimaryDark">@color/md_light_green_700</item>
+    <style name="LightBlueTheme.Dark" parent="AppTheme.Dark">
         <item name="colorAccent">@color/md_light_blue_500</item>
         <item name="material_drawer_selected_text">@color/md_light_blue_500</item>
+        <item name="colorButtonNormal">@color/md_light_blue_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightbluetheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="LightGreenTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_light_green_500</item>
+        <item name="material_drawer_selected_text">@color/md_light_green_500</item>
         <item name="colorButtonNormal">@color/md_light_green_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="LightGreenTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_light_green_500</item>
+        <item name="material_drawer_selected_text">@color/md_light_green_500</item>
+        <item name="colorButtonNormal">@color/md_light_green_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="GreenTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_green_500</item>
+        <item name="material_drawer_selected_text">@color/md_green_500</item>
+        <item name="colorButtonNormal">@color/md_green_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="GreenTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_green_500</item>
+        <item name="material_drawer_selected_text">@color/md_green_500</item>
+        <item name="colorButtonNormal">@color/md_green_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+
+    <style name="YellowTheme.Light" parent="AppTheme">
+        <item name="colorAccent">@color/md_yellow_500</item>
+        <item name="material_drawer_selected_text">@color/md_yellow_500</item>
+        <item name="colorButtonNormal">@color/md_yellow_500</item>
+        <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
+    </style>
+
+    <style name="YellowTheme.Dark" parent="AppTheme.Dark">
+        <item name="colorAccent">@color/md_yellow_500</item>
+        <item name="material_drawer_selected_text">@color/md_yellow_500</item>
+        <item name="colorButtonNormal">@color/md_yellow_500</item>
         <item name="android:fastScrollThumbDrawable">@drawable/lightgreentheme_fastscroll_thumb_holo</item>
     </style>
 </resources>

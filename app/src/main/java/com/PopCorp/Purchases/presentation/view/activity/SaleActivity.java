@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.BackPressedCallback;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.ZoomOutPageTransformer;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.presenter.SaleActivityPresenter;
@@ -29,6 +30,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeManager.getInstance().setTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sale);
 

@@ -1,7 +1,5 @@
 package com.PopCorp.Purchases.presentation.view.adapter;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,15 +17,13 @@ import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.SaleDecorator;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.ViewHolder> implements Filterable {
 
-    private RecyclerCallback<Sale> callback;
+    protected RecyclerCallback<Sale> callback;
     private Comparator<SaleDecorator> comparator;
 
     protected SortedList<SaleDecorator> publishItems;

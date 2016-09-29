@@ -3,35 +3,29 @@ package com.PopCorp.Purchases.presentation.view.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.DialogRegionsCallback;
+import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.ListItemCategory;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
@@ -42,15 +36,14 @@ import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SettingsPresenter;
 import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SelectingCityActivity;
+import com.PopCorp.Purchases.presentation.view.adapter.CategoriesRecyclerViewAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SettingsView;
-import com.afollestad.materialdialogs.DialogAction;
+import com.PopCorp.Purchases.presentation.view.view.ColorPreference;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SettingsFragment extends MvpPreferenceFragment implements SettingsView {
 
@@ -62,7 +55,9 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     private int color;
     private String selectedCurrency;
     private String selectedUnit;
+
     private MaterialDialog progressDialog;
+    private MaterialDialog dialogWithCategories;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,11 +131,12 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
             listView.setHeaderDividersEnabled(false);
             if (Build.VERSION.SDK_INT < 21) {
                 listView.setSelector(R.drawable.list_selector);
-                //listView.setPadding((int) getResources().getDimension(R.dimen.margin_item), 0, (int) getResources().getDimension(R.dimen.margin_item), 0);
+                //listView.setPadding((int) getResources().getDimension(R.dimen.padding_list_items), 0, (int) getResources().getDimension(R.dimen.padding_list_items), 0);
             }
         }
 
         toolBar = (Toolbar) mainView.findViewById(R.id.toolbar);
+        ThemeManager.getInstance().putPrimaryColor(toolBar);
         AppCompatActivity activity = ((AppCompatActivity) getActivity());
         activity.setSupportActionBar(toolBar);
         if (activity.getSupportActionBar() != null) {
@@ -151,6 +147,34 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     }
 
     private void initializePrefs() {
+        ColorPreference primaryColor = (ColorPreference) findPreference(ThemeManager.PRIMARY_COLOR);
+        if (primaryColor != null){
+            primaryColor.setOnPreferenceChangeListener((preference, newValue) -> {
+                refreshActivity();
+                return true;
+            });
+        }
+
+        ColorPreference accentColor = (ColorPreference) findPreference(ThemeManager.ACCENT_COLOR);
+        if (accentColor != null){
+            accentColor.setOnPreferenceChangeListener((preference, newValue) -> {
+                refreshActivity();
+                return true;
+            });
+        }
+
+        Preference themePreference = findPreference(PreferencesManager.PREFS_THEME_LIGHT_DARK);
+        if (themePreference != null){
+            themePreference.setSummary(getString(R.string.prefs_summary_theme).replace("theme", PreferencesManager.getInstance().getThemeLightDark()));
+            themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                themePreference.setSummary(getString(R.string.prefs_summary_theme).replace("theme", (CharSequence) newValue));
+                if (!PreferencesManager.getInstance().getThemeLightDark().equals(newValue)){
+                    refreshActivity();
+                }
+                return true;
+            });
+        }
+
         final Preference prefSortListItem = findPreference(PreferencesManager.PREFS_SORT_LIST_ITEM);
         if (prefSortListItem != null) {
             prefSortListItem.setSummary(getString(R.string.prefs_default_sort) + " " + PreferencesManager.getInstance().getSortingListItems());
@@ -267,6 +291,12 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         }
     }
 
+    private void refreshActivity() {
+        getActivity().finish();
+        MainActivity.show(getActivity(), R.string.navigation_drawer_settings);
+        //getActivity().recreate();
+    }
+
     public void selectCurrency(String selectedCurrency) {
         Preference prefCurrency = findPreference(PreferencesManager.PREFS_CURRENCY);
         if (prefCurrency != null) {
@@ -308,36 +338,40 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
     @Override
     public void showDialogWithCategories(List<ListItemCategory> categories) {
         MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
-        ArrayList<String> names = new ArrayList<>();
-        for (ListItemCategory category : categories) {
-            names.add(category.getName());
-        }
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.item_listitem_category_for_dialog, names) {
+        builder.adapter(new CategoriesRecyclerViewAdapter(new RecyclerCallback<ListItemCategory>() {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = convertView;
-                if (view == null) {
-                    LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    view = inflater.inflate(R.layout.item_listitem_category_for_dialog, parent, false);
-                }
-                ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
-                coloredCircle.getPaint().setColor(categories.get(position).getColor());
-                view.findViewById(R.id.category_image).setBackgroundDrawable(coloredCircle);
-                ((TextView) view.findViewById(R.id.category_name)).setText(categories.get(position).getName());
-                return view;
+            public void onItemClicked(View view, ListItemCategory item) {
+                showDialogForCategoryChange(item);
+                dialogWithCategories.cancel();
             }
-        };
-        builder.adapter(adapter, (dialog, itemView, which, text) -> {
-            showDialogForCategoryChange(categories.get(which));
-            dialog.cancel();
-        });
+
+            @Override
+            public void onItemLongClicked(View view, ListItemCategory item) {
+
+            }
+
+            @Override
+            public void onEmpty() {
+
+            }
+
+            @Override
+            public void onEmpty(int stringRes, int drawableRes, int buttonRes, View.OnClickListener listener) {
+
+            }
+
+            @Override
+            public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
+
+            }
+        }, categories), null);
         builder.title(R.string.prefs_categories_of_products);
         builder.negativeText(R.string.dialog_button_cancel);
         builder.positiveText(R.string.dialog_button_add);
         builder.onPositive((dialog, which) -> showDialogForCategoryChange(null));
-        Dialog dialog = builder.build();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+        dialogWithCategories = builder.build();
+        dialogWithCategories.setCanceledOnTouchOutside(false);
+        dialogWithCategories.show();
     }
 
     private void showDialogForCategoryChange(final ListItemCategory category) {
@@ -355,15 +389,17 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         final TextInputLayout categoryNameLayout = (TextInputLayout) layout.findViewById(R.id.category_name_layout);
         final View categoryColor = layout.findViewById(R.id.category_color);
         final Button selectColor = (Button) layout.findViewById(R.id.select_color);
+
         selectColor.setOnClickListener(v ->
                 new ColorDialog.Builder((AppCompatActivity) getActivity(),
-                        (dialog, selectedColor) -> {
+                        (dialog, selectedColor, selectedPosition) -> {
                             color = selectedColor;
                             categoryColor.setBackgroundColor(selectedColor);
                         }, R.string.dialog_title_selecting_color)
                         .titleSub(R.string.dialog_title_selecting_color)
                         .allowUserColorInput(false)
                         .accentMode(false)
+                        .customColors(R.array.primary_colors, null)
                         .doneButton(R.string.dialog_button_select)
                         .backButton(R.string.dialog_button_back)
                         .cancelButton(R.string.dialog_button_cancel)
@@ -668,7 +704,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         final EditText input = (EditText) customView.findViewById(R.id.edittext);
         final TextInputLayout inputLayout = (TextInputLayout) customView.findViewById(R.id.input_layout);
         inputLayout.setHint(getString(R.string.hint_shop_name));
-        if (editingShop != null){
+        if (editingShop != null) {
             input.setText(editingShop);
         }
 
@@ -689,7 +725,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
                     ArrayList<String> shopes = new ArrayList<>(PreferencesManager.getInstance().getShops());
                     if (!newShop.equals(editingShop) && shopes.contains(newShop)) {
                         inputLayout.setError(getString(R.string.error_shop_already_exists));
-                    } else if (newShop.equals(editingShop)){
+                    } else if (newShop.equals(editingShop)) {
                         dialog1.dismiss();
                     } else {
                         shopes.remove(editingShop);
@@ -715,7 +751,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
             ArrayList<String> shopes = new ArrayList<>(PreferencesManager.getInstance().getShops());
             if (!newShop.equals(editingShop) && shopes.contains(newShop)) {
                 inputLayout.setError(getString(R.string.error_shop_already_exists));
-            } else if (newShop.equals(editingShop)){
+            } else if (newShop.equals(editingShop)) {
                 dialog.dismiss();
             } else {
                 shopes.remove(editingShop);

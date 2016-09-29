@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="iconsAttrs">
+        <attr name="overflowIcon" format="reference" />
+        <attr name="editIcon" format="reference" />
+        <attr name="removeIcon" format="reference" />
+        <attr name="shareIcon" format="reference" />
+        <attr name="scaleIcon" format="reference" />
+        <attr name="currencyRubIcon" format="reference" />
+        <attr name="weightKilogramIcon" format="reference" />
+        <attr name="tagIcon" format="reference" />
+        <attr name="storeMallDirectoryIcon" format="reference" />
+        <attr name="calendarIcon" format="reference" />
+        <attr name="minusIcon" format="reference" />
+        <attr name="plusIcon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="colorsAttrs">
+        <attr name="dividerColor" format="reference" />
+        <attr name="windowBackground" format="reference" />
+        <attr name="cardBackground" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="drawablesAttrs">
+        <attr name="buttonsBackground" format="reference" />
+        <attr name="itemsBackground" format="reference" />
+    </declare-styleable>
+
+
+</resources>

@@ -24,4 +24,8 @@ public class CategoryDBRepository implements CategoryRepository {
     public void remove(Category category) {
         dao.remove(category);
     }
+
+    public void update(Category category) {
+        dao.updateOrAddToDB(category);
+    }
 }

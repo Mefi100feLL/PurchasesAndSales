@@ -2,9 +2,9 @@ package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
-import com.PopCorp.Purchases.data.dao.skidkaonline.CityDAO;
 import com.PopCorp.Purchases.data.model.skidkaonline.SaleComment;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
@@ -54,7 +54,8 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     @Override
                     public void onError(Throwable e) {
                         getViewState().refreshing(false);
-                        e.printStackTrace();
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
                             getViewState().showError(e);
                         } else {
@@ -113,7 +114,8 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
                     public void onError(Throwable e) {
                         comment.setError(ErrorManager.getErrorResource(e));
                         getViewState().showData();
-                        e.printStackTrace();
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
                     }
 
                     @Override

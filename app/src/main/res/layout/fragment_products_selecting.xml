@@ -16,8 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
@@ -35,9 +34,9 @@
             android:splitMotionEvents="false"
             app:fastScrollAutoHide="true"
             app:fastScrollAutoHideDelay="1500"
-            app:fastScrollPopupBgColor="@color/colorAccent"
+            app:fastScrollPopupBgColor="?attr/colorAccent"
             app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-            app:fastScrollThumbColor="@color/colorAccent"/>
+            app:fastScrollThumbColor="?attr/colorAccent"/>
 
         <include
             layout="@layout/content_empty"/>
@@ -64,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="@dimen/padding_list_items"
             android:src="@drawable/ic_check_white_24dp"/>
     </android.support.design.widget.CoordinatorLayout>
 

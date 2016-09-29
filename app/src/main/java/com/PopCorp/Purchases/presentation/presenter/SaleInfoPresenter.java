@@ -2,6 +2,7 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
@@ -54,6 +55,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
 
                         @Override
                         public void onError(Throwable e) {
+                            AnalyticsTrackers.getInstance().sendError(e);
                             ErrorManager.printStackTrace(e);
                             getViewState().showError(e);
                         }
@@ -84,6 +86,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         getViewState().showErrorLoadingLists(e);
                     }
@@ -93,7 +96,13 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
                         if (shoppingLists != null && shoppingLists.size() > 0) {
                             Collections.sort(shoppingLists, PreferencesManager.getInstance().getShoppingListComparator());
                             lists = shoppingLists;
-                            getViewState().showListsSelecting(shoppingLists);
+                            if (lists.size() > 1) {
+                                getViewState().showListsSelecting(shoppingLists);
+                            } else {
+                                selectedLists.clear();
+                                selectedLists.addAll(lists);
+                                openInputListItem();
+                            }
                         } else {
                             getViewState().showEmptyLists();
                         }

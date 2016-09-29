@@ -2,12 +2,14 @@ package com.PopCorp.Purchases.presentation.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInShopPresenter;
@@ -55,6 +58,9 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     private SwipeRefreshLayout swipeRefresh;
     private View progressBar;
     private EmptyView emptyView;
+    private SearchView searchView;
+
+    private Menu menu;
 
     private SalesAdapter adapter;
 
@@ -93,6 +99,8 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
             activity.getSupportActionBar().setHomeButtonEnabled(true);
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         }
+        AppBarLayout appBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar);
+        ThemeManager.getInstance().putPrimaryColor(appBarLayout);
 
         emptyView = new EmptyView(rootView);
         progressBar = rootView.findViewById(R.id.progress);
@@ -172,6 +180,16 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     }
 
     @Override
+    public void showEmptyForSearch(String query) {
+        showError(getString(R.string.empty_sales_for_search).replace("query", query), R.drawable.ic_zoom, R.string.button_show_all_sales, v -> {
+            presenter.search("");
+            if (searchView != null) {
+                searchView.onActionViewCollapsed();
+            }
+        });
+    }
+
+    @Override
     public void showSalesEmpty() {
         showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
             getActivity().onBackPressed();
@@ -211,6 +229,11 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     }
 
     @Override
+    public void hideSpinner() {
+        spinner.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
@@ -219,6 +242,9 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showData() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            menu.findItem(R.id.action_search).setVisible(true);
+        }
         progressBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.hide();
@@ -256,6 +282,21 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.sales, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                presenter.search(newText);
+                return false;
+            }
+        });
+        this.menu = menu;
+        menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 
         int groupId = 12;

@@ -3,19 +3,23 @@ package com.PopCorp.Purchases.presentation.common;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.PopCorp.Purchases.AnalyticsTrackers;
-import com.PopCorp.Purchases.data.utils.AnalitycsManager;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.arellomobile.mvp.MvpDelegate;
+import com.google.android.gms.analytics.Tracker;
 
 public class MvpAppCompatFragment extends Fragment {
 
     private MvpDelegate<? extends MvpAppCompatFragment> mMvpDelegate;
+
+    protected Tracker tracker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getMvpDelegate().onCreate(savedInstanceState);
+
+        tracker = AnalyticsTrackers.getInstance().getDefault();
     }
 
     @Override
@@ -38,6 +42,12 @@ public class MvpAppCompatFragment extends Fragment {
 
         getMvpDelegate().onStart();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AnalyticsTrackers.getInstance().sendScreenName(getClass().getSimpleName());
     }
 
     @Override

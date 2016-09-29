@@ -2,7 +2,8 @@ package com.PopCorp.Purchases.presentation.presenter;
 
 import android.view.View;
 
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
@@ -24,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements RecyclerCallback<Category> {
+public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements FavoriteRecyclerCallback<Category> {
 
     private CategoryInteractor interactor = new CategoryInteractor();
     private RegionInteractor regionsInteractor = new RegionInteractor();
@@ -54,6 +55,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
                         loadFromNetwork();
                     }
@@ -95,6 +97,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
 
                     @Override
                     public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
                         getViewState().refreshing(false);
                         ErrorManager.printStackTrace(e);
                         if (objects.size() == 0) {
@@ -146,9 +149,8 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
                 objects.add(category);
             } else {
                 Category exist = objects.get(objects.indexOf(category));
-                category.setFavorite(exist.isFavorite());
-                objects.remove(exist);
-                objects.add(category);
+                exist.setImageUrl(category.getImageUrl());
+                exist.setName(category.getName());
             }
         }
         return result;
@@ -263,4 +265,10 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
     }
 
 
+    @Override
+    public void onFavoriteClicked(Category item) {
+        item.setFavorite(!item.isFavorite());
+        interactor.update(item);
+        getViewState().filter(currentFilter);
+    }
 }
