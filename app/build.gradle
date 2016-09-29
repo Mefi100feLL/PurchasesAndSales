@@ -32,8 +32,8 @@ android {
         applicationId "com.PopCorp.Purchases"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 32
-        versionName "4.0.1"
+        versionCode 33
+        versionName "4.0.2"
         signingConfig signingConfigs.release
     }
 
@@ -91,21 +91,19 @@ dependencies {
 
 
     //material
-    compile('com.mikepenz:materialdrawer:5.3.4@aar') {
+    compile('com.mikepenz:materialdrawer:5.6.0@aar') {
         transitive = true
     }
     compile 'com.afollestad.material-dialogs:commons:0.9.0.2'
-    compile 'com.wdullaer:materialdatetimepicker:2.2.0'
+    compile 'com.wdullaer:materialdatetimepicker:2.5.0'
     compile 'com.afollestad:material-cab:0.1.12'
-    compile 'io.github.yavski:fab-speed-dial:1.0.4'
 
 
     //ui
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
-    compile 'com.github.rahatarmanahmed:circularprogressview:2.4.0'
-    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.9'
-    compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'com.sothree.slidinguppanel:library:3.3.0'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
+    compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
+    compile 'com.simplecityapps:recyclerview-fastscroll:1.0.11'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.yalantis:ucrop:1.1.1'
 
@@ -113,17 +111,22 @@ dependencies {
     //support
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
-    compile "com.android.support:gridlayout-v7:$supportVersion"
     compile "com.android.support:percent:$supportVersion"
     compile "com.android.support:preference-v7:$supportVersion"
 
-
     compile 'com.google.android.gms:play-services-analytics:9.6.1'
 
+
     //utils
-    provided "com.arello-mobile:moxy-compiler:$moxyVersion"
-    compile "com.arello-mobile:moxy:$moxyVersion"
-    compile "com.arello-mobile:moxy-android:$moxyVersion"
+    provided ("com.arello-mobile:moxy-compiler:$moxyVersion"){
+        exclude group: 'com.google.android'
+    }
+    compile ("com.arello-mobile:moxy:$moxyVersion"){
+        exclude group: 'com.google.android'
+    }
+    compile ("com.arello-mobile:moxy-android:$moxyVersion"){
+        exclude group: 'com.google.android'
+    }
 
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
