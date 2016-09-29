@@ -19,7 +19,8 @@ public class APIFactory {
                     .client(new OkHttpClient())
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).build();
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .build();
             api = retrofit.create(API.class);
         }
         return api;
