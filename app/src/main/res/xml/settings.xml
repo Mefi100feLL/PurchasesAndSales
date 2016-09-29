@@ -6,12 +6,12 @@
         android:persistent="false">
 
         <com.PopCorp.Purchases.presentation.view.view.ColorPreference
-            android:key="primary_color_version_four"
+            android:key="colorPrimary"
             android:summary="@string/prefs_color_primary_summary"
             android:title="@string/prefs_color_primary" />
 
         <com.PopCorp.Purchases.presentation.view.view.ColorPreference
-            android:key="accent_color_version_four"
+            android:key="colorAccent"
             android:summary="@string/prefs_color_accent_summary"
             android:title="@string/prefs_color_accent" />
 

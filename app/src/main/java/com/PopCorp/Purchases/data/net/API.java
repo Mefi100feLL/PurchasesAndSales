@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.data.net;
 
-import com.PopCorp.Purchases.data.dto.CommentResult;
 import com.PopCorp.Purchases.data.dto.UniversalDTO;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.Region;
