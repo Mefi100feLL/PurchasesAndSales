@@ -124,6 +124,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
                                 } else if (newCategories.size() == 1) {
                                     getViewState().showSnackBarWithNewCategory(newCategories.get(0), currentFilter.equals(ShopsAdapter.FILTER_FAVORITE));
                                 }
+                                showTapTarget();
                             }
                         }
                     }
@@ -270,5 +271,18 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
         item.setFavorite(!item.isFavorite());
         interactor.update(item);
         getViewState().filter(currentFilter);
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForCategsFilterShown()){
+            getViewState().showTapTargetForFilter();
+            PreferencesManager.getInstance().putTapTargetForCategsFilter(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForCategsFavoriteShown()){
+            getViewState().showTapTargetForCategFavorite();
+            PreferencesManager.getInstance().putTapTargetForCategsFavorite(true);
+            return;
+        }
     }
 }

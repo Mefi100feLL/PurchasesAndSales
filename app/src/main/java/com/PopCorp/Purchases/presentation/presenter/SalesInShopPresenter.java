@@ -131,6 +131,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
                             initFilters();
                             getViewState().showData();
                             getViewState().filter(currentFilter);
+                            showTapTarget();
                         }
                     }
                 });
@@ -192,7 +193,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
 
     @Override
     public void onEmpty() {
-        if (currentFilter.startsWith("query")){
+        if (currentFilter.startsWith("query")) {
             getViewState().showEmptyForSearch(currentFilter.replace("query=", ""));
         }
     }
@@ -250,5 +251,20 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
         }
         getViewState().showData();
         getViewState().filter(currentFilter);
+    }
+
+    public void showTapTarget() {
+        if (filterCategories.size() > 1 && !currentFilter.startsWith("query")) {
+            if (!PreferencesManager.getInstance().isTapTargetForSalesFilterByCategsShown()) {
+                getViewState().showTapTargetForFilter();
+                PreferencesManager.getInstance().putTapTargetForSalesByCategsFilter(true);
+                return;
+            }
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSalesSearchShown()) {
+            getViewState().showTapTargetForSalesSearch();
+            PreferencesManager.getInstance().putTapTargetForSalesSearch(true);
+            return;
+        }
     }
 }

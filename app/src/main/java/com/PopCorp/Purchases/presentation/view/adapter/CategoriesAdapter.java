@@ -30,6 +30,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     private ArrayList<Category> objects;
     private final SortedList<Category> publishItems;
+    private View firstView;
 
     public CategoriesAdapter(FavoriteRecyclerCallback<Category> callback, ArrayList<Category> objects) {
         this.callback = callback;
@@ -72,6 +73,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         });
     }
 
+    public View getFirstView() {
+        return firstView;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final View view;
@@ -111,6 +116,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Category category = publishItems.get(position);
+
+        if (position == 0){
+            firstView = holder.favorite;
+        }
 
         ImageLoader.getInstance().displayImage(APIFactory.MESTOSKIDKI_URL + "/" + category.getImageUrl(), holder.image, UIL.getImageOptions());
 

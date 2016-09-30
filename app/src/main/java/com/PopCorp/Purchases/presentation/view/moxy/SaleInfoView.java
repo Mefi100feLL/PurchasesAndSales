@@ -7,7 +7,6 @@ import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.presentation.viewstate.strategy.GroupSingleStrategy;
 import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
@@ -34,4 +33,10 @@ public interface SaleInfoView extends MvpView {
     void showItemAdded();
 
     void openSameSale(View v, int saleId);
+
+    void showTapTargetForComments();
+
+    void showTapTargetForSharing();
+
+    void showTapTargetForSending();
 }

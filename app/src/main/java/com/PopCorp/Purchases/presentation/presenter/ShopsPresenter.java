@@ -122,6 +122,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
                                 } else if (newShops.size() == 1) {
                                     getViewState().showSnackBarWithNewShop(newShops.get(0), currentFilter.equals(ShopsAdapter.FILTER_FAVORITE));
                                 }
+                                showTapTarget();
                             }
                         }
                     }
@@ -269,5 +270,18 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
         item.setFavorite(!item.isFavorite());
         interactor.update(item);
         getViewState().filter(currentFilter);
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForShopsFilterShown()){
+            getViewState().showTapTargetForFilter();
+            PreferencesManager.getInstance().putTapTargetForShopsFilter(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForShopsFavoriteShown()){
+            getViewState().showTapTargetForShopFavorite();
+            PreferencesManager.getInstance().putTapTargetForShopsFavorite(true);
+            return;
+        }
     }
 }

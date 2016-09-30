@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
 import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
@@ -45,6 +47,7 @@ import com.PopCorp.Purchases.presentation.view.adapter.SameSaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SaleInfoView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.File;
@@ -63,6 +66,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         SaleParamsProvider {
 
     private static final String CURRENT_SALE = "current_sale";
+    private static final String IS_CURRENT = "is_current";
 
     @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = SaleInfoPresenter.PRESENTER_ID)
     SaleInfoPresenter presenter;
@@ -95,10 +99,11 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private CoordinatorLayout snackbarlayout;
 
 
-    public static Fragment create(SaleMainCallback parent, int saleId) {
+    public static Fragment create(SaleMainCallback parent, int saleId, boolean isCurrent) {
         SaleInfoFragment result = new SaleInfoFragment();
         Bundle args = new Bundle();
         args.putInt(CURRENT_SALE, saleId);
+        args.putBoolean(IS_CURRENT, isCurrent);
         result.setArguments(args);
         result.setParent(parent);
         return result;
@@ -108,7 +113,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public void onCreate(Bundle savedInstanceState) {
         saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
-        presenter.setSale(saleId);
+        presenter.setSale(saleId, getArguments().getBoolean(IS_CURRENT, false));
     }
 
     @Override
@@ -249,9 +254,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     @Override
     public void showEmptyLists() {
         Snackbar.make(snackbarlayout, R.string.empty_no_shopping_lists_short, Snackbar.LENGTH_LONG)
-                .setAction(R.string.button_create, view -> {
-                    DialogController.showDialogForNewList(getActivity(), presenter);
-                })
+                .setAction(R.string.button_create, view -> DialogController.showDialogForNewList(getActivity(), presenter))
                 .show();
     }
 
@@ -352,6 +355,58 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         Intent intent = new Intent(getActivity(), SameSaleActivity.class);
         intent.putExtra(SameSaleActivity.CURRENT_SALE, String.valueOf(saleId));
         startActivity(intent);
+    }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForComments() {
+        View view = getActionViewForMenuItem(R.id.action_comments);
+        if (view != null) {
+            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_sale_comments, R.string.tap_target_content_sale_comments)
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    private View getActionViewForMenuItem(int id) {
+        for (int toolbarChildIndex = 0; toolbarChildIndex < toolBar.getChildCount(); toolbarChildIndex++) {
+            View view = toolBar.getChildAt(toolbarChildIndex);
+            if (view instanceof ActionMenuView) {
+                ActionMenuView menuView = (ActionMenuView) view;
+                for (int i = 0; i < menuView.getChildCount(); i++) {
+                    if (menuView.getChildAt(i).getId() == id) {
+                        return menuView.getChildAt(i);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void showTapTargetForSharing() {
+        View view = getActionViewForMenuItem(R.id.action_share);
+        if (view != null) {
+            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_sale_sharing, R.string.tap_target_content_sale_sharing)
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForSending() {
+        fab.post(() ->
+                new TapTargetManager.Builder(getActivity(), fab, R.string.tap_target_title_sale_sending, R.string.tap_target_content_sale_sending)
+                        .listener(tapTargetListener)
+                        .tintTarget(false)
+                        .show());
     }
 
     @Override

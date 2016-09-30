@@ -70,6 +70,7 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
                             currentSale = result;
                             getViewState().showSkips();
                             getViewState().showFab();
+                            showTapTarget();
                         }
                     });
         }
@@ -221,5 +222,23 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
 
     public boolean isCropped(){
         return croppedImageUri != null;
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForCroppingRotateSkipShown()) {
+            getViewState().showTapTargetForRotateSkip();
+            PreferencesManager.getInstance().putTapTargetForCroppingRotateSkip(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForCroppingCropShown()) {
+            getViewState().showTapTargetForCrop();
+            PreferencesManager.getInstance().putTapTargetForCroppingCrop(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForCroppingScaleSkipShown()) {
+            getViewState().showTapTargetForScaleSkip();
+            PreferencesManager.getInstance().putTapTargetForCroppingScaleSkip(true);
+            return;
+        }
     }
 }

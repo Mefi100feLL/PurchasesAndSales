@@ -31,4 +31,8 @@ public interface SelectingCityView extends SampleDataView {
     void hideFastScroll();
 
     void finish();
+
+    void showTapTargetForSearch();
+
+    void showTapTargetForCitySelect();
 }

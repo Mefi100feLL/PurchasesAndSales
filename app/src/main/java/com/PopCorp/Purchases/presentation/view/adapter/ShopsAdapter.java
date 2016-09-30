@@ -33,6 +33,8 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
     private ArrayList<Shop> objects;
     private final SortedList<Shop> publishItems;
 
+    private View firstView;
+
 
     public ShopsAdapter(Context context, FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
         this.context = context;
@@ -74,6 +76,10 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
                 notifyItemRangeRemoved(position, count);
             }
         });
+    }
+
+    public View getFirstView() {
+        return firstView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -118,6 +124,9 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Shop shop = publishItems.get(position);
 
+        if (position == 0){
+            firstView = holder.favorite;
+        }
         ImageLoader.getInstance().displayImage(APIFactory.MESTOSKIDKI_URL + "/" + shop.getImageUrl(), holder.image, UIL.getImageOptions());
 
         holder.name.setText(shop.getName());

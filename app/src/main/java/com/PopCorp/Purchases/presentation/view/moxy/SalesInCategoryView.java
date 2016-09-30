@@ -17,4 +17,8 @@ public interface SalesInCategoryView extends SalesView {
     void showFavoriteShopsEmpty();
 
     void showShopsForSelectingFavorites(ArrayList<Shop> shops);
+
+    void showTapTargetForFilter();
+
+    void showTapTargetForSalesSearch();
 }

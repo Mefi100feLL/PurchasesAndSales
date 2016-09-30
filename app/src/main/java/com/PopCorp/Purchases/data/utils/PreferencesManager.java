@@ -75,6 +75,41 @@ public class PreferencesManager {
     private static final String PREFS_AUTHOR_COMMENT = "author_comment";
     public static final String PREFS_THEME_LIGHT_DARK = "theme_light_dark";
 
+
+    private static final String PREFS_TAP_TARGET_SHOPS_FILTER = "PREFS_TAP_TARGET_SHOPS_FILTER";
+    private static final String PREFS_TAP_TARGET_SHOPS_FAVORITE = "PREFS_TAP_TARGET_SHOPS_FAVORITE";
+    private static final String PREFS_TAP_TARGET_SALES_FILTER_BY_SHOPS = "PREFS_TAP_TARGET_SALES_FILTER_BY_SHOPS";
+    private static final String PREFS_TAP_TARGET_SALES_FILTER_BY_CATEGS = "PREFS_TAP_TARGET_SALES_FILTER_BY_CATEGS";
+    private static final String PREFS_TAP_TARGET_SALES_SEARCH = "PREFS_TAP_TARGET_SALES_SEARCH";
+    private static final String PREFS_TAP_TARGET_SALE_COMMENTS = "PREFS_TAP_TARGET_SALE_COMMENTS";
+    private static final String PREFS_TAP_TARGET_SALE_SHARING = "PREFS_TAP_TARGET_SALE_SHARING";
+    private static final String PREFS_TAP_TARGET_SALE_SENDING = "PREFS_TAP_TARGET_SALE_SENDING";
+    private static final String PREFS_TAP_TARGET_CATEGS_FILTER = "PREFS_TAP_TARGET_CATEGS_FILTER";
+    private static final String PREFS_TAP_TARGET_CATEGS_FAVORITE = "PREFS_TAP_TARGET_CATEGS_FAVORITE";
+    private static final String PREFS_TAP_TARGET_CITIES_SEARCH = "PREFS_TAP_TARGET_CITIES_SEARCH";
+    private static final String PREFS_TAP_TARGET_CITY_SELECT = "PREFS_TAP_TARGET_CITY_SELECT";
+    private static final String PREFS_TAP_TARGET_SALES_FILTER_BY_CATALOG = "PREFS_TAP_TARGET_SALES_FILTER_BY_CATALOG";
+    private static final String PREFS_TAP_TARGET_SO_SALE_SENDING = "PREFS_TAP_TARGET_SO_SALE_SENDING";
+    private static final String PREFS_TAP_TARGET_SO_SALE_COMMENTS = "PREFS_TAP_TARGET_SO_SALE_COMMENTS";
+    private static final String PREFS_TAP_TARGET_SO_SALE_CROPPING = "PREFS_TAP_TARGET_SO_SALE_CROPPING";
+    private static final String PREFS_TAP_TARGET_SO_SALE_SHARING = "PREFS_TAP_TARGET_SO_SALE_SHARING";
+    private static final String PREFS_TAP_TARGET_CROPPING_ROTATE_SKIP = "PREFS_TAP_TARGET_CROPPING_ROTATE_SKIP";
+    private static final String PREFS_TAP_TARGET_CROPPING_CROP = "PREFS_TAP_TARGET_CROPPING_CROP";
+    private static final String PREFS_TAP_TARGET_CROPPING_SCALE_SKIP = "PREFS_TAP_TARGET_CROPPING_SCALE_SKIP";
+    private static final String PREFS_TAP_TARGET_LISTS_CREATE = "PREFS_TAP_TARGET_LISTS_CREATE";
+    private static final String PREFS_TAP_TARGET_ITEMS_CREATE = "PREFS_TAP_TARGET_ITEMS_CREATE";
+    private static final String PREFS_TAP_TARGET_ITEMS_ADD = "PREFS_TAP_TARGET_ITEMS_ADD";
+    private static final String PREFS_TAP_TARGET_ITEM_INFO = "PREFS_TAP_TARGET_ITEM_INFO";
+    private static final String PREFS_TAP_TARGET_ITEMS_FILTER_BY_SHOP = "PREFS_TAP_TARGET_ITEMS_FILTER_BY_SHOP";
+    private static final String PREFS_TAP_TARGET_ITEMS_ADD_TO_ACTION_MODE = "PREFS_TAP_TARGET_ITEMS_ADD_TO_ACTION_MODE";
+    private static final String PREFS_TAP_TARGET_ITEM_EDIT_IN_ACTION_MODE = "PREFS_TAP_TARGET_ITEM_EDIT_IN_ACTION_MODE";
+    private static final String PREFS_TAP_TARGET_ITEMS_REMOVE_IN_ACTION_MODE = "PREFS_TAP_TARGET_ITEMS_REMOVE_IN_ACTION_MODE";
+    private static final String PREFS_TAP_TARGET_CLOSE_ACTION_MODE = "PREFS_TAP_TARGET_CLOSE_ACTION_MODE";
+    private static final String PREFS_TAP_TARGET_PRODUCTS_SEARCH = "PREFS_TAP_TARGET_PRODUCTS_SEARCH";
+    private static final String PREFS_TAP_TARGET_PRODUCTS_FILTER = "PREFS_TAP_TARGET_PRODUCTS_FILTER";
+    private static final String PREFS_TAP_TARGET_PRODUCTS_SORTING = "PREFS_TAP_TARGET_PRODUCTS_SORTING";
+    private static final String PREFS_TAP_TARGET_PRODUCTS_RETURN = "PREFS_TAP_TARGET_PRODUCTS_RETURN";
+
     private Context context;
     private SharedPreferences sPref;
     private SharedPreferences.Editor editor;
@@ -452,5 +487,274 @@ public class PreferencesManager {
 
     public String getThemeLightDark() {
         return sPref.getString(PREFS_THEME_LIGHT_DARK, context.getString(R.string.prefs_light_theme));
+    }
+
+    public boolean isTapTargetForShopsFilterShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SHOPS_FILTER, false);
+    }
+
+    public void putTapTargetForShopsFilter(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SHOPS_FILTER, shown).commit();
+    }
+
+    public boolean isTapTargetForShopsFavoriteShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SHOPS_FAVORITE, false);
+    }
+
+    public void putTapTargetForShopsFavorite(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SHOPS_FAVORITE, shown).commit();
+    }
+
+    public boolean isTapTargetForSalesFilterByShopsShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALES_FILTER_BY_SHOPS, false);
+    }
+
+    public void putTapTargetForSalesByShopsFilter(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALES_FILTER_BY_SHOPS, shown).commit();
+    }
+
+    public boolean isTapTargetForSalesSearchShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALES_SEARCH, false);
+    }
+
+    public void putTapTargetForSalesSearch(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALES_SEARCH, shown).commit();
+    }
+
+    public boolean isTapTargetForSaleCommentsShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALE_COMMENTS, false);
+    }
+
+    public void putTapTargetForSaleComments(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALE_COMMENTS, shown).commit();
+    }
+
+    public boolean isTapTargetForSaleSharingShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALE_SHARING, false);
+    }
+
+    public void putTapTargetForSaleSharing(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALE_SHARING, shown).commit();
+    }
+
+    public boolean isTapTargetForSaleSendingShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALE_SENDING, false);
+    }
+
+    public void putTapTargetForSaleSending(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALE_SENDING, shown).commit();
+    }
+
+    public boolean isTapTargetForCategsFilterShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CATEGS_FILTER, false);
+    }
+
+    public void putTapTargetForCategsFilter(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CATEGS_FILTER, shown).commit();
+    }
+
+    public boolean isTapTargetForCategsFavoriteShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CATEGS_FAVORITE, false);
+    }
+
+    public void putTapTargetForCategsFavorite(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CATEGS_FAVORITE, shown).commit();
+    }
+
+    public boolean isTapTargetForSalesFilterByCategsShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALES_FILTER_BY_CATEGS, false);
+    }
+
+    public void putTapTargetForSalesByCategsFilter(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALES_FILTER_BY_CATEGS, shown).commit();
+    }
+
+    public boolean isTapTargetForCitiesSearch() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CITIES_SEARCH, false);
+    }
+
+    public void putTapTargetForCitiesSearch(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CITIES_SEARCH, shown).commit();
+    }
+
+    public boolean isTapTargetForCitySelect() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CITY_SELECT, false);
+    }
+
+    public void putTapTargetForCitySelect(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CITY_SELECT, shown).commit();
+    }
+
+    public boolean isTapTargetForSalesFilterByCatalogsShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALES_FILTER_BY_CATALOG, false);
+    }
+
+    public void putTapTargetForSalesByCatalogsFilter(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALES_FILTER_BY_CATALOG, shown).commit();
+    }
+
+
+
+    public boolean isTapTargetForSOSaleSendingShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SO_SALE_SENDING, false);
+    }
+
+    public void putTapTargetForSOSaleSending(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SO_SALE_SENDING, shown).commit();
+    }
+
+    public boolean isTapTargetForSOSaleCommentsShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SO_SALE_COMMENTS, false);
+    }
+
+    public void putTapTargetForSOSaleComments(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SO_SALE_COMMENTS, shown).commit();
+    }
+
+    public boolean isTapTargetForSaleSOCroppingShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SO_SALE_CROPPING, false);
+    }
+
+    public void putTapTargetForSOSaleCropping(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SO_SALE_CROPPING, shown).commit();
+    }
+
+    public boolean isTapTargetForSaleSOSharingShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SO_SALE_SHARING, false);
+    }
+
+    public void putTapTargetForSOSaleSharing(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SO_SALE_SHARING, shown).commit();
+    }
+
+    public boolean isTapTargetForCroppingRotateSkipShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CROPPING_ROTATE_SKIP, false);
+    }
+
+    public void putTapTargetForCroppingRotateSkip(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CROPPING_ROTATE_SKIP, shown).commit();
+    }
+
+    public boolean isTapTargetForCroppingCropShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CROPPING_CROP, false);
+    }
+
+    public void putTapTargetForCroppingCrop(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CROPPING_CROP, shown).commit();
+    }
+
+    public boolean isTapTargetForCroppingScaleSkipShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CROPPING_SCALE_SKIP, false);
+    }
+
+    public void putTapTargetForCroppingScaleSkip(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CROPPING_SCALE_SKIP, shown).commit();
+    }
+
+    public boolean isTapTargetForListsCreateShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_LISTS_CREATE, false);
+    }
+
+    public void putTapTargetForListsCreate(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_LISTS_CREATE, shown).commit();
+    }
+
+
+    public boolean isTapTargetForItemsCreateShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_ITEMS_CREATE, false);
+    }
+
+    public void putTapTargetForItemsCreate(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_ITEMS_CREATE, shown).commit();
+    }
+
+    public boolean isTapTargetForItemsAddShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_ITEMS_ADD, false);
+    }
+
+    public void putTapTargetForItemsAdd(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_ITEMS_ADD, shown).commit();
+    }
+
+    public boolean isTapTargetForItemInfoShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_ITEM_INFO, false);
+    }
+
+    public void putTapTargetForItemInfo(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_ITEM_INFO, shown).commit();
+    }
+
+    public boolean isTapTargetForItemsFilterByShopShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_ITEMS_FILTER_BY_SHOP, false);
+    }
+
+    public void putTapTargetForItemsFilterByShop(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_ITEMS_FILTER_BY_SHOP, shown).commit();
+    }
+
+    //
+    public boolean isTapTargetForItemsAddToActionModeShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_ITEMS_ADD_TO_ACTION_MODE, false);
+    }
+
+    public void putTapTargetForItemsAddToActionMode(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_ITEMS_ADD_TO_ACTION_MODE, shown).commit();
+    }
+
+    public boolean isTapTargetForItemEditInActionModeShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_ITEM_EDIT_IN_ACTION_MODE, false);
+    }
+
+    public void putTapTargetForItemEditInActionMode(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_ITEM_EDIT_IN_ACTION_MODE, shown).commit();
+    }
+
+    public boolean isTapTargetForItemsRemoveInActionModeShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_ITEMS_REMOVE_IN_ACTION_MODE, false);
+    }
+
+    public void putTapTargetForItemsRemoveInActionMode(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_ITEMS_REMOVE_IN_ACTION_MODE, shown).commit();
+    }
+
+    public boolean isTapTargetForCloseActionModeShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_CLOSE_ACTION_MODE, false);
+    }
+
+    public void putTapTargetForCloseActionMode(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_CLOSE_ACTION_MODE, shown).commit();
+    }
+
+    //
+    public boolean isTapTargetForProductsSearchShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_PRODUCTS_SEARCH, false);
+    }
+
+    public void putTapTargetForProductsSearch(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_PRODUCTS_SEARCH, shown).commit();
+    }
+
+    public boolean isTapTargetForProductsFilterShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_PRODUCTS_FILTER, false);
+    }
+
+    public void putTapTargetForProductsFilter(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_PRODUCTS_FILTER, shown).commit();
+    }
+
+    public boolean isTapTargetForProductsSortingShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_PRODUCTS_SORTING, false);
+    }
+
+    public void putTapTargetForProductsSorting(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_PRODUCTS_SORTING, shown).commit();
+    }
+
+    public boolean isTapTargetForProductsReturnShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_PRODUCTS_RETURN, false);
+    }
+
+    public void putTapTargetForProductsReturn(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_PRODUCTS_RETURN, shown).commit();
     }
 }

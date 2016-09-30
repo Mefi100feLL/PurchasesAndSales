@@ -30,6 +30,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.ShoppingListsPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.ShoppingListActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ShoppingListsAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListsView;
@@ -199,9 +200,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
 
     @Override
     public void showEmptyLists() {
-        showError(R.string.empty_no_lists, R.drawable.ic_notebook_minus, R.string.button_create, v -> {
-            presenter.createNewList();
-        });
+        showError(R.string.empty_no_lists, R.drawable.ic_notebook_minus, R.string.button_create, v -> presenter.createNewList());
     }
 
     @Override
@@ -249,18 +248,21 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
     @Override
     public void showRemovedList(ShoppingList list) {
         Snackbar.make(fab, getString(R.string.notification_list_removed).replace("name", list.getName()), Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_undo, v -> {
-                    presenter.returnList(list);
-                })
+                .setAction(R.string.action_undo, v -> presenter.returnList(list))
                 .show();
     }
 
     @Override
     public void showRemovedLists(ArrayList<ShoppingList> removedLists) {
         Snackbar.make(fab, getString(R.string.notification_lists_removed).replace("count", String.valueOf(removedLists.size())), Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_undo, v -> {
-                    presenter.returnLists(removedLists);
-                })
+                .setAction(R.string.action_undo, v -> presenter.returnLists(removedLists))
+                .show();
+    }
+
+    @Override
+    public void showTapTargetForCreate() {
+        new TapTargetManager.Builder(getActivity(), fab, R.string.tap_target_title_lists_create, R.string.tap_target_content_lists_create)
+                .tintTarget(false)
                 .show();
     }
 

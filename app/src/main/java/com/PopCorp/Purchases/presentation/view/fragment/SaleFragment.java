@@ -21,17 +21,20 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallback, SaleView, SaleParamsProvider, BackPressedCallback {
 
     private static final String CURRENT_SALE = "current_sale";
+    private static final String IS_CURRENT = "is_current";
 
     @InjectPresenter(factory = SalePresenterFactory.class, presenterId = SalePresenter.PRESENTER_ID)
     SalePresenter presenter;
 
     private int saleId;
     private boolean showedComments = false;
+    private boolean isCurrent = false;
 
-    public static SaleFragment create(int saleId) {
+    public static SaleFragment create(int saleId, boolean currentSale) {
         SaleFragment result = new SaleFragment();
         Bundle args = new Bundle();
         args.putInt(SaleFragment.CURRENT_SALE, saleId);
+        args.putBoolean(SaleFragment.IS_CURRENT, currentSale);
         result.setArguments(args);
         return result;
     }
@@ -39,6 +42,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         saleId = getArguments().getInt(CURRENT_SALE);
+        isCurrent = getArguments().getBoolean(IS_CURRENT, false);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
     }
@@ -62,7 +66,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void showFragmentInfo(int saleId) {
         showedComments = false;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = SaleInfoFragment.create(this, saleId);
+        Fragment fragment = SaleInfoFragment.create(this, saleId, isCurrent);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName() + saleId)
                 .commit();
@@ -85,7 +89,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
 
     @Override
     public boolean onBackPressed() {
-        if (showedComments){
+        if (showedComments) {
             presenter.showInfo();
             return true;
         }

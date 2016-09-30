@@ -32,4 +32,8 @@ public interface ShopsView extends SampleDataView {
     void showSnackBarWithNewShop(Shop shop, boolean isFilterFavorite);
 
     void openShop(View v, Shop shop);
+
+    void showTapTargetForFilter();
+
+    void showTapTargetForShopFavorite();
 }

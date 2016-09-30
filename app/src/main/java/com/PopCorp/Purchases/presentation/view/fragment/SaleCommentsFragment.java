@@ -74,7 +74,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     private KeyboardUtil keyboardUtil;
 
 
-    public static SaleCommentsFragment create(SaleMainCallback parent, int saleId){
+    public static SaleCommentsFragment create(SaleMainCallback parent, int saleId) {
         SaleCommentsFragment result = new SaleCommentsFragment();
         Bundle args = new Bundle();
         args.putInt(CURRENT_SALE, saleId);
@@ -148,7 +148,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
             });
         }
         commentAuthor.setText(presenter.getSavedAuthorComment());
-        commentSend.setBackgroundDrawable(createOvalSelector(ThemeManager.getInstance().getAccentColor()));
+        commentSend.setBackground(createOvalSelector(ThemeManager.getInstance().getAccentColor()));
         commentSend.setOnClickListener(v -> presenter.sendComment(commentAuthor.getText().toString(), commentText.getText().toString()));
 
         commentAuthorSave.setOnClickListener(view -> {
@@ -290,9 +290,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_back_to_sale, view -> {
-            backToSale();
-        });
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_back_to_sale, view -> backToSale());
     }
 
     @Override

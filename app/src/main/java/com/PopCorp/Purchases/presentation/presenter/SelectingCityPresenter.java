@@ -73,6 +73,7 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
                             objects.addAll(cities);
                             getViewState().showData();
                             getViewState().filter(currentFilter);
+                            showTapTarget();
                         }
                     }
                 });
@@ -83,6 +84,7 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
         selectedCity = item;
         getViewState().setSelectedCity(selectedCity);
         getViewState().filter(currentFilter);
+        showTapTargetForFab();
     }
 
     @Override
@@ -150,5 +152,22 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
 
     public ArrayList<City> getObjects() {
         return objects;
+    }
+
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForCitiesSearch()){
+            getViewState().showTapTargetForSearch();
+            PreferencesManager.getInstance().putTapTargetForCitiesSearch(true);
+            return;
+        }
+
+    }
+
+    public void showTapTargetForFab(){
+        if (!PreferencesManager.getInstance().isTapTargetForCitySelect()){
+            getViewState().showTapTargetForCitySelect();
+            PreferencesManager.getInstance().putTapTargetForCitySelect(true);
+        }
     }
 }

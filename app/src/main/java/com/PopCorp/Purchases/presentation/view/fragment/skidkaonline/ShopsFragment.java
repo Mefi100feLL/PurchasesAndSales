@@ -35,6 +35,8 @@ import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.ShopAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.ShopsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
@@ -110,7 +112,9 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     @Override
     public void onResume() {
         super.onResume();
-        toolBar.setTitle("");
+        if (presenter.getObjects().size() == 0) {
+            toolBar.setTitle(R.string.title_shops);
+        }
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
@@ -123,6 +127,8 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showData() {
+        toolBar.setTitle("");
+        spinner.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.hide();
@@ -259,5 +265,42 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(spinner, getString(R.string.tap_target_title_shops_filter), getString(R.string.tap_target_content_shops_filter))
+                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
+                        .targetCircleColor(R.color.md_white_1000)
+                        .textColor(R.color.md_white_1000)
+                        .dimColor(R.color.md_black_1000)
+                        .drawShadow(true)
+                        .cancelable(false)
+                        .tintTarget(true), tapTargetListener);
+    }
+
+    @Override
+    public void showTapTargetForShopFavorite() {
+        View targetView = adapter.getFirstView();
+        if (targetView != null) {
+            TapTargetView.showFor(getActivity(),
+                    TapTarget.forView(targetView, getString(R.string.tap_target_title_shop_favorite), getString(R.string.tap_target_content_shop_favorite))
+                            .outerCircleColor(R.color.md_amber_500)
+                            .targetCircleColor(R.color.md_white_1000)
+                            .textColor(R.color.md_white_1000)
+                            .dimColor(R.color.md_black_1000)
+                            .drawShadow(true)
+                            .cancelable(false)
+                            .tintTarget(true), tapTargetListener);
+        }
     }
 }

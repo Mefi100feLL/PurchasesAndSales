@@ -32,6 +32,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
 
     private ArrayList<Shop> objects;
     private final SortedList<ShopDecorator> publishItems;
+    private View firstView;
 
     public ShopAdapter(FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
         this.callback = callback;
@@ -86,6 +87,10 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         });
     }
 
+    public View getFirstView() {
+        return firstView;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final View view;
@@ -135,6 +140,9 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         } else {
             Shop shop = decorator.getShop();
 
+            if (position == 1){
+                firstView =holder.favorite;
+            }
             ImageLoader.getInstance().displayImage(shop.getImage(), holder.image, UIL.getImageOptions());
 
             holder.name.setText(shop.getName());

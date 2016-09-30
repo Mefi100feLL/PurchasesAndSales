@@ -25,6 +25,7 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
@@ -34,6 +35,8 @@ import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.CropView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yalantis.ucrop.view.GestureCropImageView;
 import com.yalantis.ucrop.view.UCropView;
@@ -188,6 +191,53 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
     @Override
     public void showErrorLoadingLists(Throwable e) {
         showToast(R.string.error_can_not_load_lists);
+    }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForRotateSkip() {
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(rotateSkip, getString(R.string.tap_target_title_rotate_skip), getString(R.string.tap_target_content_rotate_skip))
+                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
+                        .targetCircleColor(R.color.md_white_1000)
+                        .textColor(R.color.md_white_1000)
+                        .dimColor(R.color.md_black_1000)
+                        .drawShadow(true)
+                        .cancelable(false)
+                        .tintTarget(true), tapTargetListener);
+    }
+
+    @Override
+    public void showTapTargetForCrop() {
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(fab, getString(R.string.tap_target_title_crop), getString(R.string.tap_target_content_crop))
+                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
+                        .targetCircleColor(R.color.md_white_1000)
+                        .textColor(R.color.md_white_1000)
+                        .dimColor(R.color.md_black_1000)
+                        .drawShadow(true)
+                        .cancelable(false)
+                        .tintTarget(false), tapTargetListener);
+    }
+
+    @Override
+    public void showTapTargetForScaleSkip() {
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(scaleSkip, getString(R.string.tap_target_title_scale_skip), getString(R.string.tap_target_content_sacle_skip))
+                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
+                        .targetCircleColor(R.color.md_white_1000)
+                        .textColor(R.color.md_white_1000)
+                        .dimColor(R.color.md_black_1000)
+                        .drawShadow(true)
+                        .cancelable(false)
+                        .tintTarget(true), tapTargetListener);
     }
 
     @Override

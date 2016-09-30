@@ -35,6 +35,8 @@ import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.SaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SalesView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
 
@@ -243,6 +245,27 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         }
         intent.putExtra(SaleActivity.ARRAY_SALES, salesIds);
         startActivity(intent);
+    }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        TapTargetView.showFor(getActivity(),
+                TapTarget.forView(spinner, getString(R.string.tap_target_title_sale_filter_by_catalogs), getString(R.string.tap_target_content_sale_filter_by_catalogs))
+                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
+                        .targetCircleColor(R.color.md_white_1000)
+                        .textColor(R.color.md_white_1000)
+                        .dimColor(R.color.md_black_1000)
+                        .drawShadow(true)
+                        .cancelable(false)
+                        .tintTarget(true), tapTargetListener);
     }
 
     @Override

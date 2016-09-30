@@ -26,6 +26,7 @@ import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingCityPresenter;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.CityAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SelectingCityView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -46,6 +47,8 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     private SearchView searchView;
 
     private CityAdapter adapter;
+
+    private Menu menu;
 
 
     @Override
@@ -93,9 +96,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
 
     @Override
     public void showCitiesEmpty() {
-        showError(R.string.empty_no_cities, R.drawable.ic_skyscraper, R.string.button_try_again, view -> {
-            presenter.tryAgainLoad();
-        });
+        showError(R.string.empty_no_cities, R.drawable.ic_skyscraper, R.string.button_try_again, view -> presenter.tryAgainLoad());
     }
 
     @Override
@@ -146,6 +147,24 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     }
 
     @Override
+    public void showTapTargetForSearch() {
+        if (menu != null && menu.findItem(R.id.action_search) != null && menu.findItem(R.id.action_search).getActionView() != null) {
+            View view = menu.findItem(R.id.action_search).getActionView();
+            if (view != null) {
+                new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_cities_search, R.string.tap_target_content_cities_search)
+                        .show();
+            }
+        }
+    }
+
+    @Override
+    public void showTapTargetForCitySelect() {
+        new TapTargetManager.Builder(getActivity(), fab, R.string.tap_target_title_city_select, R.string.tap_target_content_city_select)
+                .tintTarget(false)
+                .show();
+    }
+
+    @Override
     public void showSnackBar(Throwable e) {
         Snackbar.make(fab, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }
@@ -176,9 +195,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgainLoad();
-        });
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgainLoad());
     }
 
     @Override
@@ -203,6 +220,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
                 return false;
             }
         });
+        this.menu = menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
 

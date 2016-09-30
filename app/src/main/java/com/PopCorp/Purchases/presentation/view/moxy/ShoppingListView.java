@@ -71,4 +71,17 @@ public interface ShoppingListView extends SampleDataView {
 
     void shareListAsText(ShoppingList list);
 
+    void showTapTargetForCreate();
+
+    void showTapTargetForAdd();
+
+    void showTapTargetForItemInfo();
+
+    void showTapTargetForItemsFilterForShop();
+
+    void showTapTargetForItemsAddToActionMode();
+
+    void showTapTargetForItemEditInActionMode();
+
+    void showTapTargetForItemsRemoveInActionMode();
 }

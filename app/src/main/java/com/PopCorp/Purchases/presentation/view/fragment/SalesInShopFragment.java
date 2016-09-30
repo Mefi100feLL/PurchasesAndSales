@@ -34,6 +34,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInShopPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesAdapter;
@@ -41,6 +42,7 @@ import com.PopCorp.Purchases.presentation.view.adapter.SalesInShopAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SalesInShopView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,9 +134,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showCategoriesEmpty() {
-        showError(R.string.empty_no_categgories, R.drawable.ic_tag, R.string.button_try_again, v -> {
-            presenter.loadCategories();
-        });
+        showError(R.string.empty_no_categgories, R.drawable.ic_tag, R.string.button_try_again, v -> presenter.loadCategories());
     }
 
     @Override
@@ -152,11 +152,36 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         });
     }
 
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        new TapTargetManager.Builder(getActivity(), spinner, R.string.tap_target_title_sale_filter_by_categories, R.string.tap_target_content_sale_filter_by_categories)
+                .listener(tapTargetListener)
+                .show();
+    }
+
+    @Override
+    public void showTapTargetForSalesSearch() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            View view = menu.findItem(R.id.action_search).getActionView();
+            if (view != null) {
+                new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_sales_search, R.string.tap_target_content_sales_search)
+                        .listener(tapTargetListener)
+                        .show();
+            }
+        }
+    }
+
     @Override
     public void showFavoriteCategoriesEmpty() {
-        showError(R.string.empty_no_favorite_categories_in_shop, R.drawable.ic_file_favorite, R.string.button_select_categories, v -> {
-            presenter.selectCategories();
-        });
+        showError(R.string.empty_no_favorite_categories_in_shop, R.drawable.ic_file_favorite, R.string.button_select_categories, v -> presenter.selectCategories());
     }
 
     @Override
@@ -191,9 +216,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
-            getActivity().onBackPressed();
-        });
+        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> getActivity().onBackPressed());
     }
 
     @Override
@@ -262,9 +285,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgain();
-        });
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgain());
     }
 
     @Override

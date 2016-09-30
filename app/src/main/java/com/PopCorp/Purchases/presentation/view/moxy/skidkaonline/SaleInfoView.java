@@ -41,4 +41,12 @@ public interface SaleInfoView extends MvpView {
     void showErrorLoadingLists(Throwable e);
 
     void showItemAdded();
+
+    void showTapTargetForSending();
+
+    void showTapTargetForComments();
+
+    void showTapTargetForCropping();
+
+    void showTapTargetForSharing();
 }
