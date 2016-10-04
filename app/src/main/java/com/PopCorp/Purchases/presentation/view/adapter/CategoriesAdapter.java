@@ -14,9 +14,7 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.CategoryComparator;
 import com.PopCorp.Purchases.data.model.Category;
-import com.PopCorp.Purchases.data.net.APIFactory;
-import com.PopCorp.Purchases.data.utils.UIL;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
 
 import java.util.ArrayList;
 
@@ -112,7 +110,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Category category = publishItems.get(position);
 
-        ImageLoader.getInstance().displayImage(APIFactory.MESTOSKIDKI_URL + "/" + category.getImageUrl(), holder.image, UIL.getImageOptions());
+        ImageLoaderAdapter.getInstance().displayImage(category.getImageUrl(), holder.image);
 
         holder.name.setText(category.getName());
 

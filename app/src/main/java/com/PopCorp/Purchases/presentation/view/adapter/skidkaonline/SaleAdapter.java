@@ -1,9 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.adapter.skidkaonline;
 
-import android.graphics.Bitmap;
 import android.support.percent.PercentFrameLayout;
 import android.support.v7.util.SortedList;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -18,11 +16,8 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.skidkaonline.SaleDecoratorComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
-import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.skidkaonline.SaleDecorator;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
 
 import java.util.ArrayList;
 
@@ -133,7 +128,7 @@ public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> im
         } else {
             Sale sale = decorator.getSale();
 
-            ImageLoader.getInstance().displayImage(sale.getImageSmall(), holder.image, UIL.getImageOptions());
+            ImageLoaderAdapter.getInstance().displayImage(sale.getImageSmall(), holder.image);
         }
 
         holder.setClickListener((v, pos) -> {

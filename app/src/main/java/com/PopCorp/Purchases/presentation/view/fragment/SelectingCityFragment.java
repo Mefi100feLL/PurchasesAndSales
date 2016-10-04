@@ -146,6 +146,11 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     }
 
     @Override
+    public void showFab() {
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void showSnackBar(Throwable e) {
         Snackbar.make(fab, ErrorManager.getErrorText(e, getActivity()), Snackbar.LENGTH_SHORT).show();
     }

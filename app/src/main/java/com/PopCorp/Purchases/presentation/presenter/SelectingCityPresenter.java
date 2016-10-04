@@ -81,8 +81,9 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
     @Override
     public void onItemClicked(View view, City item) {
         selectedCity = item;
-        getViewState().setSelectedCity(selectedCity);
-        getViewState().filter(currentFilter);
+        /*getViewState().setSelectedCity(selectedCity);
+        getViewState().filter(currentFilter);*/
+        getViewState().showFab();
     }
 
     @Override
