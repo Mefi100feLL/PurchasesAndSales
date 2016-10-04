@@ -301,7 +301,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         if (actionMode != null && actionMode.getMenu() != null && actionMode.getMenu().findItem(R.id.action_edit) != null) {
             View view = getActionViewForMenuItem(actionMode.getToolbar(), R.id.action_edit);
             if (view != null) {
-                new TapTargetManager.Builder(getActivity(), adapter.getFirstView(), R.string.tap_target_title_item_edit_in_action_mode, R.string.tap_target_content_item_edit_in_action_mode)
+                new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_item_edit_in_action_mode, R.string.tap_target_content_item_edit_in_action_mode)
                         .listener(tapTargetListenerInActionMode)
                         .outerCircleColor(R.color.action_mode_color)
                         .show();
@@ -314,7 +314,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         if (actionMode != null && actionMode.getMenu() != null && actionMode.getMenu().findItem(R.id.action_remove) != null) {
             View view = getActionViewForMenuItem(actionMode.getToolbar(), R.id.action_remove);
             if (view != null) {
-                new TapTargetManager.Builder(getActivity(), adapter.getFirstView(), R.string.tap_target_title_items_remove_in_action_mode, R.string.tap_target_content_items_remove_in_action_mode)
+                new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_items_remove_in_action_mode, R.string.tap_target_content_items_remove_in_action_mode)
                         .listener(tapTargetListenerInActionMode)
                         .outerCircleColor(R.color.action_mode_color)
                         .show();
