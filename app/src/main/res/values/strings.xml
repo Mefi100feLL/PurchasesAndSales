@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Покупки по акциям</string>
+    <string name="app_name">Покупки</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_mestoskidki">Mestoskidki.ru</string>
