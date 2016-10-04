@@ -9,6 +9,7 @@ import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.SalesCleaner;
 import com.PopCorp.Purchases.data.utils.SkidkaonlineSalesCleaner;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
+import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
@@ -28,6 +29,7 @@ public class PurchasesApplication extends Application {
         ThemeManager.setInstance(this);
         DB.setInstance(this);
         initImageLoader(this);
+        ImageLoaderAdapter.setInstance(this);
         PreferencesManager.getInstance().firstStart();
         new SalesCleaner().start();
         new SkidkaonlineSalesCleaner().start();

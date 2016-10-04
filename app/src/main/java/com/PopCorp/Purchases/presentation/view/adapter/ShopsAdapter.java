@@ -15,9 +15,7 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
 import com.PopCorp.Purchases.data.model.Shop;
-import com.PopCorp.Purchases.data.net.APIFactory;
-import com.PopCorp.Purchases.data.utils.UIL;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
 
 import java.util.ArrayList;
 
@@ -118,7 +116,7 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Shop shop = publishItems.get(position);
 
-        ImageLoader.getInstance().displayImage(APIFactory.MESTOSKIDKI_URL + "/" + shop.getImageUrl(), holder.image, UIL.getImageOptions());
+        ImageLoaderAdapter.getInstance().displayImage(shop.getImageUrl(), holder.image);
 
         holder.name.setText(shop.getName());
         holder.count.setText(context.getString(R.string.count_of_sales).replace("count", String.valueOf(shop.getCountSales())));
