@@ -15,9 +15,8 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.skidkaonline.ShopDecoratorComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
-import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.skidkaonline.ShopDecorator;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
 
 import java.util.ArrayList;
 
@@ -135,7 +134,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         } else {
             Shop shop = decorator.getShop();
 
-            ImageLoader.getInstance().displayImage(shop.getImage(), holder.image, UIL.getImageOptions());
+            ImageLoaderAdapter.getInstance().displayImage(shop.getImage(), holder.image);
 
             holder.name.setText(shop.getName());
             holder.count.setVisibility(View.GONE);
