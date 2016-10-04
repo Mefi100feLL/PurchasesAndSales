@@ -134,7 +134,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
         holder.setClickListener((v, pos) -> {
             City oldSelectedCity = selectedCity;
             selectedCity = publishItems.get(pos);
-            notifyItemChanged(publishItems.indexOf(oldSelectedCity));
+            if (oldSelectedCity != null) {
+                notifyItemChanged(publishItems.indexOf(oldSelectedCity));
+            }
             notifyItemChanged(publishItems.indexOf(selectedCity));
             callback.onItemClicked(v, publishItems.get(pos));
         });
