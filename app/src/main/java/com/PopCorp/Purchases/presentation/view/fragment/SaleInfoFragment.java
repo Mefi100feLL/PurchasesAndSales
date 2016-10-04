@@ -31,12 +31,12 @@ import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SaleInfoPresenter;
 import com.PopCorp.Purchases.presentation.presenter.factory.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
 import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
@@ -172,7 +172,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showInfo(Sale sale) {
-        ImageLoaderAdapter.getInstance().displayImage(sale.getImage(), image);
+        ImageLoader.getInstance().displayImage(sale.getImage(), image, UIL.getImageOptions());
 
         title.setText(sale.getTitle());
         if (sale.getSubTitle().isEmpty()) {
