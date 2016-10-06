@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.presentation.view.adapter.skidkaonline;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
@@ -23,15 +22,13 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
 
     private final RecyclerCallback<City> callback;
     private final CityComparator comparator = new CityComparator();
-    private final Context context;
 
     private ArrayList<City> objects;
     private final SortedList<City> publishItems;
 
     private City selectedCity;
 
-    public CityAdapter(Context context, RecyclerCallback<City> callback, ArrayList<City> objects) {
-        this.context = context;
+    public CityAdapter(RecyclerCallback<City> callback, ArrayList<City> objects) {
         this.callback = callback;
         this.objects = objects;
         publishItems = new SortedList<>(City.class, new SortedList.Callback<City>() {
@@ -184,7 +181,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> im
         return filter;
     }
 
-    private void update(ArrayList<City> newItems) {
+    private void update(@NonNull ArrayList<City> newItems) {
         publishItems.beginBatchedUpdates();
         for (City city : newItems) {
             int index = publishItems.indexOf(city);

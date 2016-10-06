@@ -76,7 +76,7 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
-        adapter = new CityAdapter(getActivity(), presenter, presenter.getObjects());
+        adapter = new CityAdapter(presenter, presenter.getObjects());
         recyclerView.setAdapter(adapter);
 
         fab.setOnClickListener(v -> presenter.onFabClicked());

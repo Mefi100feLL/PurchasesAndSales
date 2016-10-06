@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
@@ -164,19 +165,27 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         inflater.inflate(R.menu.shops, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        int groupId = 12;
-        MenuItem item = menu.findItem(R.id.action_size_table);
-        item.getSubMenu().clear();
-        arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
-        for (String filterItem : arraySizesTable) {
-            MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(TableSizes.getSkidkaonlineShopTableSize(getActivity())))) {
-                addedItem.setChecked(true);
+        try {
+            int groupId = 12;
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            item.getSubMenu().clear();
+            arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
+            for (String filterItem : arraySizesTable) {
+                MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
+                if (filterItem.equals(String.valueOf(TableSizes.getSkidkaonlineShopTableSize(getActivity())))) {
+                    addedItem.setChecked(true);
+                }
+            }
+            item.getSubMenu().setGroupCheckable(groupId, true, true);
+            item.getSubMenu().setGroupEnabled(groupId, true);
+            item.setVisible(true);
+        } catch (IllegalStateException e) {//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
+            AnalyticsTrackers.getInstance().sendError(e);
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            if (item != null) {
+                item.setVisible(false);
             }
         }
-        item.getSubMenu().setGroupCheckable(groupId, true, true);
-        item.getSubMenu().setGroupEnabled(groupId, true);
-        item.setVisible(true);
     }
 
     @Override
