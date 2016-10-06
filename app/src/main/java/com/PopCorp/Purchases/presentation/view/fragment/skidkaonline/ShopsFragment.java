@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.ShopsPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SelectingCityActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SalesActivity;
@@ -35,7 +36,6 @@ import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.ShopAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.ShopsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
 public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
@@ -277,30 +277,29 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showTapTargetForFilter() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(spinner, getString(R.string.tap_target_title_shops_filter), getString(R.string.tap_target_content_shops_filter))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(true), tapTargetListener);
+        View view = spinner;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_shops_filter, R.string.tap_target_content_shops_filter))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForShopFavorite() {
-        View targetView = adapter.getFirstView();
-        if (targetView != null) {
-            TapTargetView.showFor(getActivity(),
-                    TapTarget.forView(targetView, getString(R.string.tap_target_title_shop_favorite), getString(R.string.tap_target_content_shop_favorite))
-                            .outerCircleColor(R.color.md_amber_500)
-                            .targetCircleColor(R.color.md_white_1000)
-                            .textColor(R.color.md_white_1000)
-                            .dimColor(R.color.md_black_1000)
-                            .drawShadow(true)
-                            .cancelable(false)
-                            .tintTarget(true), tapTargetListener);
-        }
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forView(
+                                getActivity(),
+                                adapter.getFirstView(),
+                                R.string.tap_target_title_shop_favorite,
+                                R.string.tap_target_content_shop_favorite
+                        )
+                                .outerCircleColor(R.color.md_amber_500)
+                )
+                .listener(tapTargetListener)
+                .show();
     }
 }

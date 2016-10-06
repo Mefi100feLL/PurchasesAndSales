@@ -29,13 +29,13 @@ import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SalesPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.SaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SalesView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
@@ -181,9 +181,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgain();
-        });
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgain());
     }
 
     @Override
@@ -257,22 +255,19 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public void showTapTargetForFilter() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(spinner, getString(R.string.tap_target_title_sale_filter_by_catalogs), getString(R.string.tap_target_content_sale_filter_by_catalogs))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(true), tapTargetListener);
+        View view = spinner;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_filter_by_catalogs, R.string.tap_target_content_sale_filter_by_catalogs))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
-            getActivity().onBackPressed();
-        });
+        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> getActivity().onBackPressed());
     }
 
     @Override

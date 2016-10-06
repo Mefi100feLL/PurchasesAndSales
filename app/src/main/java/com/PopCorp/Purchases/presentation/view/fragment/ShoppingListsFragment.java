@@ -261,8 +261,10 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
 
     @Override
     public void showTapTargetForCreate() {
-        new TapTargetManager.Builder(getActivity(), fab, R.string.tap_target_title_lists_create, R.string.tap_target_content_lists_create)
-                .tintTarget(false)
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forView(getActivity(), fab, R.string.tap_target_title_lists_create, R.string.tap_target_content_lists_create)
+                                .tintTarget(false))
                 .show();
     }
 

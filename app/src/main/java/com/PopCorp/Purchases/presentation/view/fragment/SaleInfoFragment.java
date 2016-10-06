@@ -10,7 +10,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -367,14 +366,18 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showTapTargetForComments() {
-        View view = getActionViewForMenuItem(R.id.action_comments);
-        if (view != null) {
-            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_sale_comments, R.string.tap_target_content_sale_comments)
-                    .listener(tapTargetListener)
-                    .show();
-        }
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forToolbarMenuItem(getActivity(),
+                                toolBar,
+                                R.id.action_comments,
+                                R.string.tap_target_title_sale_comments,
+                                R.string.tap_target_content_sale_comments)
+                )
+                .listener(tapTargetListener)
+                .show();
     }
-
+/*
     private View getActionViewForMenuItem(int id) {
         for (int toolbarChildIndex = 0; toolbarChildIndex < toolBar.getChildCount(); toolbarChildIndex++) {
             View view = toolBar.getChildAt(toolbarChildIndex);
@@ -388,25 +391,34 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             }
         }
         return null;
-    }
+    }*/
 
     @Override
     public void showTapTargetForSharing() {
-        View view = getActionViewForMenuItem(R.id.action_share);
-        if (view != null) {
-            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_sale_sharing, R.string.tap_target_content_sale_sharing)
-                    .listener(tapTargetListener)
-                    .show();
-        }
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forToolbarMenuItem(getActivity(),
+                                toolBar,
+                                R.id.action_share,
+                                R.string.tap_target_title_sale_sharing,
+                                R.string.tap_target_content_sale_sharing)
+                )
+                .listener(tapTargetListener)
+                .show();
     }
 
     @Override
     public void showTapTargetForSending() {
-        fab.post(() ->
-                new TapTargetManager.Builder(getActivity(), fab, R.string.tap_target_title_sale_sending, R.string.tap_target_content_sale_sending)
-                        .listener(tapTargetListener)
-                        .tintTarget(false)
-                        .show());
+        fab.post(() -> {
+            View view = fab;
+            if (view != null) {
+                new TapTargetManager(getActivity())
+                        .tapTarget(
+                                TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_sending, R.string.tap_target_content_sale_sending)
+                                        .tintTarget(false))
+                        .show();
+            }
+        });
     }
 
     @Override

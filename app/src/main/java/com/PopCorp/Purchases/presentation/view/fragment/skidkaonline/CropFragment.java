@@ -25,17 +25,16 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
-import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.CropPresenter;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.CropView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yalantis.ucrop.view.GestureCropImageView;
@@ -203,41 +202,39 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
 
     @Override
     public void showTapTargetForRotateSkip() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(rotateSkip, getString(R.string.tap_target_title_rotate_skip), getString(R.string.tap_target_content_rotate_skip))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(true), tapTargetListener);
+        View view = rotateSkip;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_rotate_skip, R.string.tap_target_content_rotate_skip))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForCrop() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(fab, getString(R.string.tap_target_title_crop), getString(R.string.tap_target_content_crop))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(false), tapTargetListener);
+        View view = fab;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_crop, R.string.tap_target_content_crop)
+                                    .tintTarget(false))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForScaleSkip() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(scaleSkip, getString(R.string.tap_target_title_scale_skip), getString(R.string.tap_target_content_sacle_skip))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(true), tapTargetListener);
+        View view = scaleSkip;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_scale_skip, R.string.tap_target_content_sacle_skip))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override

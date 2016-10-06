@@ -162,20 +162,35 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showTapTargetForFilter() {
-        new TapTargetManager.Builder(getActivity(), spinner, R.string.tap_target_title_sale_filter_by_categories, R.string.tap_target_content_sale_filter_by_categories)
-                .listener(tapTargetListener)
-                .show();
+        View view = spinner;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(
+                                    getActivity(),
+                                    view,
+                                    R.string.tap_target_title_sale_filter_by_categories,
+                                    R.string.tap_target_content_sale_filter_by_categories
+                            )
+                    )
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForSalesSearch() {
         if (menu != null && menu.findItem(R.id.action_search) != null) {
-            View view = menu.findItem(R.id.action_search).getActionView();
-            if (view != null) {
-                new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_sales_search, R.string.tap_target_content_sales_search)
-                        .listener(tapTargetListener)
-                        .show();
-            }
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_search,
+                                    R.string.tap_target_title_sales_search,
+                                    R.string.tap_target_content_sales_search)
+                    )
+                    .listener(tapTargetListener)
+                    .show();
         }
     }
 

@@ -284,7 +284,9 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showTapTargetForFilter() {
-        new TapTargetManager.Builder(getActivity(), spinner, R.string.tap_target_title_shops_filter, R.string.tap_target_content_shops_filter)
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forView(getActivity(), spinner, R.string.tap_target_title_shops_filter, R.string.tap_target_content_shops_filter))
                 .listener(tapTargetListener)
                 .show();
     }
@@ -293,9 +295,11 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     public void showTapTargetForShopFavorite() {
         View view = adapter.getFirstView();
         if (view != null) {
-            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_shop_favorite, R.string.tap_target_content_shop_favorite)
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_shop_favorite, R.string.tap_target_content_shop_favorite)
+                                    .outerCircleColor(R.color.md_amber_500))
                     .listener(tapTargetListener)
-                    .outerCircleColor(R.color.md_amber_500)
                     .show();
         }
     }

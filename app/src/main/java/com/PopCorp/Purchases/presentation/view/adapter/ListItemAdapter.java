@@ -264,14 +264,16 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         }
 
         if (selectedItems.contains(item)) {
+            firstView = holder.name;
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
-            int[] attrs = new int[]{R.attr.itemsBackground};
+            holder.mainLayout.setBackgroundResource(android.R.color.transparent);
+            /*int[] attrs = new int[]{R.attr.itemsBackground};
             TypedArray typedArray = context.obtainStyledAttributes(attrs);
             int backgroundResource = typedArray.getResourceId(0, 0);
             holder.mainLayout.setBackgroundResource(backgroundResource);
-            typedArray.recycle();/*
-            holder.mainLayout.setBackgroundResource(R.drawable.list_selector);*/
+            typedArray.recycle();*/
+            //holder.mainLayout.setBackgroundResource(R.drawable.list_selector);
         }
     }
 

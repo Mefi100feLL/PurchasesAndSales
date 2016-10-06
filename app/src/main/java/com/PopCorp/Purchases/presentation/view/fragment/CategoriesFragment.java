@@ -283,18 +283,31 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
 
     @Override
     public void showTapTargetForFilter() {
-        new TapTargetManager.Builder(getActivity(), spinner, R.string.tap_target_title_categs_filter, R.string.tap_target_content_categs_filter)
-                .listener(tapTargetListener)
-                .show();
+        View view = spinner;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_categs_filter, R.string.tap_target_content_categs_filter))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForCategFavorite() {
         View view = adapter.getFirstView();
         if (view != null) {
-            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_categ_favorite, R.string.tap_target_content_categ_favorite)
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(
+                                    getActivity(),
+                                    view,
+                                    R.string.tap_target_title_categ_favorite,
+                                    R.string.tap_target_content_categ_favorite
+                            )
+                                    .outerCircleColor(R.color.md_amber_500)
+                    )
                     .listener(tapTargetListener)
-                    .outerCircleColor(R.color.md_amber_500)
                     .show();
         }
     }

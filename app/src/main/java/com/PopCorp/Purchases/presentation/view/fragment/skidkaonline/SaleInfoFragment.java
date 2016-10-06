@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,12 +25,12 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
-import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleInfoPresenter;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
@@ -40,7 +39,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -306,60 +304,56 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showTapTargetForSending() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(fab, getString(R.string.tap_target_title_sale_sending), getString(R.string.tap_target_content_sale_sending))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(false), tapTargetListener);
+        View view = fab;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_sending, R.string.tap_target_content_sale_sending)
+                                    .tintTarget(false))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForComments() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(comments, getString(R.string.tap_target_title_sale_comments), getString(R.string.tap_target_content_sale_comments))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(true), tapTargetListener);
+        View view = comments;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_comments, R.string.tap_target_content_sale_comments))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForCropping() {
-        TapTargetView.showFor(getActivity(),
-                TapTarget.forView(cropImage, getString(R.string.tap_target_title_sale_cropping), getString(R.string.tap_target_content_sale_cropping))
-                        .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                        .targetCircleColor(R.color.md_white_1000)
-                        .textColor(R.color.md_white_1000)
-                        .dimColor(R.color.md_black_1000)
-                        .drawShadow(true)
-                        .cancelable(false)
-                        .tintTarget(true), tapTargetListener);
+        View view = cropImage;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_cropping, R.string.tap_target_content_sale_cropping))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override
     public void showTapTargetForSharing() {
-        View view = getActionViewForMenuItem(R.id.action_share);
-        if (view != null) {
-            TapTargetView.showFor(getActivity(),
-                    TapTarget.forView(view, getString(R.string.tap_target_title_sale_sharing), getString(R.string.tap_target_content_sale_sharing))
-                            .outerCircleColor(ThemeManager.getInstance().getPrimaryColorRes())
-                            .targetCircleColor(R.color.md_white_1000)
-                            .textColor(R.color.md_white_1000)
-                            .dimColor(R.color.md_black_1000)
-                            .drawShadow(true)
-                            .cancelable(false)
-                            .tintTarget(true), tapTargetListener);
-        }
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forToolbarMenuItem(getActivity(),
+                                toolBar,
+                                R.id.action_share,
+                                R.string.tap_target_title_sale_sharing,
+                                R.string.tap_target_content_sale_sharing)
+                )
+                .listener(tapTargetListener)
+                .show();
     }
 
-    private View getActionViewForMenuItem(int id) {
+    /*private View getActionViewForMenuItem(int id) {
         switch (id) {
             case R.id.action_share:
                 id = 0;
@@ -373,7 +367,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
             }
         }
         return null;
-    }
+    }*/
 
     @Override
     public void showImage(ImageSource uri) {

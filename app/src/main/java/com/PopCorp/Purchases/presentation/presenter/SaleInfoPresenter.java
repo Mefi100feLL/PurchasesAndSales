@@ -182,11 +182,6 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     }
 
     public void showTapTarget() {
-        if (!PreferencesManager.getInstance().isTapTargetForSaleSendingShown()) {
-            getViewState().showTapTargetForSending();
-            PreferencesManager.getInstance().putTapTargetForSaleSending(true);
-            return;
-        }
         if (!PreferencesManager.getInstance().isTapTargetForSaleCommentsShown()) {
             getViewState().showTapTargetForComments();
             PreferencesManager.getInstance().putTapTargetForSaleComments(true);
@@ -195,6 +190,11 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
         if (!PreferencesManager.getInstance().isTapTargetForSaleSharingShown()) {
             getViewState().showTapTargetForSharing();
             PreferencesManager.getInstance().putTapTargetForSaleSharing(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSendingShown()) {
+            getViewState().showTapTargetForSending();
+            PreferencesManager.getInstance().putTapTargetForSaleSending(true);
             return;
         }
     }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -276,12 +275,16 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
     @Override
     public void showTapTargetForProductsSearch() {
         if (menu != null && menu.findItem(R.id.action_search) != null) {
-            View view = menu.findItem(R.id.action_search).getActionView();
-            if (view != null) {
-                new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_products_search, R.string.tap_target_content_products_search)
-                        .listener(tapTargetListener)
-                        .show();
-            }
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_search,
+                                    R.string.tap_target_title_products_search,
+                                    R.string.tap_target_content_products_search)
+                    )
+                    .listener(tapTargetListener)
+                    .show();
         }
     }
 
@@ -289,7 +292,9 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
     public void showTapTargetForProductsFilter() {
         View view = spinner;
         if (view != null) {
-            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_products_filter, R.string.tap_target_content_products_filter)
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_products_filter, R.string.tap_target_content_products_filter))
                     .listener(tapTargetListener)
                     .show();
         }
@@ -297,9 +302,15 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
 
     @Override
     public void showTapTargetForProductsSorting() {
-        View view = getActionViewForMenuItem(toolBar, R.id.action_sort);
-        if (view != null) {
-            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_products_sorting, R.string.tap_target_content_products_sorting)
+        if (menu != null && menu.findItem(R.id.action_sort) != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_sort,
+                                    R.string.tap_target_title_products_sorting,
+                                    R.string.tap_target_content_products_sorting)
+                    )
                     .listener(tapTargetListener)
                     .show();
         }
@@ -309,14 +320,15 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
     public void showTapTargetForProductsReturn() {
         View view = fab;
         if (view != null) {
-            new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_products_return, R.string.tap_target_content_products_return)
-                    .listener(tapTargetListener)
-                    .tintTarget(false)
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_products_return, R.string.tap_target_content_products_return)
+                                    .tintTarget(false))
                     .show();
         }
     }
 
-    private View getActionViewForMenuItem(ViewGroup rootView, int id) {
+    /*private View getActionViewForMenuItem(ViewGroup rootView, int id) {
         for (int toolbarChildIndex = 0; toolbarChildIndex < rootView.getChildCount(); toolbarChildIndex++) {
             View view = rootView.getChildAt(toolbarChildIndex);
             if (view.getId() == id) {
@@ -332,5 +344,5 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
             }
         }
         return null;
-    }
+    }*/
 }

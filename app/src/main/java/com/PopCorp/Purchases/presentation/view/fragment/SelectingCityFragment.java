@@ -148,20 +148,29 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
 
     @Override
     public void showTapTargetForSearch() {
-        if (menu != null && menu.findItem(R.id.action_search) != null && menu.findItem(R.id.action_search).getActionView() != null) {
-            View view = menu.findItem(R.id.action_search).getActionView();
-            if (view != null) {
-                new TapTargetManager.Builder(getActivity(), view, R.string.tap_target_title_cities_search, R.string.tap_target_content_cities_search)
-                        .show();
-            }
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_search,
+                                    R.string.tap_target_title_cities_search,
+                                    R.string.tap_target_content_cities_search)
+                    )
+                    .show();
         }
     }
 
     @Override
     public void showTapTargetForCitySelect() {
-        new TapTargetManager.Builder(getActivity(), fab, R.string.tap_target_title_city_select, R.string.tap_target_content_city_select)
-                .tintTarget(false)
-                .show();
+        View view = fab;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_city_select, R.string.tap_target_content_city_select)
+                                    .tintTarget(false))
+                    .show();
+        }
     }
 
     @Override
