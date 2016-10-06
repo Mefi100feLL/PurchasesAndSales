@@ -76,6 +76,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
                                 calculateTotals();
                                 calculateShops();
                                 getViewState().showTitle(currentList.getName());
+                                showTapTarget();
                             } else {
                                 getViewState().showErrorLoadingList();
                             }
@@ -129,6 +130,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
                 return;
             }
             getViewState().showShopsFilter(shops, currentFilter);
+            showTapTarget();
             return;
         }
         getViewState().hideShopsFilter();
@@ -199,6 +201,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
         if (getObjects().size() > 0){
             getViewState().showData();
             getViewState().filter(currentFilter);
+            showTapTarget();
         } else{
             getViewState().showEmptyItems();
         }
@@ -354,6 +357,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
             if (getObjects().size() > 0){
                 getViewState().showData();
                 getViewState().filter(currentFilter);
+                showTapTarget();
             } else{
                 getViewState().showEmptyItems();
             }
@@ -363,5 +367,50 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     @Override
     public void onItemSaleClicked(View v, ListItemSale sale) {
         getViewState().onItemSaleClicked(v, sale);
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForItemsCreateShown()){
+            getViewState().showTapTargetForCreate();
+            PreferencesManager.getInstance().putTapTargetForItemsCreate(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForItemsAddShown()){
+            getViewState().showTapTargetForAdd();
+            PreferencesManager.getInstance().putTapTargetForItemsAdd(true);
+            return;
+        }
+        if (shops.size() > 0 && !(shops.size() == 1 && !PreferencesManager.getInstance().isFilterListOnlyProductsOfShop())) {
+            if (!PreferencesManager.getInstance().isTapTargetForItemsFilterByShopShown()){
+                getViewState().showTapTargetForItemsFilterForShop();
+                PreferencesManager.getInstance().putTapTargetForItemsFilterByShop(true);
+                return;
+            }
+        }
+        if (getObjects().size() > 0){
+            if (!PreferencesManager.getInstance().isTapTargetForItemInfoShown()){
+                getViewState().showTapTargetForItemInfo();
+                PreferencesManager.getInstance().putTapTargetForItemInfo(true);
+                return;
+            }
+        }
+    }
+
+    public void showTapTargetForActionMode() {
+        if (!PreferencesManager.getInstance().isTapTargetForItemsAddToActionModeShown()){
+            getViewState().showTapTargetForItemsAddToActionMode();
+            PreferencesManager.getInstance().putTapTargetForItemsAddToActionMode(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForItemEditInActionModeShown()){
+            getViewState().showTapTargetForItemEditInActionMode();
+            PreferencesManager.getInstance().putTapTargetForItemEditInActionMode(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForItemsRemoveInActionModeShown()){
+            getViewState().showTapTargetForItemsRemoveInActionMode();
+            PreferencesManager.getInstance().putTapTargetForItemsRemoveInActionMode(true);
+            return;
+        }
     }
 }

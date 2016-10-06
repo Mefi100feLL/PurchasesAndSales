@@ -30,10 +30,12 @@ import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.SelectingProductsPresenter;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.adapter.SelectingProductsAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SelectingProductsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
@@ -198,9 +200,7 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
 
     @Override
     public void showFavoriteProductsEmpty() {
-        showError(R.string.empty_no_favorite_products, R.drawable.ic_menu_gallery, R.string.button_all_products, view -> {
-            spinner.setSelection(0);
-        });
+        showError(R.string.empty_no_favorite_products, R.drawable.ic_menu_gallery, R.string.button_all_products, view -> spinner.setSelection(0));
     }
 
     @Override
@@ -263,4 +263,86 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
         getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
     }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForProductsSearch() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_search,
+                                    R.string.tap_target_title_products_search,
+                                    R.string.tap_target_content_products_search)
+                    )
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForProductsFilter() {
+        View view = spinner;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_products_filter, R.string.tap_target_content_products_filter))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForProductsSorting() {
+        if (menu != null && menu.findItem(R.id.action_sort) != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_sort,
+                                    R.string.tap_target_title_products_sorting,
+                                    R.string.tap_target_content_products_sorting)
+                    )
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForProductsReturn() {
+        View view = fab;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_products_return, R.string.tap_target_content_products_return)
+                                    .tintTarget(false))
+                    .show();
+        }
+    }
+
+    /*private View getActionViewForMenuItem(ViewGroup rootView, int id) {
+        for (int toolbarChildIndex = 0; toolbarChildIndex < rootView.getChildCount(); toolbarChildIndex++) {
+            View view = rootView.getChildAt(toolbarChildIndex);
+            if (view.getId() == id) {
+                return view;
+            }
+            if (view instanceof ActionMenuView) {
+                ActionMenuView menuView = (ActionMenuView) view;
+                for (int i = 0; i < menuView.getChildCount(); i++) {
+                    if (menuView.getChildAt(i).getId() == id) {
+                        return menuView.getChildAt(i);
+                    }
+                }
+            }
+        }
+        return null;
+    }*/
 }

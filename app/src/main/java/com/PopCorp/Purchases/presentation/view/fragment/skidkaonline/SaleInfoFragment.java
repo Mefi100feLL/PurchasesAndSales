@@ -30,6 +30,7 @@ import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.factory.skidkaonline.SaleInfoPresenterFactory;
 import com.PopCorp.Purchases.presentation.presenter.params.provider.SaleParamsProvider;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SaleInfoPresenter;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.CropActivity;
@@ -38,6 +39,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -59,6 +61,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private static final String CURRENT_SALE = "current_sale";
 
     private static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
+    private static final String IS_CURRENT = "is_current";
 
     @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = SaleInfoPresenter.PRESENTER_ID)
     SaleInfoPresenter presenter;
@@ -74,11 +77,16 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     private Toolbar toolBar;
 
+    private FloatingActionButton fab;
+    private ImageView comments;
+    private ImageView cropImage;
 
-    public static Fragment create(SaleMainCallback parent, int saleId) {
+
+    public static Fragment create(SaleMainCallback parent, int saleId, boolean isCurrent) {
         SaleInfoFragment result = new SaleInfoFragment();
         Bundle args = new Bundle();
         args.putInt(CURRENT_SALE, saleId);
+        args.putBoolean(IS_CURRENT, isCurrent);
         result.setArguments(args);
         result.setParent(parent);
         return result;
@@ -88,8 +96,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public void onCreate(Bundle savedInstanceState) {
         saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
-        presenter.setSale(saleId);
-
+        presenter.setSale(saleId, getArguments().getBoolean(IS_CURRENT));
     }
 
     @Override
@@ -106,9 +113,9 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
         snackbarlayout = (CoordinatorLayout) rootView.findViewById(R.id.snackbar_layout);
-        ImageView comments = (ImageView) rootView.findViewById(R.id.comments);
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        ImageView cropImage = (ImageView) rootView.findViewById(R.id.crop);
+        comments = (ImageView) rootView.findViewById(R.id.comments);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        cropImage = (ImageView) rootView.findViewById(R.id.crop);
 
         LinearLayout buttonslayout = (LinearLayout) rootView.findViewById(R.id.buttons_layout);
         if (!WindowUtils.isLandscape(getActivity()) || WindowUtils.isTablet(getActivity())) {
@@ -286,6 +293,81 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     public void showItemAdded() {
         showToast(R.string.notification_sale_sended_in_lists);
     }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForSending() {
+        View view = fab;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_sending, R.string.tap_target_content_sale_sending)
+                                    .tintTarget(false))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForComments() {
+        View view = comments;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_comments, R.string.tap_target_content_sale_comments))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForCropping() {
+        View view = cropImage;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_cropping, R.string.tap_target_content_sale_cropping))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForSharing() {
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forToolbarMenuItem(getActivity(),
+                                toolBar,
+                                R.id.action_share,
+                                R.string.tap_target_title_sale_sharing,
+                                R.string.tap_target_content_sale_sharing)
+                )
+                .listener(tapTargetListener)
+                .show();
+    }
+
+    /*private View getActionViewForMenuItem(int id) {
+        switch (id) {
+            case R.id.action_share:
+                id = 0;
+                break;
+        }
+        for (int toolbarChildIndex = 0; toolbarChildIndex < toolBar.getChildCount(); toolbarChildIndex++) {
+            View view = toolBar.getChildAt(toolbarChildIndex);
+            if (view instanceof ActionMenuView) {
+                ActionMenuView menuView = (ActionMenuView) view;
+                return menuView.getChildAt(id);
+            }
+        }
+        return null;
+    }*/
 
     @Override
     public void showImage(ImageSource uri) {

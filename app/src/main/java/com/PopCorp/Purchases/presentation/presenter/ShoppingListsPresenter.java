@@ -6,6 +6,7 @@ import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.ShareListCallback;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListsView;
 import com.arellomobile.mvp.InjectViewState;
@@ -75,6 +76,7 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
                         } else {
                             getViewState().showEmptyLists();
                         }
+                        showTapTarget();
                     }
                 });
     }
@@ -155,5 +157,13 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
             interactor.addNewShoppingList(list);
         }
         getViewState().showData();
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForListsCreateShown()){
+            getViewState().showTapTargetForCreate();
+            PreferencesManager.getInstance().putTapTargetForListsCreate(true);
+            return;
+        }
     }
 }

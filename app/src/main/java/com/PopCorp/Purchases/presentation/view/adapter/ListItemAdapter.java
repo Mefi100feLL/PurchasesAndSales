@@ -39,6 +39,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
     private List<ListItem> selectedItems;
     private String currency;
 
+    private View firstView;
+
     public ListItemAdapter(Context context, ListItemCallback callback, List<ListItem> objects, List<ListItem> selectedItems, Comparator<ListItemDecorator> saleComparator, String currency) {
         this.context = context;
         this.callback = callback;
@@ -87,6 +89,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public View getFirstView() {
+        return firstView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -156,6 +162,9 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 holder.headerName.setTextColor(decorator.getCategory().getColor());
             }
         } else {
+            if (position == 1){
+                firstView = holder.name;
+            }
             showItem(holder, decorator.getItem());
         }
         holder.setClickListener(new ViewHolder.ClickListener() {
@@ -254,14 +263,16 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         }
 
         if (selectedItems.contains(item)) {
+            firstView = holder.name;
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
-            int[] attrs = new int[]{R.attr.itemsBackground};
+            holder.mainLayout.setBackgroundResource(android.R.color.transparent);
+            /*int[] attrs = new int[]{R.attr.itemsBackground};
             TypedArray typedArray = context.obtainStyledAttributes(attrs);
             int backgroundResource = typedArray.getResourceId(0, 0);
             holder.mainLayout.setBackgroundResource(backgroundResource);
-            typedArray.recycle();/*
-            holder.mainLayout.setBackgroundResource(R.drawable.list_selector);*/
+            typedArray.recycle();*/
+            //holder.mainLayout.setBackgroundResource(R.drawable.list_selector);
         }
     }
 

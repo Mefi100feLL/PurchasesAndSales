@@ -28,6 +28,7 @@ import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.ShopsPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SelectingCityActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SalesActivity;
@@ -35,6 +36,7 @@ import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.ShopAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.ShopsView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
@@ -110,7 +112,9 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     @Override
     public void onResume() {
         super.onResume();
-        toolBar.setTitle("");
+        if (presenter.getObjects().size() == 0) {
+            toolBar.setTitle(R.string.title_shops);
+        }
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
@@ -123,6 +127,8 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showData() {
+        toolBar.setTitle("");
+        spinner.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.hide();
@@ -259,5 +265,41 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        View view = spinner;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_shops_filter, R.string.tap_target_content_shops_filter))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForShopFavorite() {
+        new TapTargetManager(getActivity())
+                .tapTarget(
+                        TapTargetManager.forView(
+                                getActivity(),
+                                adapter.getFirstView(),
+                                R.string.tap_target_title_shop_favorite,
+                                R.string.tap_target_content_shop_favorite
+                        )
+                                .outerCircleColor(R.color.md_amber_500)
+                )
+                .listener(tapTargetListener)
+                .show();
     }
 }

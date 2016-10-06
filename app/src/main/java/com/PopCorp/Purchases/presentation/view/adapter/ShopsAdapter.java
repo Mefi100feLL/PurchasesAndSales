@@ -15,7 +15,9 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
 import com.PopCorp.Purchases.data.model.Shop;
+import com.PopCorp.Purchases.data.net.APIFactory;
 import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,8 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
 
     private ArrayList<Shop> objects;
     private final SortedList<Shop> publishItems;
+
+    private View firstView;
 
 
     public ShopsAdapter(Context context, FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
@@ -72,6 +76,10 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
                 notifyItemRangeRemoved(position, count);
             }
         });
+    }
+
+    public View getFirstView() {
+        return firstView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -117,6 +125,9 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
         Shop shop = publishItems.get(position);
 
         ImageLoaderAdapter.getInstance().displayImage(shop.getImageUrl(), holder.image);
+        if (position == 0){
+            firstView = holder.favorite;
+        }
 
         holder.name.setText(shop.getName());
         holder.count.setText(context.getString(R.string.count_of_sales).replace("count", String.valueOf(shop.getCountSales())));

@@ -29,11 +29,13 @@ import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.CropPresenter;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.utils.WindowUtils;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.CropView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yalantis.ucrop.view.GestureCropImageView;
 import com.yalantis.ucrop.view.UCropView;
@@ -188,6 +190,51 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
     @Override
     public void showErrorLoadingLists(Throwable e) {
         showToast(R.string.error_can_not_load_lists);
+    }
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForRotateSkip() {
+        View view = rotateSkip;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_rotate_skip, R.string.tap_target_content_rotate_skip))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForCrop() {
+        View view = fab;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_crop, R.string.tap_target_content_crop)
+                                    .tintTarget(false))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForScaleSkip() {
+        View view = scaleSkip;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_scale_skip, R.string.tap_target_content_sacle_skip))
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 
     @Override

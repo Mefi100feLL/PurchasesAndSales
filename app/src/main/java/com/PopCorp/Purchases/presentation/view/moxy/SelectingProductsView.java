@@ -33,4 +33,12 @@ public interface SelectingProductsView extends SampleDataView {
 
     @StateStrategyType(SkipStrategy.class)
     void setResultAndExit(ArrayList<ListItem> result);
+
+    void showTapTargetForProductsSearch();
+
+    void showTapTargetForProductsFilter();
+
+    void showTapTargetForProductsSorting();
+
+    void showTapTargetForProductsReturn();
 }

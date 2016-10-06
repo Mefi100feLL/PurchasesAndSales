@@ -42,7 +42,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     private List<ShoppingList> lists = new ArrayList<>();
     private ArrayList<ShoppingList> selectedLists = new ArrayList<>();
 
-    public void setSale(int saleId) {
+    public void setSale(int saleId, boolean isCurrent) {
         if (sale == null) {
             interactor.getSale(Integer.valueOf(PreferencesManager.getInstance().getRegionId()), saleId)
                     .subscribeOn(Schedulers.io())
@@ -65,6 +65,9 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
                             if (result != null) {
                                 sale = result;
                                 getViewState().showInfo(sale);
+                                if (isCurrent) {
+                                    showTapTarget();
+                                }
                             } else {
                                 getViewState().showSaleEmpty();
                             }
@@ -176,5 +179,23 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     @Override
     public void onEmpty(String string, int drawableRes, int buttonRes, View.OnClickListener listener) {
 
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForSaleCommentsShown()) {
+            getViewState().showTapTargetForComments();
+            PreferencesManager.getInstance().putTapTargetForSaleComments(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSharingShown()) {
+            getViewState().showTapTargetForSharing();
+            PreferencesManager.getInstance().putTapTargetForSaleSharing(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSendingShown()) {
+            getViewState().showTapTargetForSending();
+            PreferencesManager.getInstance().putTapTargetForSaleSending(true);
+            return;
+        }
     }
 }

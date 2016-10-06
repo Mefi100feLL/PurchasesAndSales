@@ -288,4 +288,79 @@
     <string name="prefs_summary_theme">Текущая тема - theme</string>
 
 
+    <string name="title_categories">Категории</string>
+
+
+    // tap targets
+    <string name="tap_target_title_shops_filter">Фильтр магазинов</string>
+    <string name="tap_target_content_shops_filter">Просматривайте все магазины или только избранные</string>
+    <string name="tap_target_title_shop_favorite">Избранный магазин</string>
+    <string name="tap_target_content_shop_favorite">Добавляйте магазины в избранные, чтобы не просматривать каждый раз весь список</string>
+
+    <string name="tap_target_title_categs_filter">Фильтр категорий</string>
+    <string name="tap_target_content_categs_filter">Просматривайте все категории или только избранные</string>
+    <string name="tap_target_title_categ_favorite">Избранная категория</string>
+    <string name="tap_target_content_categ_favorite">Добавляйте категории в избранные, чтобы не просматривать каждый раз весь список</string>
+
+    <string name="tap_target_title_sale_filter_by_categories">Фильтр по категориям</string>
+    <string name="tap_target_content_sale_filter_by_categories">Вы можете просматривать акции только интересующей Вас категории</string>
+    <string name="tap_target_title_sales_search">Поиск акций</string>
+    <string name="tap_target_content_sales_search">Можно быстро найти нужные акции по имени</string>
+
+    <string name="tap_target_title_sale_filter_by_shops">Фильтр по магазинам</string>
+    <string name="tap_target_content_sale_filter_by_shops">Вы можете просматривать акции только интересующего Вас магазина</string>
+
+    <string name="tap_target_title_sale_comments">Комментарии</string>
+    <string name="tap_target_content_sale_comments">Обсуждайте акции с другими пользователями</string>
+    <string name="tap_target_title_sale_sharing">Рассылка акции</string>
+    <string name="tap_target_content_sale_sharing">Делитесь акциями с друзьями и близкими</string>
+    <string name="tap_target_title_sale_sending">Отправка акции</string>
+    <string name="tap_target_content_sale_sending">Отправляйте акции в списки покупок</string>
+
+    <string name="tap_target_title_cities_search">Поиск города</string>
+    <string name="tap_target_content_cities_search">Список городов довольно большой\nПопробуйте найти свой город через поиск</string>
+    <string name="tap_target_title_city_select">Выбрать город</string>
+    <string name="tap_target_content_city_select">Определившись с городом, подтвердите выбор</string>
+
+    <string name="tap_target_title_sale_filter_by_catalogs">Фильтр по каталогу</string>
+    <string name="tap_target_content_sale_filter_by_catalogs">Можно просматривать акции, отфильтровав их по каталогу</string>
+
+    <string name="tap_target_title_sale_cropping">Обрезка картинки</string>
+    <string name="tap_target_content_sale_cropping">Вы можете обрезать картинку акции и отправить в список или поделиться</string>
+
+    <string name="tap_target_title_rotate_skip">Выровнять по вертикали</string>
+    <string name="tap_target_content_rotate_skip">Если при масштабировании появился ненужный наклон, нажмите сюда</string>
+    <string name="tap_target_title_crop">Обрезать картинку</string>
+    <string name="tap_target_content_crop">Отмасштабировав картинку, нажмите, чтобы обрезать</string>
+    <string name="tap_target_title_scale_skip">Сброс масштаба</string>
+    <string name="tap_target_content_sacle_skip">Чтобы сбросить масштаб, нажмите сюда</string>
+
+    <string name="tap_target_title_lists_create">Создать список</string>
+    <string name="tap_target_content_lists_create">Создавайте списки покупок, чтобы купить то, что запланировали</string>
+    <string name="tap_target_title_items_create">Добавление товара</string>
+    <string name="tap_target_content_items_create">Добавляйте товары, вводя наименование и другие аттрибуты</string>
+    <string name="tap_target_title_items_add">Выбор товаров</string>
+    <string name="tap_target_content_items_add">Наполняйте список быстрее, выбирая товары из списка всех товаров</string>
+    <string name="tap_target_title_items_filter_by_shop">Фильтр по магазину</string>
+    <string name="tap_target_content_items_filter_by_shop">Вы можете отфильтровать товары по магазину, в котором находитесь</string>
+    <string name="tap_target_title_item_info">Товар</string>
+    <string name="tap_target_content_item_info">Нажмите на товар, чтобы купить\nНажмите и удерживайте, чтобы открыть режим редактирования товаров</string>
+    <string name="tap_target_title_items_add_to_action_mode">Выбрать товар для редактирования</string>
+    <string name="tap_target_content_items_add_to_action_mode">Нажимая на товар в режиме редактирования, Вы добавляете/удаляете его из списка редактирования</string>
+    <string name="tap_target_title_item_edit_in_action_mode">Редактирование товара</string>
+    <string name="tap_target_content_item_edit_in_action_mode">Редактируйте аттрибуты выбранного товара</string>
+    <string name="tap_target_title_items_remove_in_action_mode">Удаление товаров</string>
+    <string name="tap_target_content_items_remove_in_action_mode">Удаляйте ненужные товары, выбрав их и нажав сюда</string>
+    <string name="tap_target_title_close_action_mode">Закрыть режим редактирования</string>
+    <string name="tap_target_content_close_action_mode">Закройте режим редактирования, если хотите продолжить работать со списком</string>
+
+    <string name="tap_target_title_products_search">Поиск товаров</string>
+    <string name="tap_target_content_products_search">Вы можете найти товар через поиск по имени</string>
+    <string name="tap_target_title_products_filter">Фильтр товаров</string>
+    <string name="tap_target_content_products_filter">С помощью фильтра можно показать избранные товары - которые чаще всего используются</string>
+    <string name="tap_target_title_products_sorting">Сортировка товаров</string>
+    <string name="tap_target_content_products_sorting">Для Вашего удобства можно сортировать товары по имени или по категории</string>
+    <string name="tap_target_title_products_return">Возвращение в список</string>
+    <string name="tap_target_content_products_return">При нажатии отмеченные товары будут добавлены в список покупок, а остальные - удалены</string>
+
 </resources>

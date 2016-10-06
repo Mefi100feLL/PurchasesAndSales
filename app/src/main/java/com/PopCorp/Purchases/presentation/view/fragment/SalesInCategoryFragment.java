@@ -34,6 +34,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInCategoryPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesAdapter;
@@ -41,6 +42,7 @@ import com.PopCorp.Purchases.presentation.view.adapter.SalesInCategoryAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SalesInCategoryView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,9 +133,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showShopsEmpty() {
-        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_try_again, v -> {
-            presenter.loadShops();
-        });
+        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_try_again, v -> presenter.loadShops());
     }
 
     @Override
@@ -153,16 +153,12 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showFavoriteShopsEmpty() {
-        showError(R.string.empty_no_favorite_shops_in_category, R.drawable.ic_folder_favorite, R.string.button_select_shops, v -> {
-            presenter.selectShops();
-        });
+        showError(R.string.empty_no_favorite_shops_in_category, R.drawable.ic_folder_favorite, R.string.button_select_shops, v -> presenter.selectShops());
     }
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_category, R.drawable.ic_ghost_top, R.string.button_back_to_categories, v -> {
-            getActivity().onBackPressed();
-        });
+        showError(R.string.empty_no_sales_in_category, R.drawable.ic_ghost_top, R.string.button_back_to_categories, v -> getActivity().onBackPressed());
     }
 
     @Override
@@ -259,9 +255,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgain();
-        });
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgain());
     }
 
     @Override
@@ -326,5 +320,42 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
             }
         }
         return true;
+    }
+
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        View view = spinner;
+        if (view != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_filter_by_shops, R.string.tap_target_content_sale_filter_by_shops))
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
+    @Override
+    public void showTapTargetForSalesSearch() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_search,
+                                    R.string.tap_target_title_sales_search,
+                                    R.string.tap_target_content_sales_search)
+                    )
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 }

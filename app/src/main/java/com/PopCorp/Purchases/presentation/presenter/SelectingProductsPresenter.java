@@ -10,6 +10,7 @@ import com.PopCorp.Purchases.data.mapper.ListItemProductMapper;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ProductInteractor;
 import com.PopCorp.Purchases.presentation.view.adapter.SelectingProductsAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.ShopsAdapter;
@@ -72,9 +73,9 @@ public class SelectingProductsPresenter extends MvpPresenter<SelectingProductsVi
                     public void onError(Throwable e) {
                         AnalyticsTrackers.getInstance().sendError(e);
                         ErrorManager.printStackTrace(e);
-                        if (objects.size() == 0){
+                        if (objects.size() == 0) {
                             getViewState().showProductsEmpty();
-                        } else{
+                        } else {
                             getViewState().showSnackBar(e);
                         }
                     }
@@ -89,6 +90,7 @@ public class SelectingProductsPresenter extends MvpPresenter<SelectingProductsVi
                         if (objects.size() > 0) {
                             getViewState().showData();
                             getViewState().filter(currentFilter);
+                            showTapTarget();
                         } else {
                             getViewState().showProductsEmpty();
                         }
@@ -133,7 +135,7 @@ public class SelectingProductsPresenter extends MvpPresenter<SelectingProductsVi
 
     public void onFabClicked() {
         ArrayList<ListItem> result = new ArrayList<>();
-        for (Product product : selectedProducts){
+        for (Product product : selectedProducts) {
             result.add(ListItemProductMapper.productToListItem(product));
         }
         getViewState().setResultAndExit(result);
@@ -186,5 +188,28 @@ public class SelectingProductsPresenter extends MvpPresenter<SelectingProductsVi
 
     public ArrayList<Product> getSelectedProducts() {
         return selectedProducts;
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForProductsFilterShown()) {
+            getViewState().showTapTargetForProductsFilter();
+            PreferencesManager.getInstance().putTapTargetForProductsFilter(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForProductsSearchShown()) {
+            getViewState().showTapTargetForProductsSearch();
+            PreferencesManager.getInstance().putTapTargetForProductsSearch(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForProductsSortingShown()) {
+            getViewState().showTapTargetForProductsSorting();
+            PreferencesManager.getInstance().putTapTargetForProductsSorting(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForProductsReturnShown()) {
+            getViewState().showTapTargetForProductsReturn();
+            PreferencesManager.getInstance().putTapTargetForProductsReturn(true);
+            return;
+        }
     }
 }

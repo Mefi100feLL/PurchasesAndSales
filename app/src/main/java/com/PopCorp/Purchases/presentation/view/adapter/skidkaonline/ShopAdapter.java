@@ -15,8 +15,10 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.skidkaonline.ShopDecoratorComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.skidkaonline.ShopDecorator;
 import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -31,6 +33,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
 
     private ArrayList<Shop> objects;
     private final SortedList<ShopDecorator> publishItems;
+    private View firstView;
 
     public ShopAdapter(FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
         this.callback = callback;
@@ -85,6 +88,10 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         });
     }
 
+    public View getFirstView() {
+        return firstView;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final View view;
@@ -135,6 +142,9 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
             Shop shop = decorator.getShop();
 
             ImageLoaderAdapter.getInstance().displayImage(shop.getImage(), holder.image);
+            if (position == 1){
+                firstView =holder.favorite;
+            }
 
             holder.name.setText(shop.getName());
             holder.count.setVisibility(View.GONE);
