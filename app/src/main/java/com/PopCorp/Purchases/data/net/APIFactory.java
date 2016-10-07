@@ -1,5 +1,8 @@
 package com.PopCorp.Purchases.data.net;
 
+import com.PopCorp.Purchases.BuildConfig;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -14,7 +17,7 @@ public class APIFactory {
     public static API getAPI() {
         if (api == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .client(new OkHttpClient())
+                    .client(buildClient())
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -22,5 +25,13 @@ public class APIFactory {
             api = retrofit.create(API.class);
         }
         return api;
+    }
+
+    private static OkHttpClient buildClient(){
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG){
+            builder.addNetworkInterceptor(new StethoInterceptor());
+        }
+        return builder.build();
     }
 }
