@@ -143,9 +143,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgainLoadShops();
-        });
+        showError(ErrorManager.getErrorExpandedText(e, getActivity()), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgainLoadShops());
     }
 
     @Override
@@ -163,9 +161,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showEmptyRegions() {
-        showError(R.string.empty_no_regions, R.drawable.ic_globe, R.string.button_try_again, view -> {
-            presenter.loadRegions();
-        });
+        showError(R.string.empty_no_regions, R.drawable.ic_globe, R.string.button_try_again, view -> presenter.loadRegions());
     }
 
     @Override
