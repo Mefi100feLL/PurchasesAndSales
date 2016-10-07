@@ -342,14 +342,18 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showTapTargetForFilter() {
-        View view = spinner;
-        if (view != null) {
-            new TapTargetManager(getActivity())
-                    .tapTarget(
-                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_filter_by_shops, R.string.tap_target_content_sale_filter_by_shops))
-                    .listener(tapTargetListener)
-                    .show();
-        }
+        spinner.post(() -> {
+                    View view = spinner.findViewById(android.R.id.text1);
+                    if (view == null) {
+                        view = spinner;
+                    }
+                    new TapTargetManager(getActivity())
+                            .tapTarget(
+                                    TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_filter_by_shops, R.string.tap_target_content_sale_filter_by_shops))
+                            .listener(tapTargetListener)
+                            .show();
+                }
+        );
     }
 
     @Override

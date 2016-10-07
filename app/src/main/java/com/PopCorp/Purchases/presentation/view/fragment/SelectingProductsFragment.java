@@ -290,14 +290,20 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
 
     @Override
     public void showTapTargetForProductsFilter() {
-        View view = spinner;
-        if (view != null) {
-            new TapTargetManager(getActivity())
-                    .tapTarget(
-                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_products_filter, R.string.tap_target_content_products_filter))
-                    .listener(tapTargetListener)
-                    .show();
-        }
+        spinner.post(() -> {
+                    View view = spinner.findViewById(android.R.id.text1);
+                    if (view == null) {
+                        view = spinner;
+                    }
+                    if (view != null) {
+                        new TapTargetManager(getActivity())
+                                .tapTarget(
+                                        TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_products_filter, R.string.tap_target_content_products_filter))
+                                .listener(tapTargetListener)
+                                .show();
+                    }
+                }
+        );
     }
 
     @Override

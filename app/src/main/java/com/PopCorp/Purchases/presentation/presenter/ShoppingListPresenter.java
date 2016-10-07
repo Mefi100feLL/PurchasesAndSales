@@ -130,7 +130,6 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
                 return;
             }
             getViewState().showShopsFilter(shops, currentFilter);
-            showTapTarget();
             return;
         }
         getViewState().hideShopsFilter();

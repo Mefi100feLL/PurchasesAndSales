@@ -162,20 +162,24 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showTapTargetForFilter() {
-        View view = spinner;
-        if (view != null) {
-            new TapTargetManager(getActivity())
-                    .tapTarget(
-                            TapTargetManager.forView(
-                                    getActivity(),
-                                    view,
-                                    R.string.tap_target_title_sale_filter_by_categories,
-                                    R.string.tap_target_content_sale_filter_by_categories
+        spinner.post(() -> {
+                    View view = spinner.findViewById(android.R.id.text1);
+                    if (view == null) {
+                        view = spinner;
+                    }
+                    new TapTargetManager(getActivity())
+                            .tapTarget(
+                                    TapTargetManager.forView(
+                                            getActivity(),
+                                            view,
+                                            R.string.tap_target_title_sale_filter_by_categories,
+                                            R.string.tap_target_content_sale_filter_by_categories
+                                    )
                             )
-                    )
-                    .listener(tapTargetListener)
-                    .show();
-        }
+                            .listener(tapTargetListener)
+                            .show();
+                }
+        );
     }
 
     @Override
@@ -349,9 +353,9 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
             item.getSubMenu().setGroupCheckable(groupId, true, true);
             item.getSubMenu().setGroupEnabled(groupId, true);
             item.setVisible(true);
-        } catch (IllegalStateException e){//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
+        } catch (IllegalStateException e) {//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
             MenuItem item = menu.findItem(R.id.action_size_table);
-            if (item != null){
+            if (item != null) {
                 item.setVisible(false);
             }
         }

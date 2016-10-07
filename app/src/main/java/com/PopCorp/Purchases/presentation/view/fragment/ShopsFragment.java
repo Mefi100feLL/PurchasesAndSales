@@ -293,11 +293,18 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showTapTargetForFilter() {
-        new TapTargetManager(getActivity())
-                .tapTarget(
-                        TapTargetManager.forView(getActivity(), spinner, R.string.tap_target_title_shops_filter, R.string.tap_target_content_shops_filter))
-                .listener(tapTargetListener)
-                .show();
+        spinner.post(() -> {
+                    View view = spinner.findViewById(android.R.id.text1);
+                    if (view == null) {
+                        view = spinner;
+                    }
+                    new TapTargetManager(getActivity())
+                            .tapTarget(
+                                    TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_shops_filter, R.string.tap_target_content_shops_filter))
+                            .listener(tapTargetListener)
+                            .show();
+                }
+        );
     }
 
     @Override

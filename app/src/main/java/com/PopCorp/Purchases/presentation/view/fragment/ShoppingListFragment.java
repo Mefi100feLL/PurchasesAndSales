@@ -218,12 +218,18 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void showTapTargetForCreate() {
-        new TapTargetManager(getActivity())
-                .tapTarget(
-                        TapTargetManager.forView(getActivity(), fab, R.string.tap_target_title_items_create, R.string.tap_target_content_items_create)
-                                .tintTarget(false))
-                .listener(tapTargetListener)
-                .show();
+        fab.post(() ->
+                new TapTargetManager(getActivity())
+                        .tapTarget(
+                                TapTargetManager.forView(
+                                        getActivity(),
+                                        fab,
+                                        R.string.tap_target_title_items_create,
+                                        R.string.tap_target_content_items_create
+                                )
+                                        .tintTarget(false))
+                        .listener(tapTargetListener)
+                        .show());
     }
 
     @Override
@@ -244,31 +250,31 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public void showTapTargetForItemInfo() {
         recyclerView.post(() ->
                 new TapTargetManager(getActivity())
-                .tapTarget(
-                        TapTargetManager.forView(
-                                getActivity(),
-                                adapter.getFirstView(),
-                                R.string.tap_target_title_item_info,
-                                R.string.tap_target_content_item_info
+                        .tapTarget(
+                                TapTargetManager.forView(
+                                        getActivity(),
+                                        adapter.getFirstView(),
+                                        R.string.tap_target_title_item_info,
+                                        R.string.tap_target_content_item_info
+                                )
                         )
-                )
-                .listener(tapTargetListener)
-                .show());
+                        .listener(tapTargetListener)
+                        .show());
     }
 
     @Override
     public void showTapTargetForItemsFilterForShop() {
         toolBar.post(() ->
                 new TapTargetManager(getActivity())
-                .tapTarget(
-                        TapTargetManager.forToolbarMenuItem(getActivity(),
-                                toolBar,
-                                R.id.action_shop,
-                                R.string.tap_target_title_items_filter_by_shop,
-                                R.string.tap_target_content_items_filter_by_shop)
-                )
-                .listener(tapTargetListener)
-                .show()
+                        .tapTarget(
+                                TapTargetManager.forToolbarMenuItem(getActivity(),
+                                        toolBar,
+                                        R.id.action_shop,
+                                        R.string.tap_target_title_items_filter_by_shop,
+                                        R.string.tap_target_content_items_filter_by_shop)
+                        )
+                        .listener(tapTargetListener)
+                        .show()
         );
     }
 
