@@ -1,7 +1,6 @@
 package com.PopCorp.Purchases.data.net;
 
-import com.PopCorp.Purchases.BuildConfig;
-import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.PopCorp.Purchases.data.utils.StethoLauncher;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -29,8 +28,8 @@ public class APIFactory {
 
     private static OkHttpClient buildClient(){
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (BuildConfig.DEBUG){
-            builder.addNetworkInterceptor(new StethoInterceptor());
+        if (StethoLauncher.getStethoInterceptor() != null){
+            builder.addNetworkInterceptor(StethoLauncher.getStethoInterceptor());
         }
         return builder.build();
     }

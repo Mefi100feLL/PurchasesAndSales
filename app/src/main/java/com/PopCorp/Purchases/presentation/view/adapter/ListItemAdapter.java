@@ -20,9 +20,10 @@ import com.PopCorp.Purchases.data.callback.ListItemCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
 import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -246,7 +247,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         }
 
         if (item.getSale() != null) {
-            ImageLoaderAdapter.getInstance().displayImage(item.getSale().getImage(), holder.image);
+            ImageLoader.getInstance().displayImage(item.getSale().getImage(), holder.image, UIL.getImageOptions());
             holder.image.setTag(item.getSale());
             holder.image.setOnClickListener(v -> callback.onItemSaleClicked(v, (ListItemSale) v.getTag()));
             holder.image.setBackgroundResource(android.R.color.transparent);
