@@ -20,9 +20,10 @@ import com.PopCorp.Purchases.data.callback.ListItemCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ListItemSale;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.ListItemDecorator;
 import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -132,6 +133,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
 
         public interface ClickListener {
             void onClick(View v, int position);
+
             void onLongClick(View v, int position);
         }
 
@@ -162,7 +164,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 holder.headerName.setTextColor(decorator.getCategory().getColor());
             }
         } else {
-            if (position == 1){
+            if (position == 1) {
                 firstView = holder.name;
             }
             showItem(holder, decorator.getItem());
@@ -244,8 +246,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             holder.image.setAlpha(1f);
         }
 
-        if (item.getSale() != null){
-            ImageLoaderAdapter.getInstance().displayImage(item.getSale().getImage(), holder.image);
+        if (item.getSale() != null) {
+            ImageLoader.getInstance().displayImage(item.getSale().getImage(), holder.image, UIL.getImageOptions());
             holder.image.setTag(item.getSale());
             holder.image.setOnClickListener(v -> callback.onItemSaleClicked(v, (ListItemSale) v.getTag()));
             holder.image.setBackgroundResource(android.R.color.transparent);
@@ -255,7 +257,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
                 coloredCircle.getPaint().setColor(item.getCategory().getColor());
                 holder.image.setVisibility(View.VISIBLE);
-                holder.image.setBackgroundDrawable(coloredCircle);
+                holder.image.setBackground(coloredCircle);
                 holder.image.setImageResource(android.R.color.transparent);
             } else {
                 holder.image.setVisibility(View.GONE);
@@ -267,12 +269,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
             holder.mainLayout.setBackgroundResource(android.R.color.transparent);
-            /*int[] attrs = new int[]{R.attr.itemsBackground};
-            TypedArray typedArray = context.obtainStyledAttributes(attrs);
-            int backgroundResource = typedArray.getResourceId(0, 0);
-            holder.mainLayout.setBackgroundResource(backgroundResource);
-            typedArray.recycle();*/
-            //holder.mainLayout.setBackgroundResource(R.drawable.list_selector);
         }
     }
 
@@ -332,7 +328,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         return filter;
     }
 
-    public void onItemBuyed(ListItem item){
+    public void onItemBuyed(ListItem item) {
         ListItemDecorator decorator = new ListItemDecorator(item.getName(), false, item, item.isBuyed(), item.getCategory());
         int index = publishItems.indexOf(decorator);
         item.setBuyed(!item.isBuyed());
@@ -376,13 +372,13 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
     private void recalculateHeaders() {
         ArrayList<ListItemDecorator> arrayForRemove = new ArrayList<>();
         ArrayList<ListItemDecorator> headers = new ArrayList<>();
-        if (PreferencesManager.getInstance().showCategories()){
+        if (PreferencesManager.getInstance().showCategories()) {
             for (int i = 0; i < publishItems.size(); i++) {
                 ListItemDecorator decorator = publishItems.get(i);
                 if (decorator.isHeader()) {
                     continue;
                 }
-                if (PreferencesManager.getInstance().replaceBuyed() && decorator.getItem().isBuyed()){
+                if (PreferencesManager.getInstance().replaceBuyed() && decorator.getItem().isBuyed()) {
                     continue;
                 }
                 ListItemDecorator header = new ListItemDecorator(decorator.getItem().getCategory().getName(), true, null, false, decorator.getItem().getCategory());
@@ -402,7 +398,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             }
         }
 
-        for (ListItemDecorator decorator : headers){
+        for (ListItemDecorator decorator : headers) {
             int index = publishItems.indexOf(decorator);
             if (index == SortedList.INVALID_POSITION) {
                 publishItems.add(decorator);
@@ -420,7 +416,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         }
     }
 
-    public void updateAll(){
+    public void updateAll() {
         notifyItemRangeChanged(0, publishItems.size());
     }
 }

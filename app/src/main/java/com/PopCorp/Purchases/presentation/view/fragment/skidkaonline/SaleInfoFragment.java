@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -73,7 +72,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private CircularProgressView progressView;
     private View progressLayout;
     private SubsamplingScaleImageView image;
-    private CoordinatorLayout snackbarlayout;
 
     private Toolbar toolBar;
 
@@ -112,7 +110,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
-        snackbarlayout = (CoordinatorLayout) rootView.findViewById(R.id.snackbar_layout);
         comments = (ImageView) rootView.findViewById(R.id.comments);
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         cropImage = (ImageView) rootView.findViewById(R.id.crop);
@@ -352,22 +349,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
                 .listener(tapTargetListener)
                 .show();
     }
-
-    /*private View getActionViewForMenuItem(int id) {
-        switch (id) {
-            case R.id.action_share:
-                id = 0;
-                break;
-        }
-        for (int toolbarChildIndex = 0; toolbarChildIndex < toolBar.getChildCount(); toolbarChildIndex++) {
-            View view = toolBar.getChildAt(toolbarChildIndex);
-            if (view instanceof ActionMenuView) {
-                ActionMenuView menuView = (ActionMenuView) view;
-                return menuView.getChildAt(id);
-            }
-        }
-        return null;
-    }*/
 
     @Override
     public void showImage(ImageSource uri) {

@@ -14,8 +14,9 @@ import android.widget.TextView;
 import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.Sale;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.SaleDecorator;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -128,7 +129,7 @@ public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.Vie
             holder.name.setText(decorator.getName());
         } else {
             Sale sale = decorator.getSale();
-            ImageLoaderAdapter.getInstance().displayImage(sale.getImage(), holder.image);
+            ImageLoader.getInstance().displayImage(sale.getImage(), holder.image, UIL.getImageOptions());
         }
         holder.setClickListener((v, pos) -> {
             SaleDecorator saleDecorator = publishItems.get(pos);

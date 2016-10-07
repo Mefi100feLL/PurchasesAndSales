@@ -15,8 +15,7 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
 import com.PopCorp.Purchases.data.model.Shop;
-import com.PopCorp.Purchases.data.net.APIFactory;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -124,7 +123,7 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Shop shop = publishItems.get(position);
 
-        ImageLoaderAdapter.getInstance().displayImage(shop.getImageUrl(), holder.image);
+        ImageLoader.getInstance().displayImage(shop.getImageUrl(), holder.image, UIL.getImageOptions());
         if (position == 0){
             firstView = holder.favorite;
         }

@@ -17,7 +17,6 @@ import com.PopCorp.Purchases.data.comparator.skidkaonline.ShopDecoratorComparato
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.skidkaonline.ShopDecorator;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -141,7 +140,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         } else {
             Shop shop = decorator.getShop();
 
-            ImageLoaderAdapter.getInstance().displayImage(shop.getImage(), holder.image);
+            ImageLoader.getInstance().displayImage(shop.getImage(), holder.image, UIL.getImageOptions());
             if (position == 1){
                 firstView =holder.favorite;
             }

@@ -104,7 +104,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
         swipeRefresh.setOnRefreshListener(presenter::onRefresh);
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(TableSizes.getSkidkaonlineShopTableSize(getActivity()), StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(TableSizes.getSkidkaonlineSaleTableSize(getActivity()), StaggeredGridLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();

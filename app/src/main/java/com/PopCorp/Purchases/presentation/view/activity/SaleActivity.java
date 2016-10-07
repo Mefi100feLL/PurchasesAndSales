@@ -39,8 +39,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
         MaterializeBuilder builder = new MaterializeBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBarProgrammatically(true)
-                .withTransparentStatusBar(true)
-                .withTransparentNavigationBar(!WindowUtils.isLandscape(this));
+                .withTransparentStatusBar(true);
 
         if (WindowUtils.isLandscape(this)){
             builder.withStatusBarColorRes(R.color.bars_color);
