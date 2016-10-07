@@ -335,19 +335,26 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 
-        int groupId = 12;
-        MenuItem item = menu.findItem(R.id.action_size_table);
-        item.getSubMenu().clear();
-        arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
-        for (String filterItem : arraySizesTable) {
-            MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(TableSizes.getSaleTableSize(getActivity())))) {
-                addedItem.setChecked(true);
+        try {
+            int groupId = 12;
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            item.getSubMenu().clear();
+            arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
+            for (String filterItem : arraySizesTable) {
+                MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
+                if (filterItem.equals(String.valueOf(TableSizes.getSaleTableSize(getActivity())))) {
+                    addedItem.setChecked(true);
+                }
+            }
+            item.getSubMenu().setGroupCheckable(groupId, true, true);
+            item.getSubMenu().setGroupEnabled(groupId, true);
+            item.setVisible(true);
+        } catch (IllegalStateException e){//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            if (item != null){
+                item.setVisible(false);
             }
         }
-        item.getSubMenu().setGroupCheckable(groupId, true, true);
-        item.getSubMenu().setGroupEnabled(groupId, true);
-        item.setVisible(true);
     }
 
     @Override

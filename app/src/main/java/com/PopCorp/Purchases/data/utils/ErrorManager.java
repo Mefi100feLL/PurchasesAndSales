@@ -1,7 +1,6 @@
 package com.PopCorp.Purchases.data.utils;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 
 import com.PopCorp.Purchases.BuildConfig;
 import com.PopCorp.Purchases.R;
@@ -22,15 +21,15 @@ public class ErrorManager {
 
     public static String getErrorText(Throwable e, Context context) {
         String result;
-        if (e instanceof HttpException) {
+        if (e instanceof HttpException || e instanceof ConnectException) {
             result = context.getString(R.string.error_server_no_response);
         } else if (e instanceof UnknownHostException) {
             result = context.getString(R.string.error_no_internet_connection);
         } else if (e instanceof SocketTimeoutException) {
             result = context.getString(R.string.error_timeout);
-        } else if (e instanceof ConnectException) {
+        }/* else if (e instanceof ConnectException) {
             result = context.getString(R.string.error_can_not_connect);
-        } else {
+        }*/ else {
             result = e.getMessage();
         }
         return result;
