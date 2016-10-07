@@ -52,7 +52,7 @@ public class ImageLoaderAdapter {
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                loadedImage.recycle();
+                //loadedImage.recycle();
                 Picasso.with(context)
                         .load(getFile(imageUri))
                         .placeholder(R.drawable.ic_image_media)
