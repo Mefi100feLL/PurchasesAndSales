@@ -7,6 +7,7 @@ import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.skidkaonline.SaleInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SalesView;
 import com.arellomobile.mvp.InjectViewState;
@@ -73,6 +74,7 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
                             initFilters();
                             getViewState().showData();
                             getViewState().filter(currentFilter);
+                            showTapTarget();
                         }
                     }
                 });
@@ -155,5 +157,16 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
 
     public ArrayList<Sale> getObjects() {
         return objects;
+    }
+
+
+    public void showTapTarget() {
+        if (filterCatalogs.size() > 1) {
+            if (!PreferencesManager.getInstance().isTapTargetForSalesFilterByCatalogsShown()) {
+                getViewState().showTapTargetForFilter();
+                PreferencesManager.getInstance().putTapTargetForSalesByCatalogsFilter(true);
+                return;
+            }
+        }
     }
 }

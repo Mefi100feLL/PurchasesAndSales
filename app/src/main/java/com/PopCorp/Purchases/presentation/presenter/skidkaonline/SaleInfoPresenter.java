@@ -52,7 +52,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
         getViewState().showProgress();
     }
 
-    public void setSale(int saleId) {
+    public void setSale(int saleId, boolean isCurrent) {
         if (sale == null) {
             interactor.getSale(Integer.valueOf(PreferencesManager.getInstance().getCity()), saleId)
                     .subscribeOn(Schedulers.io())
@@ -75,6 +75,9 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
                             if (result != null) {
                                 sale = result;
                                 showSale();
+                                if (isCurrent){
+                                    showTapTarget();
+                                }
                             } else {
                                 getViewState().showSaleEmpty();
                             }
@@ -234,5 +237,28 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
 
     public String getShopNameForUrl(String shopUrl) {
         return new ShopInteractor().getForUrl(shopUrl, Integer.parseInt(PreferencesManager.getInstance().getCity()));
+    }
+
+    public void showTapTarget() {
+        if (!PreferencesManager.getInstance().isTapTargetForSOSaleCommentsShown()) {
+            getViewState().showTapTargetForComments();
+            PreferencesManager.getInstance().putTapTargetForSOSaleComments(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSOSaleSendingShown()) {
+            getViewState().showTapTargetForSending();
+            PreferencesManager.getInstance().putTapTargetForSOSaleSending(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSOCroppingShown()) {
+            getViewState().showTapTargetForCropping();
+            PreferencesManager.getInstance().putTapTargetForSOSaleCropping(true);
+            return;
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSOSharingShown()) {
+            getViewState().showTapTargetForSharing();
+            PreferencesManager.getInstance().putTapTargetForSOSaleSharing(true);
+            return;
+        }
     }
 }

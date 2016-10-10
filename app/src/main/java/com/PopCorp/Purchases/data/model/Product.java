@@ -17,13 +17,29 @@ public class Product implements ContentSame<Product> {
     public Product(long id, String name, String count, String edizm, String coast, ListItemCategory category, String shop, String comment, boolean favorite) {
         this.id = id;
         this.name = name;
-        this.count = new BigDecimal(count != null && !count.isEmpty() ? count : "0");
+        setCount(count);
         this.edizm = edizm;
-        this.coast = new BigDecimal(coast != null && !coast.isEmpty() ? coast : "0");
+        setCoast(coast);
         this.category = category;
         this.shop = shop;
         this.comment = comment;
         this.favorite = favorite;
+    }
+
+    private void setCoast(String coast) {
+        try{
+            this.coast = new BigDecimal((coast != null && !coast.isEmpty()) ? coast : "0");
+        } catch (Exception e){
+            this.coast = new BigDecimal("0");
+        }
+    }
+
+    private void setCount(String count) {
+        try {
+            this.count = new BigDecimal((count != null && !count.isEmpty()) ? count : "0");
+        } catch (Exception e){
+            this.count = new BigDecimal("0");
+        }
     }
 
     @Override

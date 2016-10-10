@@ -5,7 +5,6 @@ import android.view.View;
 import com.PopCorp.Purchases.data.model.Region;
 import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.presentation.viewstate.strategy.GroupSingleStrategy;
-import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
@@ -41,4 +40,7 @@ public interface ShopsView extends SampleDataView {
 
     void openShop(View v, Shop shop);
 
+    void showTapTargetForFilter();
+
+    void showTapTargetForShopFavorite();
 }

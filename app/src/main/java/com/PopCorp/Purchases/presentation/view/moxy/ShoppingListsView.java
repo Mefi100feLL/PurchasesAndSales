@@ -26,4 +26,6 @@ public interface ShoppingListsView extends SampleDataView {
     void showRemovedList(ShoppingList list);
 
     void showRemovedLists(ArrayList<ShoppingList> removedLists);
+
+    void showTapTargetForCreate();
 }

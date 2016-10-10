@@ -27,4 +27,5 @@
 
 
     <color name="bars_color">#64000000</color>
+    <color name="action_mode_color">@color/md_grey_700</color>
 </resources>

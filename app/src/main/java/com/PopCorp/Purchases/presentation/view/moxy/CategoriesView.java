@@ -37,4 +37,7 @@ public interface CategoriesView extends SampleDataView {
 
     void openCategory(View v, Category category);
 
+    void showTapTargetForFilter();
+
+    void showTapTargetForCategFavorite();
 }

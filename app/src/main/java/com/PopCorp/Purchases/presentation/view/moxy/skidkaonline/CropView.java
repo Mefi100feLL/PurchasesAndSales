@@ -6,11 +6,9 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.presentation.viewstate.strategy.GroupSingleStrategy;
 import com.arellomobile.mvp.MvpView;
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
-import java.io.File;
 import java.util.List;
 
 @StateStrategyType(SkipStrategy.class)
@@ -54,4 +52,10 @@ public interface CropView extends MvpView {
     void showItemAdded();
 
     void showErrorLoadingLists(Throwable e);
+
+    void showTapTargetForRotateSkip();
+
+    void showTapTargetForCrop();
+
+    void showTapTargetForScaleSkip();
 }

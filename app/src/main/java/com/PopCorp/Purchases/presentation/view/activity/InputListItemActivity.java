@@ -23,8 +23,8 @@ public class InputListItemActivity extends MvpAppCompatActivity {
         ThemeManager.getInstance().setStatusBarColor(this);
 
         Fragment fragment = InputListItemFragment.create(
-                getIntent().getParcelableExtra(CURRENT_LISTITEM),
-                getIntent().getLongArrayExtra(CURRENT_LISTS)
+                getIntent().getParcelableExtra(InputListItemFragment.CURRENT_LISTITEM),
+                getIntent().getLongArrayExtra(InputListItemFragment.CURRENT_LISTS)
         );
 
         String tag = fragment.getClass().getSimpleName();

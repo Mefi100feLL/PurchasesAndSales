@@ -33,4 +33,7 @@ public interface SelectingCityView extends SampleDataView {
     void finish();
 
     void showFab();
+    void showTapTargetForSearch();
+
+    void showTapTargetForCitySelect();
 }

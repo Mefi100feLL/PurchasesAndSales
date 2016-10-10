@@ -16,8 +16,9 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.skidkaonline.SaleDecoratorComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
+import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.skidkaonline.SaleDecorator;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -128,7 +129,7 @@ public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> im
         } else {
             Sale sale = decorator.getSale();
 
-            ImageLoaderAdapter.getInstance().displayImage(sale.getImageSmall(), holder.image);
+            ImageLoader.getInstance().displayImage(sale.getImageSmall(), holder.image, UIL.getImageOptions());
         }
 
         holder.setClickListener((v, pos) -> {

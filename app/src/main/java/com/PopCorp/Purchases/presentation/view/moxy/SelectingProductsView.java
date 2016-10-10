@@ -10,9 +10,10 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-@StateStrategyType(AddToEndSingleStrategy.class)
+@StateStrategyType(SkipStrategy.class)
 public interface SelectingProductsView extends SampleDataView {
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void filter(String filter);
 
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "fastScroll")
@@ -20,8 +21,10 @@ public interface SelectingProductsView extends SampleDataView {
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "fastScroll")
     void hideFastScroll();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void setAdapterComparator(Comparator<Product> comparator);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void checkItem(int itemId);
 
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
@@ -31,6 +34,13 @@ public interface SelectingProductsView extends SampleDataView {
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showSearchProductsEmpty(String currentFilter);
 
-    @StateStrategyType(SkipStrategy.class)
     void setResultAndExit(ArrayList<ListItem> result);
+
+    void showTapTargetForProductsSearch();
+
+    void showTapTargetForProductsFilter();
+
+    void showTapTargetForProductsSorting();
+
+    void showTapTargetForProductsReturn();
 }

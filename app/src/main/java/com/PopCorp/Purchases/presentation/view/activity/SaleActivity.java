@@ -28,6 +28,8 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
     @InjectPresenter
     SaleActivityPresenter presenter;
 
+    private ViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ThemeManager.getInstance().setTheme(this);
@@ -37,8 +39,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
         MaterializeBuilder builder = new MaterializeBuilder()
                 .withActivity(this)
                 .withTranslucentStatusBarProgrammatically(true)
-                .withTransparentStatusBar(true)
-                .withTransparentNavigationBar(!WindowUtils.isLandscape(this));
+                .withTransparentStatusBar(true);
 
         if (WindowUtils.isLandscape(this)){
             builder.withStatusBarColorRes(R.color.bars_color);
@@ -50,7 +51,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
         presenter.setCurrentId(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)));
         presenter.setSalesIds(getIntent().getStringArrayExtra(ARRAY_SALES));
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         SampleFragmentPagerAdapter adapter = new SampleFragmentPagerAdapter(getSupportFragmentManager());
         if (viewPager != null) {
             viewPager.setAdapter(adapter);
@@ -73,7 +74,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         @Override
         public Fragment getItem(int position) {
-            return SaleFragment.create(presenter.getSalesIds().get(position));
+            return SaleFragment.create(presenter.getSalesIds().get(position), viewPager.getCurrentItem() == position);
         }
 
         @Override

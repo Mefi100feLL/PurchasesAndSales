@@ -2,6 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
+    android:foreground="?attr/itemsBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 

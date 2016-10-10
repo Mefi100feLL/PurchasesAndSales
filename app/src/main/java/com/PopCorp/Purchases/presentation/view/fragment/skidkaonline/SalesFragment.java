@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.EmptyView;
@@ -29,12 +30,14 @@ import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SalesPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.SaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SalesView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
 
@@ -101,7 +104,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         swipeRefresh.setColorSchemeResources(R.color.swipe_refresh_color_one, R.color.swipe_refresh_color_two, R.color.swipe_refresh_color_three);
         swipeRefresh.setOnRefreshListener(presenter::onRefresh);
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(TableSizes.getSkidkaonlineShopTableSize(getActivity()), StaggeredGridLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(TableSizes.getSkidkaonlineSaleTableSize(getActivity()), StaggeredGridLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
@@ -179,9 +182,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgain();
-        });
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgain());
     }
 
     @Override
@@ -196,19 +197,27 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         inflater.inflate(R.menu.shops, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
-        int groupId = 12;
-        MenuItem item = menu.findItem(R.id.action_size_table);
-        item.getSubMenu().clear();
-        arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
-        for (String filterItem : arraySizesTable) {
-            MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(TableSizes.getSkidkaonlineSaleTableSize(getActivity())))) {
-                addedItem.setChecked(true);
+        try {
+            int groupId = 12;
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            item.getSubMenu().clear();
+            arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
+            for (String filterItem : arraySizesTable) {
+                MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
+                if (filterItem.equals(String.valueOf(TableSizes.getSkidkaonlineSaleTableSize(getActivity())))) {
+                    addedItem.setChecked(true);
+                }
+            }
+            item.getSubMenu().setGroupCheckable(groupId, true, true);
+            item.getSubMenu().setGroupEnabled(groupId, true);
+            item.setVisible(true);
+        } catch (IllegalStateException e) {//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
+            AnalyticsTrackers.getInstance().sendError(e);
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            if (item != null) {
+                item.setVisible(false);
             }
         }
-        item.getSubMenu().setGroupCheckable(groupId, true, true);
-        item.getSubMenu().setGroupEnabled(groupId, true);
-        item.setVisible(true);
     }
 
     @Override
@@ -245,11 +254,33 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         startActivity(intent);
     }
 
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        spinner.post(() -> {
+                    View view = spinner.findViewById(android.R.id.text1);
+                    if (view == null) {
+                        view = spinner;
+                    }
+                    new TapTargetManager(getActivity())
+                            .tapTarget(
+                                    TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_filter_by_catalogs, R.string.tap_target_content_sale_filter_by_catalogs))
+                            .listener(tapTargetListener)
+                            .show();
+                }
+        );
+    }
+
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
-            getActivity().onBackPressed();
-        });
+        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> getActivity().onBackPressed());
     }
 
     @Override

@@ -34,13 +34,14 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInShopPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
-import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesInShopAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SalesInShopView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Shop shop = getArguments().getParcelable(SalesActivity.CURRENT_SHOP);
+        Shop shop = getArguments().getParcelable(CURRENT_SHOP);
         presenter.setCurrentShop(shop);
         if (shop != null) {
             title = shop.getName();
@@ -132,9 +133,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showCategoriesEmpty() {
-        showError(R.string.empty_no_categgories, R.drawable.ic_tag, R.string.button_try_again, v -> {
-            presenter.loadCategories();
-        });
+        showError(R.string.empty_no_categgories, R.drawable.ic_tag, R.string.button_try_again, v -> presenter.loadCategories());
     }
 
     @Override
@@ -152,11 +151,55 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         });
     }
 
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        spinner.post(() -> {
+                    View view = spinner.findViewById(android.R.id.text1);
+                    if (view == null) {
+                        view = spinner;
+                    }
+                    new TapTargetManager(getActivity())
+                            .tapTarget(
+                                    TapTargetManager.forView(
+                                            getActivity(),
+                                            view,
+                                            R.string.tap_target_title_sale_filter_by_categories,
+                                            R.string.tap_target_content_sale_filter_by_categories
+                                    )
+                            )
+                            .listener(tapTargetListener)
+                            .show();
+                }
+        );
+    }
+
+    @Override
+    public void showTapTargetForSalesSearch() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_search,
+                                    R.string.tap_target_title_sales_search,
+                                    R.string.tap_target_content_sales_search)
+                    )
+                    .listener(tapTargetListener)
+                    .show();
+        }
+    }
+
     @Override
     public void showFavoriteCategoriesEmpty() {
-        showError(R.string.empty_no_favorite_categories_in_shop, R.drawable.ic_file_favorite, R.string.button_select_categories, v -> {
-            presenter.selectCategories();
-        });
+        showError(R.string.empty_no_favorite_categories_in_shop, R.drawable.ic_file_favorite, R.string.button_select_categories, v -> presenter.selectCategories());
     }
 
     @Override
@@ -191,9 +234,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> {
-            getActivity().onBackPressed();
-        });
+        showError(R.string.empty_no_sales_in_shop, R.drawable.ic_ghost_top, R.string.button_back_to_shops, v -> getActivity().onBackPressed());
     }
 
     @Override
@@ -262,9 +303,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgain();
-        });
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgain());
     }
 
     @Override
@@ -299,19 +338,26 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 
-        int groupId = 12;
-        MenuItem item = menu.findItem(R.id.action_size_table);
-        item.getSubMenu().clear();
-        arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
-        for (String filterItem : arraySizesTable) {
-            MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(TableSizes.getSaleTableSize(getActivity())))) {
-                addedItem.setChecked(true);
+        try {
+            int groupId = 12;
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            item.getSubMenu().clear();
+            arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
+            for (String filterItem : arraySizesTable) {
+                MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
+                if (filterItem.equals(String.valueOf(TableSizes.getSaleTableSize(getActivity())))) {
+                    addedItem.setChecked(true);
+                }
+            }
+            item.getSubMenu().setGroupCheckable(groupId, true, true);
+            item.getSubMenu().setGroupEnabled(groupId, true);
+            item.setVisible(true);
+        } catch (IllegalStateException e) {//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            if (item != null) {
+                item.setVisible(false);
             }
         }
-        item.getSubMenu().setGroupCheckable(groupId, true, true);
-        item.getSubMenu().setGroupEnabled(groupId, true);
-        item.setVisible(true);
     }
 
     @Override

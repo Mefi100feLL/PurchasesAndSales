@@ -68,7 +68,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
 
         initializePrefs();
         if (getPreferenceScreen() != null) {
-            ArrayList<Preference> preferences = getAllPreferenceScreen(getPreferenceScreen(), new ArrayList<Preference>());
+            ArrayList<Preference> preferences = getAllPreferenceScreen(getPreferenceScreen(), new ArrayList<>());
             for (Preference preference : preferences) {
                 preferenceToMaterialPreference(preference);
             }
@@ -148,7 +148,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
 
     private void initializePrefs() {
         ColorPreference primaryColor = (ColorPreference) findPreference(ThemeManager.PRIMARY_COLOR);
-        if (primaryColor != null){
+        if (primaryColor != null) {
             primaryColor.setOnPreferenceChangeListener((preference, newValue) -> {
                 refreshActivity();
                 return true;
@@ -156,7 +156,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         }
 
         ColorPreference accentColor = (ColorPreference) findPreference(ThemeManager.ACCENT_COLOR);
-        if (accentColor != null){
+        if (accentColor != null) {
             accentColor.setOnPreferenceChangeListener((preference, newValue) -> {
                 refreshActivity();
                 return true;
@@ -164,11 +164,11 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         }
 
         Preference themePreference = findPreference(PreferencesManager.PREFS_THEME_LIGHT_DARK);
-        if (themePreference != null){
+        if (themePreference != null) {
             themePreference.setSummary(getString(R.string.prefs_summary_theme).replace("theme", PreferencesManager.getInstance().getThemeLightDark()));
             themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
                 themePreference.setSummary(getString(R.string.prefs_summary_theme).replace("theme", (CharSequence) newValue));
-                if (!PreferencesManager.getInstance().getThemeLightDark().equals(newValue)){
+                if (!PreferencesManager.getInstance().getThemeLightDark().equals(newValue)) {
                     refreshActivity();
                 }
                 return true;
@@ -457,7 +457,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         builder.title(R.string.prefs_currency);
         builder.autoDismiss(false);
 
-        builder.items(currencies.toArray(new String[currencies.size()]));
+        builder.items(currencies.toArray(new CharSequence[currencies.size()]));
         builder.alwaysCallSingleChoiceCallback();
         builder.itemsCallbackSingleChoice(currencies.indexOf(currentCurrency), (dialog, view, which, text) -> {
             selectedCurrency = currencies.get(which);
@@ -574,7 +574,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         });
         builder.onNeutral((dialog, which) -> dialog.dismiss());
 
-        builder.items(units.toArray(new String[units.size()]));
+        builder.items(units.toArray(new CharSequence[units.size()]));
         builder.alwaysCallSingleChoiceCallback();
         builder.itemsCallbackSingleChoice(units.indexOf(currentUnit), (dialog, view, which, text) -> {
             selectedUnit = units.get(which);
@@ -688,7 +688,7 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
         ArrayList<String> shopes = new ArrayList<>(PreferencesManager.getInstance().getShops());
         Dialog dialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.prefs_shops)
-                .items(shopes.toArray(new String[shopes.size()]))
+                .items(shopes.toArray(new CharSequence[shopes.size()]))
                 .itemsCallback((dialog1, view, which, text) -> showDialogForNewShop(text.toString()))
                 .positiveText(R.string.dialog_button_add)
                 .negativeText(R.string.dialog_button_cancel)

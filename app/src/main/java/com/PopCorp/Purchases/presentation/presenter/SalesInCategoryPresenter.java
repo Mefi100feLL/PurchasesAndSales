@@ -130,6 +130,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
                             initFilters();
                             getViewState().showData();
                             getViewState().filter(currentFilter);
+                            showTapTarget();
                         }
                     }
                 });
@@ -247,5 +248,20 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
         }
         getViewState().showData();
         getViewState().filter(currentFilter);
+    }
+
+    public void showTapTarget() {
+        if (!currentFilter.startsWith("query") && filterShops.size() > 1) {
+            if (!PreferencesManager.getInstance().isTapTargetForSalesFilterByShopsShown()) {
+                getViewState().showTapTargetForFilter();
+                PreferencesManager.getInstance().putTapTargetForSalesByShopsFilter(true);
+                return;
+            }
+        }
+        if (!PreferencesManager.getInstance().isTapTargetForSalesSearchShown()) {
+            getViewState().showTapTargetForSalesSearch();
+            PreferencesManager.getInstance().putTapTargetForSalesSearch(true);
+            return;
+        }
     }
 }

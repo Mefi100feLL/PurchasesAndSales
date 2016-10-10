@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.DialogFavoriteCallback;
 import com.PopCorp.Purchases.data.comparator.SalesShopComparator;
 import com.PopCorp.Purchases.data.model.Category;
@@ -34,13 +35,14 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.SalesInCategoryPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
+import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
-import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesInCategoryAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.SalesInCategoryView;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.getkeepsafe.taptargetview.TapTargetView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +81,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Category category = getArguments().getParcelable(SalesActivity.CURRENT_CATEGORY);
+        Category category = getArguments().getParcelable(CURRENT_CATEGORY);
         presenter.setCurrentCategory(category);
         if (category != null) {
             title = category.getName();
@@ -131,9 +133,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showShopsEmpty() {
-        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_try_again, v -> {
-            presenter.loadShops();
-        });
+        showError(R.string.empty_no_shops, R.drawable.ic_shop, R.string.button_try_again, v -> presenter.loadShops());
     }
 
     @Override
@@ -153,16 +153,12 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showFavoriteShopsEmpty() {
-        showError(R.string.empty_no_favorite_shops_in_category, R.drawable.ic_folder_favorite, R.string.button_select_shops, v -> {
-            presenter.selectShops();
-        });
+        showError(R.string.empty_no_favorite_shops_in_category, R.drawable.ic_folder_favorite, R.string.button_select_shops, v -> presenter.selectShops());
     }
 
     @Override
     public void showSalesEmpty() {
-        showError(R.string.empty_no_sales_in_category, R.drawable.ic_ghost_top, R.string.button_back_to_categories, v -> {
-            getActivity().onBackPressed();
-        });
+        showError(R.string.empty_no_sales_in_category, R.drawable.ic_ghost_top, R.string.button_back_to_categories, v -> getActivity().onBackPressed());
     }
 
     @Override
@@ -259,9 +255,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
 
     @Override
     public void showError(Throwable e) {
-        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> {
-            presenter.tryAgain();
-        });
+        showError(ErrorManager.getErrorResource(e), ErrorManager.getErrorImage(e), R.string.button_try_again, view -> presenter.tryAgain());
     }
 
     @Override
@@ -296,19 +290,27 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         menu.findItem(R.id.action_search).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
 
-        int groupId = 12;
-        MenuItem item = menu.findItem(R.id.action_size_table);
-        item.getSubMenu().clear();
-        arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
-        for (String filterItem : arraySizesTable) {
-            MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
-            if (filterItem.equals(String.valueOf(TableSizes.getSaleTableSize(getActivity())))) {
-                addedItem.setChecked(true);
+        try {
+            int groupId = 12;
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            item.getSubMenu().clear();
+            arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
+            for (String filterItem : arraySizesTable) {
+                MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
+                if (filterItem.equals(String.valueOf(TableSizes.getSaleTableSize(getActivity())))) {
+                    addedItem.setChecked(true);
+                }
+            }
+            item.getSubMenu().setGroupCheckable(groupId, true, true);
+            item.getSubMenu().setGroupEnabled(groupId, true);
+            item.setVisible(true);
+        } catch (IllegalStateException e) {//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
+            AnalyticsTrackers.getInstance().sendError(e);
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            if (item != null) {
+                item.setVisible(false);
             }
         }
-        item.getSubMenu().setGroupCheckable(groupId, true, true);
-        item.getSubMenu().setGroupEnabled(groupId, true);
-        item.setVisible(true);
     }
 
     @Override
@@ -326,5 +328,46 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
             }
         }
         return true;
+    }
+
+
+    private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
+        @Override
+        public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            presenter.showTapTarget();
+        }
+    };
+
+    @Override
+    public void showTapTargetForFilter() {
+        spinner.post(() -> {
+                    View view = spinner.findViewById(android.R.id.text1);
+                    if (view == null) {
+                        view = spinner;
+                    }
+                    new TapTargetManager(getActivity())
+                            .tapTarget(
+                                    TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_filter_by_shops, R.string.tap_target_content_sale_filter_by_shops))
+                            .listener(tapTargetListener)
+                            .show();
+                }
+        );
+    }
+
+    @Override
+    public void showTapTargetForSalesSearch() {
+        if (menu != null && menu.findItem(R.id.action_search) != null) {
+            new TapTargetManager(getActivity())
+                    .tapTarget(
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_search,
+                                    R.string.tap_target_title_sales_search,
+                                    R.string.tap_target_content_sales_search)
+                    )
+                    .listener(tapTargetListener)
+                    .show();
+        }
     }
 }

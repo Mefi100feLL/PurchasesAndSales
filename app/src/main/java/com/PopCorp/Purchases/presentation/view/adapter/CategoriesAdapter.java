@@ -14,7 +14,8 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.CategoryComparator;
 import com.PopCorp.Purchases.data.model.Category;
-import com.PopCorp.Purchases.presentation.utils.ImageLoaderAdapter;
+import com.PopCorp.Purchases.data.utils.UIL;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     private ArrayList<Category> objects;
     private final SortedList<Category> publishItems;
+    private View firstView;
 
     public CategoriesAdapter(FavoriteRecyclerCallback<Category> callback, ArrayList<Category> objects) {
         this.callback = callback;
@@ -70,6 +72,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         });
     }
 
+    public View getFirstView() {
+        return firstView;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final View view;
@@ -110,7 +116,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Category category = publishItems.get(position);
 
-        ImageLoaderAdapter.getInstance().displayImage(category.getImageUrl(), holder.image);
+        ImageLoader.getInstance().displayImage(category.getImageUrl(), holder.image, UIL.getImageOptions());
+        if (position == 0){
+            firstView = holder.favorite;
+        }
 
         holder.name.setText(category.getName());
 
