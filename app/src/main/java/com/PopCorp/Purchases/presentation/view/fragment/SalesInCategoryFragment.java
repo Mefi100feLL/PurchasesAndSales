@@ -37,7 +37,6 @@ import com.PopCorp.Purchases.presentation.presenter.SalesInCategoryPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
-import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesInCategoryAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
@@ -82,7 +81,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Category category = getArguments().getParcelable(SalesActivity.CURRENT_CATEGORY);
+        Category category = getArguments().getParcelable(CURRENT_CATEGORY);
         presenter.setCurrentCategory(category);
         if (category != null) {
             title = category.getName();

@@ -377,21 +377,6 @@ public class SaleInfoFragment extends MvpAppCompatFragment
                 .listener(tapTargetListener)
                 .show();
     }
-/*
-    private View getActionViewForMenuItem(int id) {
-        for (int toolbarChildIndex = 0; toolbarChildIndex < toolBar.getChildCount(); toolbarChildIndex++) {
-            View view = toolBar.getChildAt(toolbarChildIndex);
-            if (view instanceof ActionMenuView) {
-                ActionMenuView menuView = (ActionMenuView) view;
-                for (int i = 0; i < menuView.getChildCount(); i++) {
-                    if (menuView.getChildAt(i).getId() == id) {
-                        return menuView.getChildAt(i);
-                    }
-                }
-            }
-        }
-        return null;
-    }*/
 
     @Override
     public void showTapTargetForSharing() {

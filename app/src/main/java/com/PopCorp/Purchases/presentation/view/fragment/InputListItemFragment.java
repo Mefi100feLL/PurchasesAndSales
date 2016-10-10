@@ -44,8 +44,8 @@ import java.util.List;
 
 public class InputListItemFragment extends MvpAppCompatFragment implements InputListItemView {
 
-    private static final String CURRENT_LISTS = "current_list";
-    private static final String CURRENT_LISTITEM = "current_listitem";
+    public static final String CURRENT_LISTS = "current_list";
+    public static final String CURRENT_LISTITEM = "current_listitem";
 
     @InjectPresenter
     InputListItemPresenter presenter;

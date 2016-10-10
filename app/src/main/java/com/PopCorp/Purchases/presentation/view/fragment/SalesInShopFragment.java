@@ -36,7 +36,6 @@ import com.PopCorp.Purchases.presentation.presenter.SalesInShopPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.SaleActivity;
-import com.PopCorp.Purchases.presentation.view.activity.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SalesInShopAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
@@ -82,7 +81,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Shop shop = getArguments().getParcelable(SalesActivity.CURRENT_SHOP);
+        Shop shop = getArguments().getParcelable(CURRENT_SHOP);
         presenter.setCurrentShop(shop);
         if (shop != null) {
             title = shop.getName();

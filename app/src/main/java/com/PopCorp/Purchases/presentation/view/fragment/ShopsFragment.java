@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.presentation.view.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -162,9 +161,7 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void openShop(View v, Shop shop) {
-        Intent intent = new Intent(getActivity(), SalesActivity.class);
-        intent.putExtra(SalesActivity.CURRENT_SHOP, shop);
-        startActivity(intent);
+        SalesActivity.show(getActivity(), shop);
     }
 
     @Override

@@ -278,24 +278,6 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         );
     }
 
-    /*private View getActionViewForMenuItem(ViewGroup rootView, int id) {
-        for (int toolbarChildIndex = 0; toolbarChildIndex < rootView.getChildCount(); toolbarChildIndex++) {
-            View view = rootView.getChildAt(toolbarChildIndex);
-            if (view.getId() == id) {
-                return view;
-            }
-            if (view instanceof ActionMenuView) {
-                ActionMenuView menuView = (ActionMenuView) view;
-                for (int i = 0; i < menuView.getChildCount(); i++) {
-                    if (menuView.getChildAt(i).getId() == id) {
-                        return menuView.getChildAt(i);
-                    }
-                }
-            }
-        }
-        return null;
-    }*/
-
     private TapTargetView.Listener tapTargetListenerInActionMode = new TapTargetView.Listener() {
         @Override
         public void onTargetClick(TapTargetView view) {
@@ -382,19 +364,23 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void showShopsFilter(ArrayList<String> shops, String filter) {
         recyclerView.post(() -> {
-            menu.findItem(R.id.action_shop).setVisible(true);
-            Menu subMenu = menu.findItem(R.id.action_shop).getSubMenu();
-            subMenu.clear();
-            if (!shops.contains(getString(R.string.menu_item_all_shops))) {
-                shops.add(0, getString(R.string.menu_item_all_shops));
-            }
-            for (String key : shops) {
-                MenuItem item = subMenu.add(R.id.action_shop_group, shops.indexOf(key), shops.indexOf(key), key).setCheckable(true);
-                if (key.equals(filter) || (filter.isEmpty() && shops.indexOf(key) == 0)) {
-                    item.setChecked(true);
+            try {
+                menu.findItem(R.id.action_shop).setVisible(true);
+                Menu subMenu = menu.findItem(R.id.action_shop).getSubMenu();
+                subMenu.clear();
+                if (!shops.contains(getString(R.string.menu_item_all_shops))) {
+                    shops.add(0, getString(R.string.menu_item_all_shops));
                 }
+                for (String key : shops) {
+                    MenuItem item = subMenu.add(R.id.action_shop_group, shops.indexOf(key), shops.indexOf(key), key).setCheckable(true);
+                    if (key.equals(filter) || (filter.isEmpty() && shops.indexOf(key) == 0)) {
+                        item.setChecked(true);
+                    }
+                }
+                subMenu.setGroupCheckable(R.id.action_shop_group, true, true);
+            } catch (Exception e){
+                //Иногда вылазиет ошибка при показе магазинов
             }
-            subMenu.setGroupCheckable(R.id.action_shop_group, true, true);
         });
     }
 
