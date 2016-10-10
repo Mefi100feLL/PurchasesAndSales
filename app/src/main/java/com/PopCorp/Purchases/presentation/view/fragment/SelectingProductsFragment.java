@@ -117,7 +117,11 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
     @Override
     public void onResume() {
         super.onResume();
-        toolBar.setTitle("");
+        if (presenter.getObjects().size() == 0){
+            toolBar.setTitle(R.string.title_all_products);
+        } else {
+            toolBar.setTitle("");
+        }
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
 
@@ -141,6 +145,8 @@ public class SelectingProductsFragment extends MvpAppCompatFragment implements S
 
     @Override
     public void showData() {
+        toolBar.setTitle("");
+        spinner.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         emptyView.hide();

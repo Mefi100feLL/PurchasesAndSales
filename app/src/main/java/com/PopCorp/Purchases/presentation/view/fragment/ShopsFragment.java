@@ -117,6 +117,8 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
         super.onResume();
         if (presenter.getObjects().size() == 0) {
             toolBar.setTitle(R.string.title_shops);
+        } else {
+            toolBar.setTitle("");
         }
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }

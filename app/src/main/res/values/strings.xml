@@ -362,5 +362,6 @@
     <string name="tap_target_content_products_sorting">Для Вашего удобства можно сортировать товары по имени или по категории</string>
     <string name="tap_target_title_products_return">Возвращение в список</string>
     <string name="tap_target_content_products_return">При нажатии отмеченные товары будут добавлены в список покупок, а остальные - удалены</string>
+    <string name="title_all_products">Все товары</string>
 
 </resources>

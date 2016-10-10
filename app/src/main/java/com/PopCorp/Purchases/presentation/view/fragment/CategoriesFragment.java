@@ -117,6 +117,8 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
         super.onResume();
         if (presenter.getObjects().size() == 0) {
             toolBar.setTitle(R.string.title_categories);
+        } else {
+            toolBar.setTitle("");
         }
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
     }
