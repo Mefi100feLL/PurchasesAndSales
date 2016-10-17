@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.skidkaonline.SaleDecoratorComparator;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.utils.UIL;
@@ -24,13 +24,13 @@ import java.util.ArrayList;
 
 public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> implements Filterable {
 
-    private final RecyclerCallback<Sale> callback;
+    private final FavoriteRecyclerCallback<Sale> callback;
     private final SaleDecoratorComparator comparator = new SaleDecoratorComparator();
 
     private ArrayList<Sale> objects;
     private final SortedList<SaleDecorator> publishItems;
 
-    public SaleAdapter(RecyclerCallback<Sale> callback, ArrayList<Sale> objects) {
+    public SaleAdapter(FavoriteRecyclerCallback<Sale> callback, ArrayList<Sale> objects) {
         this.callback = callback;
         this.objects = objects;
         publishItems = new SortedList<>(SaleDecorator.class, new SortedList.Callback<SaleDecorator>() {
@@ -87,6 +87,7 @@ public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> im
         public final View view;
         public final TextView headerName;
         public final PercentFrameLayout layout;
+        public final ImageView favorite;
         public final ImageView image;
         private ClickListener clickListener;
 
@@ -95,6 +96,7 @@ public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> im
             this.view = view;
             headerName = (TextView) view.findViewById(R.id.header_text);
             layout = (PercentFrameLayout) view.findViewById(R.id.layout);
+            favorite = (ImageView) view.findViewById(R.id.favorite);
             image = (ImageView) view.findViewById(R.id.image);
             view.setOnClickListener(this);
         }
@@ -129,6 +131,22 @@ public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> im
         } else {
             Sale sale = decorator.getSale();
 
+            if (sale.isFavorite()) {
+                holder.favorite.setImageResource(R.drawable.ic_star_white_24dp);
+            } else {
+                holder.favorite.setImageResource(R.drawable.ic_star_border_white_24dp);
+            }
+
+            holder.favorite.setTag(sale);
+            holder.favorite.setOnClickListener(v -> {
+                Sale clickedSale = (Sale) v.getTag();
+                callback.onFavoriteClicked(clickedSale);
+                if (clickedSale.isFavorite()) {
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_white_24dp);
+                } else {
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_border_white_24dp);
+                }
+            });
             ImageLoader.getInstance().displayImage(sale.getImageSmall(), holder.image, UIL.getImageOptions());
         }
 

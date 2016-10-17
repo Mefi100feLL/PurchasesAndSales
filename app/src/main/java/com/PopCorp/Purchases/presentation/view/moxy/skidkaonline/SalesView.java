@@ -27,4 +27,6 @@ public interface SalesView extends SampleDataView {
     void showSales(View v, Sale item);
 
     void showTapTargetForFilter();
+
+    void update();
 }

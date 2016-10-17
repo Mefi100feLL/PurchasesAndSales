@@ -5,7 +5,7 @@ import android.view.View;
 import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
-import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
+import com.PopCorp.Purchases.data.mapper.SaleToListItemMapper;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.SameSale;
@@ -41,6 +41,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
 
     private List<ShoppingList> lists = new ArrayList<>();
     private ArrayList<ShoppingList> selectedLists = new ArrayList<>();
+    private boolean editMode;
 
     public void setSale(int saleId, boolean isCurrent) {
         if (sale == null) {
@@ -65,6 +66,15 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
                             if (result != null) {
                                 sale = result;
                                 getViewState().showInfo(sale);
+                                if (editMode) {
+                                    getViewState().showSendButton();
+                                    if (sale.isFavorite()) {
+                                        getViewState().showFavorite(sale.isFavorite());
+                                    }
+                                } else {
+                                    getViewState().hideFavorite();
+                                    getViewState().hideSendButton();
+                                }
                                 if (isCurrent) {
                                     showTapTarget();
                                 }
@@ -128,7 +138,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     }
 
     private void openInputListItem() {
-        ListItem item = SaleTOListItemMapper.getListItem(sale);
+        ListItem item = SaleToListItemMapper.getListItem(sale);
         long[] ids = new long[selectedLists.size()];
         for (int i = 0; i < selectedLists.size(); i++) {
             ids[i] = selectedLists.get(i).getId();
@@ -197,5 +207,25 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             PreferencesManager.getInstance().putTapTargetForSaleSending(true);
             return;
         }
+    }
+
+    public void onToFavoriteClicked() {
+        if (sale.isFavorite()){
+            listItemInteractor.removeWithSaleIdFromList(listInteractor.getDefaultList().getId(), sale.getId());
+        } else {
+            ListItem item = SaleToListItemMapper.getListItem(sale);
+            item.setListId(listInteractor.getDefaultList().getId());
+            listItemInteractor.addItem(item);
+        }
+        sale.setFavorite(!sale.isFavorite());
+        getViewState().showFavorite(sale.isFavorite());
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
     }
 }

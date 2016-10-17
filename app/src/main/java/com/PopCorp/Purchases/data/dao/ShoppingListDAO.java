@@ -1,6 +1,7 @@
 package com.PopCorp.Purchases.data.dao;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.PopCorp.Purchases.data.db.DB;
 import com.PopCorp.Purchases.data.model.ListItem;
@@ -35,6 +36,14 @@ public class ShoppingListDAO {
 
     private DB db = DB.getInstance();
     private ListItemDAO listItemDAO = new ListItemDAO();
+
+    public ShoppingListDAO(){
+
+    }
+
+    public ShoppingListDAO(SQLiteDatabase db) {
+        this.db = new DB(db);
+    }
 
     public long updateOrAddToDB(ShoppingList list) {
         String[] values = new String[]{

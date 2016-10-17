@@ -3,11 +3,15 @@ package com.PopCorp.Purchases.presentation.presenter.skidkaonline;
 import android.view.View;
 
 import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
+import com.PopCorp.Purchases.data.mapper.SaleToListItemMapper;
+import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
+import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
+import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
 import com.PopCorp.Purchases.domain.interactor.skidkaonline.SaleInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SalesView;
 import com.arellomobile.mvp.InjectViewState;
@@ -18,11 +22,15 @@ import java.util.Collections;
 import java.util.List;
 
 import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerCallback<Sale> {
+public class SalesPresenter extends MvpPresenter<SalesView> implements FavoriteRecyclerCallback<Sale> {
 
     private SaleInteractor interactor = new SaleInteractor();
+    private ShoppingListInteractor listInteractor = new ShoppingListInteractor();
+    private ListItemInteractor listItemInteractor = new ListItemInteractor();
 
     private ArrayList<Sale> objects = new ArrayList<>();
     private Shop currentShop;
@@ -168,5 +176,42 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements RecyclerC
                 return;
             }
         }
+    }
+
+    @Override
+    public void onFavoriteClicked(Sale sale) {
+        if (sale.isFavorite()){
+            listItemInteractor.removeWithSaleIdFromList(listInteractor.getDefaultList().getId(), sale.getId());
+        } else {
+            ListItem item = SaleToListItemMapper.getListItem(sale);
+            item.setListId(listInteractor.getDefaultList().getId());
+            listItemInteractor.addItem(item);
+        }
+        sale.setFavorite(!sale.isFavorite());
+    }
+
+    public void refreshFavorites() {
+        interactor.refreshFavorites(objects)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
+                    }
+
+                    @Override
+                    public void onNext(Boolean edited) {
+                        if (edited){
+                            getViewState().update();
+                        }
+                    }
+                });
     }
 }

@@ -108,6 +108,10 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
     }
 
     public void removeList(ShoppingList list) {
+        if (list.getDateTime() == 0){
+            getViewState().showCantRemoveDefaultList();
+            return;
+        }
         objects.remove(list);
         interactor.removeList(list);
         if (objects.size() > 0) {

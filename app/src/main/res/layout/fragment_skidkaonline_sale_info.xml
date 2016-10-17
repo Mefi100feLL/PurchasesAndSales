@@ -58,7 +58,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/buttonsBackground"
             android:padding="24dp"
-            android:src="@drawable/ic_comment_multiple_outline_white_24dp"/>
+            android:src="@drawable/ic_comment_multiple_outline_white_24dp"
+            android:visibility="gone"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -68,7 +69,8 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
             android:layout_marginTop="16dp"
-            android:src="@drawable/ic_shopping_cart_white_24dp"/>
+            android:src="@drawable/ic_shopping_cart_white_24dp"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/crop"
@@ -76,7 +78,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/buttonsBackground"
             android:padding="24dp"
-            android:src="@drawable/ic_crop_white_24dp"/>
+            android:src="@drawable/ic_crop_white_24dp"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </RelativeLayout>

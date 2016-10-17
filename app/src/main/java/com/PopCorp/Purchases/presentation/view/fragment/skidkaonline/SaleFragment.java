@@ -22,6 +22,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
 
     private static final String CURRENT_SALE = "current_sale";
     private static final String IS_CURRENT = "is_current";
+    private static final String EDIT_MODE = "edit_mode";
 
     @InjectPresenter(factory = SalePresenterFactory.class, presenterId = SalePresenter.PRESENTER_ID)
     SalePresenter presenter;
@@ -29,12 +30,14 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     private int saleId;
     private boolean showedComments = false;
     private boolean isCurrent;
+    private boolean editMode;
 
-    public static SaleFragment create(int saleId, boolean isCurrent) {
+    public static SaleFragment create(int saleId, boolean isCurrent, boolean editMode) {
         SaleFragment result = new SaleFragment();
         Bundle args = new Bundle();
         args.putInt(CURRENT_SALE, saleId);
         args.putBoolean(IS_CURRENT, isCurrent);
+        args.putBoolean(EDIT_MODE, editMode);
         result.setArguments(args);
         return result;
     }
@@ -43,8 +46,10 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void onCreate(Bundle savedInstanceState) {
         saleId = getArguments().getInt(CURRENT_SALE);
         isCurrent = getArguments().getBoolean(IS_CURRENT, false);
+        editMode = getArguments().getBoolean(EDIT_MODE, false);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
+        presenter.setEditMode(getArguments().getBoolean(EDIT_MODE, false));
     }
 
     @Override
@@ -56,7 +61,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void showFragmentComments(int saleId) {
         showedComments = true;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = SaleCommentsFragment.create(this, saleId);
+        Fragment fragment = SaleCommentsFragment.create(this, saleId, editMode);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName())
                 .commit();
@@ -66,7 +71,7 @@ public class SaleFragment extends MvpAppCompatFragment implements SaleMainCallba
     public void showFragmentInfo(int saleId) {
         showedComments = false;
         FragmentManager fragmentManager = getChildFragmentManager();
-        Fragment fragment = SaleInfoFragment.create(this, saleId, isCurrent);
+        Fragment fragment = SaleInfoFragment.create(this, saleId, isCurrent, editMode);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content, fragment, fragment.getClass().getSimpleName())
                 .commit();

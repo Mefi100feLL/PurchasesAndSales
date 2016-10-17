@@ -31,4 +31,17 @@ public class ShoppingListInteractor {
         dbRepository.removeList(list);
     }
 
+    public ShoppingList getDefaultList() {
+        return dbRepository.getData()
+                .map(shoppingLists -> {
+                    for (ShoppingList list : shoppingLists){
+                        if (list.getDateTime() == 0){
+                            return list;
+                        }
+                    }
+                    return null;
+                })
+                .toBlocking()
+                .first();
+    }
 }

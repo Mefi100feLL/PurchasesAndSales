@@ -15,4 +15,28 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"/>
 
+    <LinearLayout
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="-10dp"
+        android:layout_marginRight="-10dp"
+        android:background="@drawable/background_oval">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right|bottom"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/buttonsBackground"
+            android:padding="16dp"/>
+    </LinearLayout>
+
 </android.support.percent.PercentFrameLayout>

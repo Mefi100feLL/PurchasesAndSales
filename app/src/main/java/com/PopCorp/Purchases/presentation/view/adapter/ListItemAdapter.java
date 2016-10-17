@@ -257,6 +257,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
                 coloredCircle.getPaint().setColor(item.getCategory().getColor());
                 holder.image.setVisibility(View.VISIBLE);
+                holder.image.setOnClickListener(v -> {});
                 holder.image.setBackground(coloredCircle);
                 holder.image.setImageResource(android.R.color.transparent);
             } else {

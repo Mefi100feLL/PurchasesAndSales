@@ -2,7 +2,7 @@ package com.PopCorp.Purchases.presentation.view.adapter;
 
 import android.support.v7.util.SortedList;
 
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.presentation.decorator.SaleCategoryDecorator;
 import com.PopCorp.Purchases.presentation.decorator.SaleDecorator;
@@ -12,7 +12,7 @@ import java.util.Comparator;
 
 public class SalesInShopAdapter extends SalesAdapter {
 
-    public SalesInShopAdapter(RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
+    public SalesInShopAdapter(FavoriteRecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
         super(callback, objects, saleComparator);
     }
 

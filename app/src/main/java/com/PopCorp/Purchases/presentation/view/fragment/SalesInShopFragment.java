@@ -129,6 +129,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         super.onResume();
         toolBar.setTitle(title);
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        presenter.refreshFavorites();
     }
 
     @Override
@@ -195,6 +196,11 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
                     .listener(tapTargetListener)
                     .show();
         }
+    }
+
+    @Override
+    public void update() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -309,7 +315,6 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override

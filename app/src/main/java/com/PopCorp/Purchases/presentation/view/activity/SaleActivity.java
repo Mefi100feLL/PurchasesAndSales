@@ -74,7 +74,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         @Override
         public Fragment getItem(int position) {
-            return SaleFragment.create(presenter.getSalesIds().get(position), viewPager.getCurrentItem() == position);
+            return SaleFragment.create(presenter.getSalesIds().get(position), viewPager.getCurrentItem() == position, true);
         }
 
         @Override

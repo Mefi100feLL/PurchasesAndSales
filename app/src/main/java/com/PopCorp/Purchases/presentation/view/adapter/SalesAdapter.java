@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.PopCorp.Purchases.R;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.PopCorp.Purchases.presentation.decorator.SaleDecorator;
@@ -23,13 +23,13 @@ import java.util.Comparator;
 
 public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.ViewHolder> implements Filterable {
 
-    protected RecyclerCallback<Sale> callback;
+    protected FavoriteRecyclerCallback<Sale> callback;
     private Comparator<SaleDecorator> comparator;
 
     protected SortedList<SaleDecorator> publishItems;
     protected ArrayList<Sale> objects;
 
-    public SalesAdapter(RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
+    public SalesAdapter(FavoriteRecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
         this.callback = callback;
         this.objects = objects;
         this.comparator = saleComparator;
@@ -91,6 +91,7 @@ public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.Vie
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final View view;
         public final ImageView image;
+        public final ImageView favorite;
         public final TextView name;
         private ClickListener clickListener;
 
@@ -98,6 +99,7 @@ public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.Vie
             super(view);
             this.view = view;
             image = (ImageView) view.findViewById(R.id.sale_image);
+            favorite = (ImageView) view.findViewById(R.id.favorite);
             name = (TextView) view.findViewById(R.id.header_text);
             view.setOnClickListener(this);
         }
@@ -130,6 +132,23 @@ public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.Vie
         } else {
             Sale sale = decorator.getSale();
             ImageLoader.getInstance().displayImage(sale.getImage(), holder.image, UIL.getImageOptions());
+
+            if (sale.isFavorite()) {
+                holder.favorite.setImageResource(R.drawable.ic_star_white_24dp);
+            } else {
+                holder.favorite.setImageResource(R.drawable.ic_star_border_white_24dp);
+            }
+
+            holder.favorite.setTag(sale);
+            holder.favorite.setOnClickListener(v -> {
+                Sale clickedSale = (Sale) v.getTag();
+                callback.onFavoriteClicked(clickedSale);
+                if (clickedSale.isFavorite()) {
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_white_24dp);
+                } else {
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_border_white_24dp);
+                }
+            });
         }
         holder.setClickListener((v, pos) -> {
             SaleDecorator saleDecorator = publishItems.get(pos);

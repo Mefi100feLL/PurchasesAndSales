@@ -9,6 +9,7 @@ import com.PopCorp.Purchases.data.repository.db.ProductDBRepository;
 import java.util.List;
 
 import rx.Observable;
+import rx.Observer;
 
 public class ListItemInteractor {
 
@@ -48,5 +49,35 @@ public class ListItemInteractor {
 
     public void addItems(ListItem[] items) {
         dbRepository.addItems(items);
+    }
+
+    public void removeWithSaleIdFromList(long listId, int saleId) {
+        dbRepository.getForList(listId)
+                .map(listItems -> {
+                    if (listItems != null && listItems.size() > 0) {
+                        for (ListItem item : listItems) {
+                            if (item.getSale() != null && item.getSale().getSaleId() == saleId) {
+                                removeItem(item);
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Boolean o) {
+
+            }
+        });
     }
 }

@@ -129,6 +129,7 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
         super.onResume();
         toolBar.setTitle(title);
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        presenter.refreshFavorites();
     }
 
     @Override
@@ -164,6 +165,11 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     @Override
     public void filter(String filter) {
         adapter.getFilter().filter(filter);
+    }
+
+    @Override
+    public void update() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -261,7 +267,6 @@ public class SalesInCategoryFragment extends MvpAppCompatFragment implements Sal
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override

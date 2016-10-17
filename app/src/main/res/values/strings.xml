@@ -363,5 +363,8 @@
     <string name="tap_target_title_products_return">Возвращение в список</string>
     <string name="tap_target_content_products_return">При нажатии отмеченные товары будут добавлены в список покупок, а остальные - удалены</string>
     <string name="title_all_products">Все товары</string>
+    <string name="notification_cant_remove_default_list">Невозможно удалить список по-умолчанию</string>
+    <string name="action_to_favorite">В избранные</string>
+    <string name="action_from_favorite">Из избранных</string>
 
 </resources>

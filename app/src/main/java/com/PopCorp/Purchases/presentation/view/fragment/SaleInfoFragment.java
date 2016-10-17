@@ -66,6 +66,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     private static final String CURRENT_SALE = "current_sale";
     private static final String IS_CURRENT = "is_current";
+    private static final String EDIT_MODE = "edit_mode";
 
     @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = SaleInfoPresenter.PRESENTER_ID)
     SaleInfoPresenter presenter;
@@ -98,11 +99,12 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private CoordinatorLayout snackbarlayout;
 
 
-    public static Fragment create(SaleMainCallback parent, int saleId, boolean isCurrent) {
+    public static Fragment create(SaleMainCallback parent, int saleId, boolean isCurrent, boolean editMode) {
         SaleInfoFragment result = new SaleInfoFragment();
         Bundle args = new Bundle();
         args.putInt(CURRENT_SALE, saleId);
         args.putBoolean(IS_CURRENT, isCurrent);
+        args.putBoolean(EDIT_MODE, editMode);
         result.setArguments(args);
         result.setParent(parent);
         return result;
@@ -113,6 +115,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId, getArguments().getBoolean(IS_CURRENT, false));
+        presenter.setEditMode(getArguments().getBoolean(EDIT_MODE, false));
     }
 
     @Override
@@ -351,9 +354,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void openSameSale(View view, int saleId) {
-        Intent intent = new Intent(getActivity(), SameSaleActivity.class);
-        intent.putExtra(SameSaleActivity.CURRENT_SALE, String.valueOf(saleId));
-        startActivity(intent);
+        SameSaleActivity.show(getActivity(), saleId, presenter.isEditMode());
     }
 
     private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
@@ -407,8 +408,39 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     @Override
+    public void showFavorite(boolean favorite) {
+        MenuItem item = toolBar.getMenu().findItem(R.id.action_to_favorite);
+        if (item != null){
+            item.setVisible(true);
+            item.setIcon(favorite ? R.drawable.ic_star_white_24dp : R.drawable.ic_star_border_white_24dp);
+            item.setTitle(favorite ? R.string.action_from_favorite : R.string.action_to_favorite);
+        }
+    }
+
+    @Override
+    public void hideFavorite() {
+        MenuItem item = toolBar.getMenu().findItem(R.id.action_to_favorite);
+        if (item != null){
+            item.setVisible(false);
+        }
+    }
+
+    @Override
+    public void hideSendButton() {
+        fab.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showSendButton() {
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_to_favorite:
+                presenter.onToFavoriteClicked();
+                break;
             case R.id.action_share:
                 shareSale(presenter.getSale());
                 break;

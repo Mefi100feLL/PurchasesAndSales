@@ -157,14 +157,11 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override
     public void openShop(View v, Shop shop) {
-        Intent intent = new Intent(getActivity(), SalesActivity.class);
-        intent.putExtra(SalesActivity.CURRENT_SHOP, shop);
-        startActivity(intent);
+        SalesActivity.show(getActivity(), shop);
     }
 
     @Override

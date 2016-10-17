@@ -27,6 +27,8 @@ public class Sale {
     @SerializedName("imageHeight")
     private int imageHeight;
 
+    private boolean favorite;
+
     public Sale(int id, String shopUrl, String imageSmall, String imageBig, long periodStart, long periodEnd, String catalog, String cityUrl, int cityId, int imageWidth, int imageHeight) {
         this.id = id;
         this.shopUrl = shopUrl;
@@ -134,5 +136,13 @@ public class Sale {
 
     public void setImageHeight(int imageHeight) {
         this.imageHeight = imageHeight;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

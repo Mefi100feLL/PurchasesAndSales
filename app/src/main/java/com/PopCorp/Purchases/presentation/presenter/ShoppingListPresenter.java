@@ -284,6 +284,10 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     }
 
     public void removeList() {
+        if (currentList.getDateTime() == 0){
+            getViewState().showCantRemoveDefaultList();
+            return;
+        }
         interactor.removeList(currentList);
         getViewState().finish();
     }
@@ -365,7 +369,15 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
 
     @Override
     public void onItemSaleClicked(View v, ListItemSale sale) {
-        getViewState().onItemSaleClicked(v, sale);
+        if (sale.getSaleId() == 0){
+            getViewState().onItemSaleClicked(v, sale);
+        } else {
+            if (sale.getSaleId() > 999999) {
+                getViewState().openSkidkaonlineSale(sale.getSaleId());
+            } else {
+                getViewState().openSale(sale.getSaleId());
+            }
+        }
     }
 
     public void showTapTarget() {

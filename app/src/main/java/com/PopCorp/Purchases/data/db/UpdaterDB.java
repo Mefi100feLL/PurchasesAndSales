@@ -8,6 +8,7 @@ import com.PopCorp.Purchases.data.dao.ListItemCategoryDAO;
 import com.PopCorp.Purchases.data.dao.ProductDAO;
 import com.PopCorp.Purchases.data.db.strategy.VersionFiveUpdateStrategy;
 import com.PopCorp.Purchases.data.db.strategy.VersionFourUpdateStrategy;
+import com.PopCorp.Purchases.data.db.strategy.VersionSevenUpdateStrategy;
 import com.PopCorp.Purchases.data.db.strategy.VersionSixUpdateStrategy;
 import com.PopCorp.Purchases.data.db.strategy.VersionThreeUpdateStrategy;
 import com.PopCorp.Purchases.data.db.strategy.VersionTwoUpdateStrategy;
@@ -37,6 +38,9 @@ public class UpdaterDB {
         }
         if (oldVersion < 6) {
             new VersionSixUpdateStrategy().update(context, db);
+        }
+        if (oldVersion < 7){
+            new VersionSevenUpdateStrategy().update(context, db);
         }
     }
 

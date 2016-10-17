@@ -156,7 +156,6 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override

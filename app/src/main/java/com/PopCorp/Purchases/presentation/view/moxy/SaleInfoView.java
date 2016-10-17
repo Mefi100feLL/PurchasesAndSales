@@ -39,4 +39,12 @@ public interface SaleInfoView extends MvpView {
     void showTapTargetForSharing();
 
     void showTapTargetForSending();
+
+    void showFavorite(boolean favorite);
+
+    void hideFavorite();
+
+    void hideSendButton();
+
+    void showSendButton();
 }

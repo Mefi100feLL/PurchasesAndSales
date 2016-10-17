@@ -12,27 +12,31 @@ public class ListItemSaleDAO {
 
     public static final String TABLE_LIST_SALES = "list_sales";
 
-    public static final String KEY_CATEGS_IMAGE = "image";
-    public static final String KEY_CATEGS_PERIOD_START = "period_start";
-    public static final String KEY_CATEGS_PERIOD_END = "period_end";
+    public static final String KEY_IMAGE = "image";
+    public static final String KEY_SALE_ID = "sale_id";
+    public static final String KEY_PERIOD_START = "period_start";
+    public static final String KEY_PERIOD_END = "period_end";
 
     public static final String[] COLUMNS_LIST_SALES = new String[]{
-            KEY_CATEGS_IMAGE,
-            KEY_CATEGS_PERIOD_START,
-            KEY_CATEGS_PERIOD_END
+            KEY_IMAGE,
+            KEY_SALE_ID,
+            KEY_PERIOD_START,
+            KEY_PERIOD_END
     };
 
     public static final String CREATE_TABLE_SALES = "CREATE TABLE IF NOT EXISTS " + TABLE_LIST_SALES +
             "( " + DB.KEY_ID + " integer primary key autoincrement, " +
-            KEY_CATEGS_IMAGE + " text, " +
-            KEY_CATEGS_PERIOD_START + " text, " +
-            KEY_CATEGS_PERIOD_END + " text);" ;
+            KEY_IMAGE + " text, " +
+            KEY_SALE_ID + " integer, " +
+            KEY_PERIOD_START + " text, " +
+            KEY_PERIOD_END + " text);" ;
 
     private DB db = DB.getInstance();
 
     public long updateOrAddToDB(ListItemSale sale) {
         String[] values = new String[]{
                 sale.getImage(),
+                String.valueOf(sale.getSaleId()),
                 sale.getPeriodStart(),
                 sale.getPeriodEnd()
         };
@@ -67,9 +71,10 @@ public class ListItemSaleDAO {
     private ListItemSale getListItemSale(Cursor cursor) {
         return new ListItemSale(
                 cursor.getLong(cursor.getColumnIndex(DB.KEY_ID)),
-                cursor.getString(cursor.getColumnIndex(KEY_CATEGS_IMAGE)),
-                cursor.getString(cursor.getColumnIndex(KEY_CATEGS_PERIOD_START)),
-                cursor.getString(cursor.getColumnIndex(KEY_CATEGS_PERIOD_END))
+                cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
+                cursor.getInt(cursor.getColumnIndex(KEY_SALE_ID)),
+                cursor.getString(cursor.getColumnIndex(KEY_PERIOD_START)),
+                cursor.getString(cursor.getColumnIndex(KEY_PERIOD_END))
         );
     }
 
@@ -87,9 +92,22 @@ public class ListItemSaleDAO {
 
     public int countWithImage(String image) {
         int result = 0;
-        Cursor cursor = db.getData(TABLE_LIST_SALES, KEY_CATEGS_IMAGE + "='" + image + "'");
+        Cursor cursor = db.getData(TABLE_LIST_SALES, KEY_IMAGE + "='" + image + "'");
         if (cursor != null) {
-            return cursor.getCount();
+            result = cursor.getCount();
+            cursor.close();
+        }
+        return result;
+    }
+
+    public boolean findSaleInList(int saleId) {
+        boolean result = false;
+        Cursor cursor = db.getData(TABLE_LIST_SALES, KEY_SALE_ID + "=" + saleId);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                result = true;
+            }
+            cursor.close();
         }
         return result;
     }

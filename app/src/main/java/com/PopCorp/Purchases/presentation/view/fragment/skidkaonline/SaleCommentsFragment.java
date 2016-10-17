@@ -48,6 +48,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         SaleParamsProvider {
 
     public static final String CURRENT_SALE = "current_sale";
+    public static final String EDIT_MODE = "edit_mode";
 
     @InjectPresenter(factory = SaleCommentsPresenterFactory.class, presenterId = "SaleCommentsPresenter")
     SaleCommentsPresenter presenter;
@@ -74,10 +75,11 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     private SaleCommentAdapter adapter;
 
 
-    public static SaleCommentsFragment create(SaleMainCallback parent, int saleId) {
+    public static SaleCommentsFragment create(SaleMainCallback parent, int saleId, boolean editMode) {
         SaleCommentsFragment result = new SaleCommentsFragment();
         Bundle args = new Bundle();
         args.putInt(CURRENT_SALE, saleId);
+        args.putBoolean(EDIT_MODE, editMode);
         result.setArguments(args);
         result.setParent(parent);
         return result;
@@ -88,6 +90,7 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
         saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId);
+        presenter.setEditMode(getArguments().getBoolean(EDIT_MODE, false));
     }
 
     @Override
@@ -299,7 +302,6 @@ public class SaleCommentsFragment extends MvpAppCompatFragment
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override

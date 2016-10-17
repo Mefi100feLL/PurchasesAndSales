@@ -11,6 +11,7 @@ public class SaleActivityPresenter extends MvpPresenter<SaleActivityView> {
 
     private int currentSaleId;
     private ArrayList<Integer> salesIds = new ArrayList<>();
+    private boolean editMode;
 
     public void setCurrentId(int id) {
         currentSaleId = id;
@@ -28,5 +29,13 @@ public class SaleActivityPresenter extends MvpPresenter<SaleActivityView> {
 
     public ArrayList<Integer> getSalesIds() {
         return salesIds;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
     }
 }

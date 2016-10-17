@@ -58,9 +58,10 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         SaleParamsProvider {
 
     private static final String CURRENT_SALE = "current_sale";
+    private static final String IS_CURRENT = "is_current";
+    private static final String EDIT_MODE = "edit_mode";
 
     private static final int REQUEST_CODE_FOR_INPUT_LISTITEM = 1;
-    private static final String IS_CURRENT = "is_current";
 
     @InjectPresenter(factory = SaleInfoPresenterFactory.class, presenterId = SaleInfoPresenter.PRESENTER_ID)
     SaleInfoPresenter presenter;
@@ -80,11 +81,12 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private ImageView cropImage;
 
 
-    public static Fragment create(SaleMainCallback parent, int saleId, boolean isCurrent) {
+    public static Fragment create(SaleMainCallback parent, int saleId, boolean isCurrent, boolean editMode) {
         SaleInfoFragment result = new SaleInfoFragment();
         Bundle args = new Bundle();
         args.putInt(CURRENT_SALE, saleId);
         args.putBoolean(IS_CURRENT, isCurrent);
+        args.putBoolean(EDIT_MODE, editMode);
         result.setArguments(args);
         result.setParent(parent);
         return result;
@@ -95,6 +97,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         saleId = getArguments().getInt(CURRENT_SALE);
         super.onCreate(savedInstanceState);
         presenter.setSale(saleId, getArguments().getBoolean(IS_CURRENT));
+        presenter.setEditMode(getArguments().getBoolean(EDIT_MODE, false));
     }
 
     @Override
@@ -144,10 +147,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     }
 
     private void openCropActivity() {
-        Intent intent = new Intent(getActivity(), CropActivity.class);
-        intent.putExtra(CropActivity.CURRENT_SALE, presenter.getSale().getId());
-        intent.putExtra(CropActivity.CURRENT_FILE_PATH, ImageLoader.getInstance().getDiskCache().get(presenter.getSale().getImageBig()).getAbsolutePath());
-        startActivity(intent);
+        CropActivity.show(getActivity(), presenter.getSale().getId(), ImageLoader.getInstance().getDiskCache().get(presenter.getSale().getImageBig()).getAbsolutePath());
     }
 
     @Override
@@ -158,6 +158,12 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_comments:
+                parent.showComments();
+                break;
+            case R.id.action_to_favorite:
+                presenter.onToFavoriteClicked();
+                break;
             case R.id.action_share:
                 shareSale(presenter.getSale());
                 break;
@@ -166,6 +172,70 @@ public class SaleInfoFragment extends MvpAppCompatFragment
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void showFavorite(boolean favorite) {
+        MenuItem item = toolBar.getMenu().findItem(R.id.action_to_favorite);
+        if (item != null){
+            item.setVisible(true);
+            item.setIcon(favorite ? R.drawable.ic_star_white_24dp : R.drawable.ic_star_border_white_24dp);
+            item.setTitle(favorite ? R.string.action_from_favorite : R.string.action_to_favorite);
+        }
+    }
+
+    @Override
+    public void hideFavorite() {
+        MenuItem item = toolBar.getMenu().findItem(R.id.action_to_favorite);
+        if (item != null){
+            item.setVisible(false);
+        }
+    }
+
+    @Override
+    public void hideSendButton() {
+        fab.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideCropButton() {
+        cropImage.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideCommentsButton() {
+        comments.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showCommentsMenuItem() {
+        MenuItem item = toolBar.getMenu().findItem(R.id.action_comments);
+        if (item != null){
+            item.setVisible(true);
+        }
+    }
+
+    @Override
+    public void showSendButton() {
+        fab.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showCropButton() {
+        cropImage.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showCommentsButton() {
+        comments.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideCommentsMenuItem() {
+        MenuItem item = toolBar.getMenu().findItem(R.id.action_comments);
+        if (item != null){
+            item.setVisible(false);
+        }
     }
 
     private void shareSale(Sale sale) {
@@ -207,9 +277,9 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showInfo(Sale sale) {
-        SimpleDateFormat format = new SimpleDateFormat("d MMMM ", new Locale("ru"));
+        SimpleDateFormat format = new SimpleDateFormat("d MMM. ", new Locale("ru"));
         String title = format.format(new Date(sale.getPeriodStart())) + " - " + format.format(new Date(sale.getPeriodEnd()));
-        toolBar.setTitle(title);
+        toolBar.setTitle(title.toLowerCase());
     }
 
     @Override

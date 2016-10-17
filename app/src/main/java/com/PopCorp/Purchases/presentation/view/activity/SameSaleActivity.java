@@ -1,5 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,7 +17,8 @@ import com.mikepenz.materialize.MaterializeBuilder;
 
 public class SameSaleActivity extends MvpAppCompatActivity {
 
-    public static final String CURRENT_SALE = "current_sale";
+    private static final String CURRENT_SALE = "current_sale";
+    private static final String EDIT_MODE = "edit_mode";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class SameSaleActivity extends MvpAppCompatActivity {
         }
         builder.build();
 
-        Fragment fragment = SaleFragment.create(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)), false);
+        Fragment fragment = SaleFragment.create(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)), false, getIntent().getBooleanExtra(EDIT_MODE, false));
         String tag = fragment.getClass().getSimpleName();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -57,5 +60,12 @@ public class SameSaleActivity extends MvpAppCompatActivity {
             }
         }
         super.onBackPressed();
+    }
+
+    public static void show(Context context, long saleId, boolean editMode) {
+        Intent intent = new Intent(context, SameSaleActivity.class);
+        intent.putExtra(CURRENT_SALE, String.valueOf(saleId));
+        intent.putExtra(EDIT_MODE, editMode);
+        context.startActivity(intent);
     }
 }
