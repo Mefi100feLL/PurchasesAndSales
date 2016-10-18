@@ -384,11 +384,24 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showTapTargetForComments() {
-        View view = comments;
-        if (view != null) {
+        if (presenter.isEditMode()){
+            View view = comments;
+            if (view != null) {
+                new TapTargetManager(getActivity())
+                        .tapTarget(
+                                TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_comments, R.string.tap_target_content_sale_comments))
+                        .listener(tapTargetListener)
+                        .show();
+            }
+        } else {
             new TapTargetManager(getActivity())
                     .tapTarget(
-                            TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_comments, R.string.tap_target_content_sale_comments))
+                            TapTargetManager.forToolbarMenuItem(getActivity(),
+                                    toolBar,
+                                    R.id.action_comments,
+                                    R.string.tap_target_title_sale_comments,
+                                    R.string.tap_target_content_sale_comments)
+                    )
                     .listener(tapTargetListener)
                     .show();
         }

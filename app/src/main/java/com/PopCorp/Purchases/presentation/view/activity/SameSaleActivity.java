@@ -40,7 +40,7 @@ public class SameSaleActivity extends MvpAppCompatActivity {
         }
         builder.build();
 
-        Fragment fragment = SaleFragment.create(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)), false, getIntent().getBooleanExtra(EDIT_MODE, false));
+        Fragment fragment = SaleFragment.create(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)), true, getIntent().getBooleanExtra(EDIT_MODE, false));
         String tag = fragment.getClass().getSimpleName();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

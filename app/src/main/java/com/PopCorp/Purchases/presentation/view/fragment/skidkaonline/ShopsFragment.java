@@ -301,17 +301,18 @@ public class ShopsFragment extends MvpAppCompatFragment implements ShopsView {
 
     @Override
     public void showTapTargetForShopFavorite() {
-        new TapTargetManager(getActivity())
-                .tapTarget(
-                        TapTargetManager.forView(
-                                getActivity(),
-                                adapter.getFirstView(),
-                                R.string.tap_target_title_shop_favorite,
-                                R.string.tap_target_content_shop_favorite
-                        )
-                                .outerCircleColor(R.color.md_amber_500)
-                )
-                .listener(tapTargetListener)
-                .show();
+        adapter.getFavoriteViews()
+                .first()
+                .subscribe((view -> {
+                    if (view != null) {
+                        view.postDelayed(() ->
+                                new TapTargetManager(getActivity())
+                                        .tapTarget(
+                                                TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_shop_favorite, R.string.tap_target_content_shop_favorite)
+                                                        .outerCircleColor(R.color.md_amber_500))
+                                        .listener(tapTargetListener)
+                                        .show(), 200);
+                    }
+                }));
     }
 }

@@ -109,6 +109,7 @@ public class PreferencesManager {
     private static final String PREFS_TAP_TARGET_PRODUCTS_FILTER = "PREFS_TAP_TARGET_PRODUCTS_FILTER";
     private static final String PREFS_TAP_TARGET_PRODUCTS_SORTING = "PREFS_TAP_TARGET_PRODUCTS_SORTING";
     private static final String PREFS_TAP_TARGET_PRODUCTS_RETURN = "PREFS_TAP_TARGET_PRODUCTS_RETURN";
+    private static final String PREFS_TAP_TARGET_SALES_FAVORITE = "PREFS_TAP_TARGET_SALES_FAVORITE";
 
     private Context context;
     private SharedPreferences sPref;
@@ -756,5 +757,13 @@ public class PreferencesManager {
 
     public void putTapTargetForProductsReturn(boolean shown) {
         editor.putBoolean(PREFS_TAP_TARGET_PRODUCTS_RETURN, shown).commit();
+    }
+
+    public boolean isTapTargetForSalesFavoriteShown() {
+        return sPref.getBoolean(PREFS_TAP_TARGET_SALES_FAVORITE, false);
+    }
+
+    public void putTapTargetForSalesFavorite(boolean shown) {
+        editor.putBoolean(PREFS_TAP_TARGET_SALES_FAVORITE, shown).commit();
     }
 }

@@ -366,5 +366,7 @@
     <string name="notification_cant_remove_default_list">Невозможно удалить список по-умолчанию</string>
     <string name="action_to_favorite">В избранные</string>
     <string name="action_from_favorite">Из избранных</string>
+    <string name="tap_target_title_sale_favorite">Быстрая отправка</string>
+    <string name="tap_target_content_sale_favorite">Отправляйте акцию в список покупок одним касанием</string>
 
 </resources>

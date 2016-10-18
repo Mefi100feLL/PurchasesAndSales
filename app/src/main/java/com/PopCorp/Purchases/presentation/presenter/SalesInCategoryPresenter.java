@@ -5,7 +5,7 @@ import android.view.View;
 import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
-import com.PopCorp.Purchases.data.mapper.SaleToListItemMapper;
+import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
 import com.PopCorp.Purchases.data.model.Category;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
@@ -278,7 +278,7 @@ public class SalesInCategoryPresenter extends MvpPresenter<SalesInCategoryView> 
         if (sale.isFavorite()){
             listItemInteractor.removeWithSaleIdFromList(listInteractor.getDefaultList().getId(), sale.getId());
         } else {
-            ListItem item = SaleToListItemMapper.getListItem(sale);
+            ListItem item = SaleTOListItemMapper.getListItem(sale);
             item.setListId(listInteractor.getDefaultList().getId());
             listItemInteractor.addItem(item);
         }

@@ -20,6 +20,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+import rx.subjects.ReplaySubject;
+
 public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> implements Filterable {
 
     public static final String FILTER_ALL = "";
@@ -31,8 +34,6 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
 
     private ArrayList<Shop> objects;
     private final SortedList<Shop> publishItems;
-
-    private View firstView;
 
 
     public ShopsAdapter(Context context, FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
@@ -77,8 +78,10 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
         });
     }
 
-    public View getFirstView() {
-        return firstView;
+    private ReplaySubject<View> publishSubject = ReplaySubject.create();
+
+    public Observable<View> getFavoriteViews(){
+        return publishSubject;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -125,7 +128,10 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
 
         ImageLoader.getInstance().displayImage(shop.getImageUrl(), holder.image, UIL.getImageOptions());
         if (position == 0){
-            firstView = holder.favorite;
+            if (!publishSubject.hasCompleted()) {
+                publishSubject.onNext(holder.favorite);
+                publishSubject.onCompleted();
+            }
         }
 
         holder.name.setText(shop.getName());

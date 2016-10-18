@@ -19,6 +19,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+import rx.subjects.ReplaySubject;
+
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> implements Filterable {
 
     public static final String FILTER_ALL = "";
@@ -29,7 +32,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     private ArrayList<Category> objects;
     private final SortedList<Category> publishItems;
-    private View firstView;
 
     public CategoriesAdapter(FavoriteRecyclerCallback<Category> callback, ArrayList<Category> objects) {
         this.callback = callback;
@@ -70,10 +72,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                 notifyItemRangeRemoved(position, count);
             }
         });
-    }
-
-    public View getFirstView() {
-        return firstView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -118,7 +116,10 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         ImageLoader.getInstance().displayImage(category.getImageUrl(), holder.image, UIL.getImageOptions());
         if (position == 0){
-            firstView = holder.favorite;
+            if (!publishSubject.hasCompleted()) {
+                publishSubject.onNext(holder.favorite);
+                publishSubject.onCompleted();
+            }
         }
 
         holder.name.setText(category.getName());
@@ -141,6 +142,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         });
 
         holder.setClickListener((v, pos) -> callback.onItemClicked(v, publishItems.get(pos)));
+    }
+
+    private ReplaySubject<View> publishSubject = ReplaySubject.create();
+
+    public Observable<View> getFavoriteViews(){
+        return publishSubject;
     }
 
     @Override

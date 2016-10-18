@@ -30,4 +30,10 @@ public interface SalesView extends SampleDataView {
     void showEmptyForSearch(String query);
 
     void update();
+
+    void showTapTargetForFilter();
+
+    void showTapTargetForSalesSearch();
+
+    void showTapTargetForSalesFavorite();
 }

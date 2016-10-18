@@ -5,7 +5,7 @@ import android.view.View;
 import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.RecyclerCallback;
-import com.PopCorp.Purchases.data.mapper.SaleToListItemMapper;
+import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.SameSale;
@@ -138,7 +138,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     }
 
     private void openInputListItem() {
-        ListItem item = SaleToListItemMapper.getListItem(sale);
+        ListItem item = SaleTOListItemMapper.getListItem(sale);
         long[] ids = new long[selectedLists.size()];
         for (int i = 0; i < selectedLists.size(); i++) {
             ids[i] = selectedLists.get(i).getId();
@@ -202,7 +202,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             PreferencesManager.getInstance().putTapTargetForSaleSharing(true);
             return;
         }
-        if (!PreferencesManager.getInstance().isTapTargetForSaleSendingShown()) {
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSendingShown() && editMode) {
             getViewState().showTapTargetForSending();
             PreferencesManager.getInstance().putTapTargetForSaleSending(true);
             return;
@@ -213,7 +213,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
         if (sale.isFavorite()){
             listItemInteractor.removeWithSaleIdFromList(listInteractor.getDefaultList().getId(), sale.getId());
         } else {
-            ListItem item = SaleToListItemMapper.getListItem(sale);
+            ListItem item = SaleTOListItemMapper.getListItem(sale);
             item.setListId(listInteractor.getDefaultList().getId());
             listItemInteractor.addItem(item);
         }

@@ -22,6 +22,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+import rx.subjects.ReplaySubject;
+
 public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> implements Filterable {
 
     private final FavoriteRecyclerCallback<Sale> callback;
@@ -131,6 +134,12 @@ public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> im
         } else {
             Sale sale = decorator.getSale();
 
+            if (position == 1){
+                if (!publishSubject.hasCompleted()) {
+                    publishSubject.onNext(holder.favorite);
+                    publishSubject.onCompleted();
+                }
+            }
             if (sale.isFavorite()) {
                 holder.favorite.setImageResource(R.drawable.ic_star_white_24dp);
             } else {
@@ -156,6 +165,12 @@ public class SaleAdapter extends RecyclerView.Adapter<SaleAdapter.ViewHolder> im
                 callback.onItemClicked(v, saleDecorator.getSale());
             }
         });
+    }
+
+    private ReplaySubject<View> publishSubject = ReplaySubject.create();
+
+    public Observable<View> getFavoriteViews(){
+        return publishSubject;
     }
 
     @Override

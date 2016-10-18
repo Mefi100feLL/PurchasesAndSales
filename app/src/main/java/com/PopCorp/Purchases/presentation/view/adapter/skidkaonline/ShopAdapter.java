@@ -21,6 +21,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+import rx.subjects.ReplaySubject;
+
 public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> implements Filterable {
 
     public static final String FILTER_ALL = "";
@@ -32,7 +35,6 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
 
     private ArrayList<Shop> objects;
     private final SortedList<ShopDecorator> publishItems;
-    private View firstView;
 
     public ShopAdapter(FavoriteRecyclerCallback<Shop> callback, ArrayList<Shop> objects) {
         this.callback = callback;
@@ -87,10 +89,6 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
         });
     }
 
-    public View getFirstView() {
-        return firstView;
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public final View view;
@@ -141,8 +139,11 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
             Shop shop = decorator.getShop();
 
             ImageLoader.getInstance().displayImage(shop.getImage(), holder.image, UIL.getImageOptions());
-            if (position == 1){
-                firstView =holder.favorite;
+            if (position == 1) {
+                if (!publishSubject.hasCompleted()) {
+                    publishSubject.onNext(holder.favorite);
+                    publishSubject.onCompleted();
+                }
             }
 
             holder.name.setText(shop.getName());
@@ -172,6 +173,12 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> im
                 callback.onItemClicked(v, saleDecorator.getShop());
             }
         });
+    }
+
+    private ReplaySubject<View> publishSubject = ReplaySubject.create();
+
+    public Observable<View> getFavoriteViews(){
+        return publishSubject;
     }
 
     @Override
