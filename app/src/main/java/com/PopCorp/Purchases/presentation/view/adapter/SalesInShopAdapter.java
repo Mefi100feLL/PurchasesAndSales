@@ -66,7 +66,7 @@ public class SalesInShopAdapter extends SalesAdapter {
 
         ArrayList<SaleCategoryDecorator> headers = new ArrayList<>();
         for (Sale sale : sales) {
-            SaleCategoryDecorator header = new SaleCategoryDecorator(sale, true, sale.getCategory());
+            SaleCategoryDecorator header = new SaleCategoryDecorator(null, true, sale.getCategory());
             if (!headers.contains(header)) {
                 headers.add(header);
             }
