@@ -31,7 +31,12 @@ public class SaleCategoryDecorator extends SaleDecorator {
 
         SaleCategoryDecorator another = (SaleCategoryDecorator) object;
         if (isHeader() && another.isHeader()){
-            return (getCategory().equals(another.getCategory()));
+            if (getCategory() != null && another.getCategory() != null) {
+                return (getCategory().equals(another.getCategory()));
+            }
+            if (getCategory() == null && another.getCategory() == null){
+                return true;
+            }
         }
         if (!(isHeader() || another.isHeader())){
             return getSale().equals(another.getSale());
