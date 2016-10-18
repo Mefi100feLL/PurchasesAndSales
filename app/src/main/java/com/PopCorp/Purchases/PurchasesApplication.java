@@ -2,6 +2,7 @@ package com.PopCorp.Purchases;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
 import com.PopCorp.Purchases.data.db.DB;
@@ -10,6 +11,8 @@ import com.PopCorp.Purchases.data.utils.SalesCleaner;
 import com.PopCorp.Purchases.data.utils.SkidkaonlineSalesCleaner;
 import com.PopCorp.Purchases.data.utils.StethoLauncher;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
+import com.google.android.gms.analytics.ExceptionReporter;
+import com.google.android.gms.analytics.StandardExceptionParser;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
@@ -24,8 +27,9 @@ public class PurchasesApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        StethoLauncher.launch(this);
         AnalyticsTrackers.initialize(this);
+        initExceptionsReporter();
+        StethoLauncher.launch(this);
         PreferencesManager.setInstance(this);
         ThemeManager.setInstance(this);
         DB.setInstance(this);
@@ -33,6 +37,22 @@ public class PurchasesApplication extends Application {
         PreferencesManager.getInstance().firstStart();
         new SalesCleaner().start();
         new SkidkaonlineSalesCleaner().start();
+    }
+
+    private void initExceptionsReporter() {
+        ExceptionReporter myHandler = new ExceptionReporter(AnalyticsTrackers.getInstance().getDefault(), Thread.getDefaultUncaughtExceptionHandler(), this);
+
+        StandardExceptionParser exceptionParser = new StandardExceptionParser(getApplicationContext(), null) {
+            @Override
+            public String getDescription(String threadName, Throwable t) {
+                return "{" + threadName + "} " + Log.getStackTraceString(t);
+            }
+        };
+
+        myHandler.setExceptionParser(exceptionParser);
+
+        // Make myHandler the new default uncaught exception handler.
+        Thread.setDefaultUncaughtExceptionHandler(myHandler);
     }
 
     public static void initImageLoader(Context context) {
@@ -47,7 +67,7 @@ public class PurchasesApplication extends Application {
         DiskCache diskCache = new UnlimitedDiskCache(cacheDir, context.getCacheDir(), generator);
 
         ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(context);
-        builder.threadPriority(Thread.NORM_PRIORITY - 2);
+        builder.threadPriority(Thread.MIN_PRIORITY);
         builder.denyCacheImageMultipleSizesInMemory();
         builder.diskCache(diskCache);
         builder.tasksProcessingOrder(QueueProcessingType.LIFO);
