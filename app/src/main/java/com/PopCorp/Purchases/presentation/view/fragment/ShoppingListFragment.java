@@ -42,6 +42,8 @@ import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.ListItemSaleActivity;
 import com.PopCorp.Purchases.presentation.view.activity.MainActivity;
 import com.PopCorp.Purchases.presentation.view.activity.ProductsActivity;
+import com.PopCorp.Purchases.presentation.view.activity.SameSaleActivity;
+import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SaleActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.ListItemAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListView;
 import com.afollestad.materialcab.MaterialCab;
@@ -248,18 +250,24 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void showTapTargetForItemInfo() {
-        recyclerView.post(() ->
-                new TapTargetManager(getActivity())
-                        .tapTarget(
-                                TapTargetManager.forView(
-                                        getActivity(),
-                                        adapter.getFirstView(),
-                                        R.string.tap_target_title_item_info,
-                                        R.string.tap_target_content_item_info
-                                )
-                        )
-                        .listener(tapTargetListener)
-                        .show());
+        adapter.getItemsViews()
+                .first()
+                .subscribe((view -> {
+                    if (view != null) {
+                        view.postDelayed(() ->
+                                new TapTargetManager(getActivity())
+                                        .tapTarget(
+                                                TapTargetManager.forView(
+                                                        getActivity(),
+                                                        view,
+                                                        R.string.tap_target_title_item_info,
+                                                        R.string.tap_target_content_item_info
+                                                )
+                                        )
+                                        .listener(tapTargetListener)
+                                        .show(), 200);
+                    }
+                }));
     }
 
     @Override
@@ -288,19 +296,24 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
 
     @Override
     public void showTapTargetForItemsAddToActionMode() {
-        recyclerView.post(() ->
-                new TapTargetManager(getActivity())
-                        .tapTarget(
-                                TapTargetManager.forView(
-                                        getActivity(),
-                                        adapter.getFirstView(),
-                                        R.string.tap_target_title_items_add_to_action_mode,
-                                        R.string.tap_target_content_items_add_to_action_mode
+        adapter.getItemsViews()
+                .first()
+                .subscribe((view -> {
+                    if (view != null) {
+                        new TapTargetManager(getActivity())
+                                .tapTarget(
+                                        TapTargetManager.forView(
+                                                getActivity(),
+                                                view,
+                                                R.string.tap_target_title_items_add_to_action_mode,
+                                                R.string.tap_target_content_items_add_to_action_mode
+                                        )
+                                                .outerCircleColor(R.color.action_mode_color)
                                 )
-                                        .outerCircleColor(R.color.action_mode_color)
-                        )
-                        .listener(tapTargetListenerInActionMode)
-                        .show());
+                                .listener(tapTargetListenerInActionMode)
+                                .show();
+                    }
+                }));
     }
 
     @Override
@@ -337,6 +350,21 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
                     .listener(tapTargetListenerInActionMode)
                     .show();
         }
+    }
+
+    @Override
+    public void openSale(long saleId) {
+        SameSaleActivity.show(getActivity(), saleId, false);
+    }
+
+    @Override
+    public void showCantRemoveDefaultList() {
+        Snackbar.make(fab, R.string.notification_cant_remove_default_list, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openSkidkaonlineSale(int saleId) {
+        SaleActivity.show(getActivity(), saleId, new String[]{String.valueOf(saleId)}, false);
     }
 
     @Override
@@ -378,7 +406,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
                     }
                 }
                 subMenu.setGroupCheckable(R.id.action_shop_group, true, true);
-            } catch (Exception e){
+            } catch (Exception e) {
                 //Иногда вылазиет ошибка при показе магазинов
             }
         });
@@ -574,18 +602,6 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
             }
             case R.id.action_remove: {
                 presenter.removeItem();
-                break;
-            }
-            case R.id.action_send_as_sms: {
-
-                break;
-            }
-            case R.id.action_send_as_email: {
-
-                break;
-            }
-            case R.id.action_send_as_text: {
-
                 break;
             }
             default: {

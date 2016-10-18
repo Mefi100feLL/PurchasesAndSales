@@ -52,6 +52,8 @@ public class Sale {
     private Category category;
     private Shop shop;
 
+    private boolean favorite;
+
     @SerializedName("comments")
     private List<SaleComment> comments = new ArrayList<>();
 
@@ -225,5 +227,13 @@ public class Sale {
 
     public void setCountComments(int countComments) {
         this.countComments = countComments;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 }

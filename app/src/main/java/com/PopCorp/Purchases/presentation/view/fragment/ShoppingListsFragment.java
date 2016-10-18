@@ -219,9 +219,7 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
 
     @Override
     public void openShoppingList(ShoppingList list) {
-        Intent intent = new Intent(getActivity(), ShoppingListActivity.class);
-        intent.putExtra(ShoppingListActivity.CURRENT_LIST, list.getId());
-        startActivity(intent);
+        ShoppingListActivity.show(getActivity(), list.getId());
     }
 
     @Override
@@ -275,6 +273,11 @@ public class ShoppingListsFragment extends MvpAppCompatFragment implements Shopp
                         TapTargetManager.forView(getActivity(), fab, R.string.tap_target_title_lists_create, R.string.tap_target_content_lists_create)
                                 .tintTarget(false))
                 .show();
+    }
+
+    @Override
+    public void showCantRemoveDefaultList() {
+        Snackbar.make(fab, R.string.notification_cant_remove_default_list, Snackbar.LENGTH_SHORT).show();
     }
 
     public void showPopupMenu(View view, final ShoppingList list) {

@@ -1,5 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.activity.skidkaonline;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,13 +24,22 @@ import com.mikepenz.materialize.MaterializeBuilder;
 
 public class SaleActivity extends MvpAppCompatActivity implements SaleActivityView {
 
-    public static final String CURRENT_SALE = "current_sale";
-    public static final String ARRAY_SALES = "array_sales";
+    private static final String CURRENT_SALE = "current_sale";
+    private static final String ARRAY_SALES = "array_sales";
+    private static final String EDIT_MODE = "edit_mode";
 
     @InjectPresenter
     SaleActivityPresenter presenter;
 
     private ViewPager viewPager;
+
+    public static void show(Context context, int currentSaleId, String[] salesIds, boolean editMode){
+        Intent intent = new Intent(context, SaleActivity.class);
+        intent.putExtra(CURRENT_SALE, String.valueOf(currentSaleId));
+        intent.putExtra(ARRAY_SALES, salesIds);
+        intent.putExtra(EDIT_MODE, editMode);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         presenter.setCurrentId(Integer.valueOf(getIntent().getStringExtra(CURRENT_SALE)));
         presenter.setSalesIds(getIntent().getStringArrayExtra(ARRAY_SALES));
+        presenter.setEditMode(getIntent().getBooleanExtra(EDIT_MODE, false));
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         SampleFragmentPagerAdapter adapter = new SampleFragmentPagerAdapter(getSupportFragmentManager());
@@ -74,7 +86,7 @@ public class SaleActivity extends MvpAppCompatActivity implements SaleActivityVi
 
         @Override
         public Fragment getItem(int position) {
-            return SaleFragment.create(presenter.getSalesIds().get(position), viewPager.getCurrentItem() == position);
+            return SaleFragment.create(presenter.getSalesIds().get(position), viewPager.getCurrentItem() == position, presenter.isEditMode());
         }
 
         @Override

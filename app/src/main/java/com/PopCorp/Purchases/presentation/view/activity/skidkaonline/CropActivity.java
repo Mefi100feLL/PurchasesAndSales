@@ -1,5 +1,7 @@
 package com.PopCorp.Purchases.presentation.view.activity.skidkaonline;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,8 +19,16 @@ import com.mikepenz.materialize.MaterializeBuilder;
 
 public class CropActivity extends AppCompatActivity {
 
-    public static final String CURRENT_SALE = "current_sale";
-    public static final String CURRENT_FILE_PATH = "current_file_path";
+    private static final String CURRENT_SALE = "current_sale";
+    private static final String CURRENT_FILE_PATH = "current_file_path";
+
+
+    public static void show(Context context, int id, String absolutePath){
+        Intent intent = new Intent(context, CropActivity.class);
+        intent.putExtra(CURRENT_SALE, id);
+        intent.putExtra(CURRENT_FILE_PATH, absolutePath);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

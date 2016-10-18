@@ -32,6 +32,7 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
     private int currentSaleId = -1;
 
     private ArrayList<SaleComment> objects = new ArrayList<>();
+    private boolean editMode;
 
 
     public SaleCommentsPresenter(){
@@ -178,5 +179,9 @@ public class SaleCommentsPresenter extends MvpPresenter<SaleCommentsView> implem
 
     public ArrayList<SaleComment> getObjects() {
         return objects;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
 }

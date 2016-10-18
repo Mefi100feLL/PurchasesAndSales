@@ -2,6 +2,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/action_to_favorite"
+        android:icon="@drawable/ic_star_border_white_24dp"
+        android:title="@string/action_to_favorite"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_comments"

@@ -2,7 +2,7 @@ package com.PopCorp.Purchases.presentation.view.adapter;
 
 import android.support.v7.util.SortedList;
 
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.presentation.decorator.SaleDecorator;
 import com.PopCorp.Purchases.presentation.decorator.SaleShopDecorator;
@@ -12,24 +12,24 @@ import java.util.Comparator;
 
 public class SalesInCategoryAdapter extends SalesAdapter {
 
-    public SalesInCategoryAdapter(RecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
+    public SalesInCategoryAdapter(FavoriteRecyclerCallback<Sale> callback, ArrayList<Sale> objects, Comparator<SaleDecorator> saleComparator) {
         super(callback, objects, saleComparator);
     }
 
     @Override
     protected ArrayList<Sale> getFilterResults(CharSequence constraint) {
         ArrayList<Sale> result = new ArrayList<>();
-        if (constraint.equals("")){
+        if (constraint.equals("")) {
             return objects;
         }
         String query = (String) constraint;
-        if (query.startsWith("query=")){
+        if (query.startsWith("query=")) {
             query = query.replace("query=", "").toLowerCase();
         } else {
             query = "";
         }
         for (Sale sale : objects) {
-            if (!query.isEmpty() && sale.getTitle().toLowerCase().contains(query)){
+            if (!query.isEmpty() && sale.getTitle().toLowerCase().contains(query)) {
                 result.add(sale);
                 continue;
             }
@@ -86,7 +86,7 @@ public class SalesInCategoryAdapter extends SalesAdapter {
         for (SaleDecorator header : arrayForRemoving) {
             publishItems.remove(header);
         }
-        if (publishItems.size() == 0){
+        if (publishItems.size() == 0) {
             callback.onEmpty();
         }
         publishItems.endBatchedUpdates();

@@ -351,7 +351,7 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.skidkaonline_sale, menu);
+        inflater.inflate(R.menu.crop_sale, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

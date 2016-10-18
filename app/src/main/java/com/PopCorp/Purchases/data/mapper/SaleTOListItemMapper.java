@@ -65,7 +65,7 @@ public class SaleTOListItemMapper {
                 comment,
                 false,
                 false,
-                new ListItemSale(-1, sale.getImage(), format.format(new Date(sale.getPeriodStart())), format.format(new Date(sale.getPeriodEnd())))
+                new ListItemSale(-1, sale.getImage(), sale.getId(), format.format(new Date(sale.getPeriodStart())), format.format(new Date(sale.getPeriodEnd())))
         );
         return result;
     }
@@ -111,7 +111,7 @@ public class SaleTOListItemMapper {
         ListItem item = new ListItem(
                 -1,
                 -1,
-                "",
+                String.valueOf(sale.getId()),
                 count,
                 edizm,
                 coast,
@@ -120,7 +120,7 @@ public class SaleTOListItemMapper {
                 comment,
                 false,
                 false,
-                new ListItemSale(-1, sale.getImageBig(), format.format(new Date(sale.getPeriodStart())), format.format(new Date(sale.getPeriodEnd())))
+                new ListItemSale(-1, sale.getImageBig(), sale.getId(), format.format(new Date(sale.getPeriodStart())), format.format(new Date(sale.getPeriodEnd())))
         );
         return item;
     }

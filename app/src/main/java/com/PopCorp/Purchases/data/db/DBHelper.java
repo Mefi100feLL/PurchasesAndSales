@@ -16,11 +16,12 @@ import com.PopCorp.Purchases.data.dao.SameSaleDAO;
 import com.PopCorp.Purchases.data.dao.ShopDAO;
 import com.PopCorp.Purchases.data.dao.ShoppingListDAO;
 import com.PopCorp.Purchases.data.dao.skidkaonline.CityDAO;
+import com.PopCorp.Purchases.data.model.ShoppingList;
 
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "PopCorp.Purchases.DB";
-    private static final int DB_VERSION = 6;
+    private static final int DB_VERSION = 7;
 
     private Context context;
 
@@ -54,6 +55,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         UpdaterDB.addCategs(context, db);
         UpdaterDB.addAllProducts(context, db);
+        ShoppingList list = new ShoppingList(-1, "Список акций", 0, 0, "RUB");
+        ShoppingListDAO dao = new ShoppingListDAO(db);
+        dao.updateOrAddToDB(list);
     }
 
     @Override

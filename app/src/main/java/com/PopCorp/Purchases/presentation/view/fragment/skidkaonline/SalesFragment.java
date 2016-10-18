@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.presentation.view.fragment.skidkaonline;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
@@ -32,7 +31,6 @@ import com.PopCorp.Purchases.presentation.presenter.skidkaonline.SalesPresenter;
 import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SaleActivity;
-import com.PopCorp.Purchases.presentation.view.activity.skidkaonline.SalesActivity;
 import com.PopCorp.Purchases.presentation.view.adapter.SpinnerAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.skidkaonline.SaleAdapter;
 import com.PopCorp.Purchases.presentation.view.moxy.skidkaonline.SalesView;
@@ -73,7 +71,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Shop shop = getArguments().getParcelable(SalesActivity.CURRENT_SHOP);
+        Shop shop = getArguments().getParcelable(CURRENT_SHOP);
         presenter.setCurrentShop(shop);
         if (shop != null) {
             title = shop.getName();
@@ -142,6 +140,8 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
             }
         });
         spinner.setVisibility(View.VISIBLE);
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolBar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
     }
 
     @Override
@@ -154,6 +154,7 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
         super.onResume();
         toolBar.setTitle(title);
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        presenter.refreshFavorites();
     }
 
     @Override
@@ -188,7 +189,6 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override
@@ -243,15 +243,12 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
 
     @Override
     public void showSales(View view, Sale item) {
-        Intent intent = new Intent(getActivity(), SaleActivity.class);
-        intent.putExtra(SaleActivity.CURRENT_SALE, String.valueOf(item.getId()));
         ArrayList<Sale> sales = adapter.getSales();
         String[] salesIds = new String[sales.size()];
         for (int i = 0; i < sales.size(); i++) {
             salesIds[i] = String.valueOf(sales.get(i).getId());
         }
-        intent.putExtra(SaleActivity.ARRAY_SALES, salesIds);
-        startActivity(intent);
+        SaleActivity.show(getActivity(), item.getId(), salesIds, true);
     }
 
     private TapTargetView.Listener tapTargetListener = new TapTargetView.Listener() {
@@ -276,6 +273,27 @@ public class SalesFragment extends MvpAppCompatFragment implements SalesView {
                             .show();
                 }
         );
+    }
+
+    @Override
+    public void showTapTargetForSalesFavorite() {
+        adapter.getFavoriteViews()
+                .first()
+                .subscribe(view -> {
+                    if (view != null) {
+                        view.post(() ->
+                                new TapTargetManager(getActivity())
+                                .tapTarget(
+                                        TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_favorite, R.string.tap_target_content_sale_favorite))
+                                .listener(tapTargetListener)
+                                .show());
+                    }
+                });
+    }
+
+    @Override
+    public void update() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override

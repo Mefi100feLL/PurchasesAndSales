@@ -49,4 +49,24 @@ public interface SaleInfoView extends MvpView {
     void showTapTargetForCropping();
 
     void showTapTargetForSharing();
+
+    void showFavorite(boolean favorite);
+
+    void hideFavorite();
+
+    void hideSendButton();
+
+    void hideCropButton();
+
+    void hideCommentsButton();
+
+    void showCommentsMenuItem();
+
+    void showSendButton();
+
+    void showCropButton();
+
+    void showCommentsButton();
+
+    void hideCommentsMenuItem();
 }

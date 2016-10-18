@@ -214,7 +214,6 @@ public class SelectingCityFragment extends MvpAppCompatFragment implements Selec
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override

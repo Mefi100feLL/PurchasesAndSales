@@ -156,7 +156,6 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override
@@ -307,20 +306,24 @@ public class CategoriesFragment extends MvpAppCompatFragment implements Categori
 
     @Override
     public void showTapTargetForCategFavorite() {
-        View view = adapter.getFirstView();
-        if (view != null) {
-            new TapTargetManager(getActivity())
-                    .tapTarget(
-                            TapTargetManager.forView(
-                                    getActivity(),
-                                    view,
-                                    R.string.tap_target_title_categ_favorite,
-                                    R.string.tap_target_content_categ_favorite
-                            )
-                                    .outerCircleColor(R.color.md_amber_500)
-                    )
-                    .listener(tapTargetListener)
-                    .show();
-        }
+        adapter.getFavoriteViews()
+                .first()
+                .subscribe((view -> {
+                    if (view != null) {
+                        view.post(() ->
+                                new TapTargetManager(getActivity())
+                                        .tapTarget(
+                                                TapTargetManager.forView(
+                                                        getActivity(),
+                                                        view,
+                                                        R.string.tap_target_title_categ_favorite,
+                                                        R.string.tap_target_content_categ_favorite
+                                                )
+                                                        .outerCircleColor(R.color.md_amber_500)
+                                        )
+                                        .listener(tapTargetListener)
+                                        .show());
+                    }
+                }));
     }
 }

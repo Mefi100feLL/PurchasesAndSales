@@ -41,6 +41,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
 
     private List<ShoppingList> lists = new ArrayList<>();
     private ArrayList<ShoppingList> selectedLists = new ArrayList<>();
+    private boolean editMode;
 
     public void setSale(int saleId, boolean isCurrent) {
         if (sale == null) {
@@ -65,6 +66,15 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
                             if (result != null) {
                                 sale = result;
                                 getViewState().showInfo(sale);
+                                if (editMode) {
+                                    getViewState().showSendButton();
+                                    if (sale.isFavorite()) {
+                                        getViewState().showFavorite(sale.isFavorite());
+                                    }
+                                } else {
+                                    getViewState().hideFavorite();
+                                    getViewState().hideSendButton();
+                                }
                                 if (isCurrent) {
                                     showTapTarget();
                                 }
@@ -192,10 +202,30 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             PreferencesManager.getInstance().putTapTargetForSaleSharing(true);
             return;
         }
-        if (!PreferencesManager.getInstance().isTapTargetForSaleSendingShown()) {
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSendingShown() && editMode) {
             getViewState().showTapTargetForSending();
             PreferencesManager.getInstance().putTapTargetForSaleSending(true);
             return;
         }
+    }
+
+    public void onToFavoriteClicked() {
+        if (sale.isFavorite()){
+            listItemInteractor.removeWithSaleIdFromList(listInteractor.getDefaultList().getId(), sale.getId());
+        } else {
+            ListItem item = SaleTOListItemMapper.getListItem(sale);
+            item.setListId(listInteractor.getDefaultList().getId());
+            listItemInteractor.addItem(item);
+        }
+        sale.setFavorite(!sale.isFavorite());
+        getViewState().showFavorite(sale.isFavorite());
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
     }
 }

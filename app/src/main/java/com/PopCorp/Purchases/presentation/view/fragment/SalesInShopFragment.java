@@ -129,6 +129,7 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
         super.onResume();
         toolBar.setTitle(title);
         toolBar.setKeepScreenOn(PreferencesManager.getInstance().isDisplayNoOff());
+        presenter.refreshFavorites();
     }
 
     @Override
@@ -195,6 +196,27 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
                     .listener(tapTargetListener)
                     .show();
         }
+    }
+
+    @Override
+    public void showTapTargetForSalesFavorite() {
+        adapter.getFavoriteViews()
+                .first()
+                .subscribe((view -> {
+                    if (view != null) {
+                        view.post(() ->
+                                new TapTargetManager(getActivity())
+                                        .tapTarget(
+                                                TapTargetManager.forView(getActivity(), view, R.string.tap_target_title_sale_favorite, R.string.tap_target_content_sale_favorite))
+                                        .listener(tapTargetListener)
+                                        .show());
+                    }
+                }));
+    }
+
+    @Override
+    public void update() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -267,6 +289,8 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
             }
         });
         spinner.setVisibility(View.VISIBLE);
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolBar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
     }
 
     @Override
@@ -309,7 +333,6 @@ public class SalesInShopFragment extends MvpAppCompatFragment implements SalesIn
     @Override
     public void refreshing(boolean refresh) {
         swipeRefresh.setRefreshing(refresh);
-        swipeRefresh.setEnabled(!refresh);
     }
 
     @Override

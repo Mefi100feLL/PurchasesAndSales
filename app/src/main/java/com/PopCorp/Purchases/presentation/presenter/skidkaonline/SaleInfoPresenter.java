@@ -44,6 +44,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     private ListItemInteractor listItemInteractor = new ListItemInteractor();
 
     private Sale sale;
+    private boolean editMode;
 
     public List<ShoppingList> lists = new ArrayList<>();
     private ArrayList<ShoppingList> selectedLists = new ArrayList<>();
@@ -94,6 +95,21 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             loadBigImage(sale);
         } else {
             loadSmallImage();
+        }
+        if (editMode) {
+            getViewState().showSendButton();
+            getViewState().showCropButton();
+            getViewState().showCommentsButton();
+            getViewState().hideCommentsMenuItem();
+            if (sale.isFavorite()) {
+                getViewState().showFavorite(sale.isFavorite());
+            }
+        } else {
+            getViewState().hideSendButton();
+            getViewState().hideCropButton();
+            getViewState().hideCommentsButton();
+            getViewState().showCommentsMenuItem();
+            getViewState().hideFavorite();
         }
     }
 
@@ -245,12 +261,12 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             PreferencesManager.getInstance().putTapTargetForSOSaleComments(true);
             return;
         }
-        if (!PreferencesManager.getInstance().isTapTargetForSOSaleSendingShown()) {
+        if (!PreferencesManager.getInstance().isTapTargetForSOSaleSendingShown() && editMode) {
             getViewState().showTapTargetForSending();
             PreferencesManager.getInstance().putTapTargetForSOSaleSending(true);
             return;
         }
-        if (!PreferencesManager.getInstance().isTapTargetForSaleSOCroppingShown()) {
+        if (!PreferencesManager.getInstance().isTapTargetForSaleSOCroppingShown() && editMode) {
             getViewState().showTapTargetForCropping();
             PreferencesManager.getInstance().putTapTargetForSOSaleCropping(true);
             return;
@@ -260,5 +276,25 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             PreferencesManager.getInstance().putTapTargetForSOSaleSharing(true);
             return;
         }
+    }
+
+    public void onToFavoriteClicked() {
+        if (sale.isFavorite()){
+            listItemInteractor.removeWithSaleIdFromList(listInteractor.getDefaultList().getId(), sale.getId());
+        } else {
+            ListItem item = SaleTOListItemMapper.getListItem(sale);
+            item.setListId(listInteractor.getDefaultList().getId());
+            listItemInteractor.addItem(item);
+        }
+        sale.setFavorite(!sale.isFavorite());
+        getViewState().showFavorite(sale.isFavorite());
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
     }
 }

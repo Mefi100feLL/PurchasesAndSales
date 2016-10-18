@@ -7,12 +7,14 @@ public class ListItemSale implements Parcelable {
 
     private long id;
     private String image;
+    private int saleId;
     private String periodStart;
     private String periodEnd;
 
-    public ListItemSale(long id, String image, String periodStart, String periodEnd) {
+    public ListItemSale(long id, String image, int saleId, String periodStart, String periodEnd) {
         this.id = id;
         this.image = image;
+        this.saleId = saleId;
         this.periodStart = periodStart;
         this.periodEnd = periodEnd;
     }
@@ -33,6 +35,7 @@ public class ListItemSale implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(image);
+        dest.writeInt(saleId);
         dest.writeString(periodStart);
         dest.writeString(periodEnd);
     }
@@ -50,6 +53,7 @@ public class ListItemSale implements Parcelable {
     private ListItemSale(Parcel parcel) {
         this.id = parcel.readLong();
         this.image = parcel.readString();
+        this.saleId = parcel.readInt();
         this.periodStart = parcel.readString();
         this.periodEnd = parcel.readString();
     }
@@ -84,5 +88,13 @@ public class ListItemSale implements Parcelable {
 
     public void setPeriodEnd(String periodEnd) {
         this.periodEnd = periodEnd;
+    }
+
+    public int getSaleId() {
+        return saleId;
+    }
+
+    public void setSaleId(int saleId) {
+        this.saleId = saleId;
     }
 }

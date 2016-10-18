@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import rx.Observable;
+import rx.subjects.ReplaySubject;
+
 public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHolder> implements Filterable {
 
     private Context context;
@@ -39,8 +42,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
     protected List<ListItem> objects;
     private List<ListItem> selectedItems;
     private String currency;
-
-    private View firstView;
 
     public ListItemAdapter(Context context, ListItemCallback callback, List<ListItem> objects, List<ListItem> selectedItems, Comparator<ListItemDecorator> saleComparator, String currency) {
         this.context = context;
@@ -90,10 +91,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
 
     public void setCurrency(String currency) {
         this.currency = currency;
-    }
-
-    public View getFirstView() {
-        return firstView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -165,7 +162,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             }
         } else {
             if (position == 1) {
-                firstView = holder.name;
+                publishSubject.onNext(holder.name);
             }
             showItem(holder, decorator.getItem());
         }
@@ -257,6 +254,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
                 coloredCircle.getPaint().setColor(item.getCategory().getColor());
                 holder.image.setVisibility(View.VISIBLE);
+                holder.image.setOnClickListener(v -> {
+                });
                 holder.image.setBackground(coloredCircle);
                 holder.image.setImageResource(android.R.color.transparent);
             } else {
@@ -265,11 +264,17 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         }
 
         if (selectedItems.contains(item)) {
-            firstView = holder.name;
+            publishSubject.onNext(holder.name);
             holder.mainLayout.setBackgroundResource(R.color.md_btn_selected);
         } else {
             holder.mainLayout.setBackgroundResource(android.R.color.transparent);
         }
+    }
+
+    private ReplaySubject<View> publishSubject = ReplaySubject.create();
+
+    public Observable<View> getItemsViews() {
+        return publishSubject;
     }
 
     @Override

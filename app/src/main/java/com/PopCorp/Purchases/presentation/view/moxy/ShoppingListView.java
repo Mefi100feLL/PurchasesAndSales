@@ -84,4 +84,10 @@ public interface ShoppingListView extends SampleDataView {
     void showTapTargetForItemEditInActionMode();
 
     void showTapTargetForItemsRemoveInActionMode();
+
+    void openSale(long saleId);
+
+    void showCantRemoveDefaultList();
+
+    void openSkidkaonlineSale(int saleId);
 }

@@ -3,15 +3,19 @@ package com.PopCorp.Purchases.presentation.presenter;
 import android.view.View;
 
 import com.PopCorp.Purchases.data.analytics.AnalyticsTrackers;
-import com.PopCorp.Purchases.data.callback.RecyclerCallback;
+import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.CategoryComparator;
+import com.PopCorp.Purchases.data.mapper.SaleTOListItemMapper;
 import com.PopCorp.Purchases.data.model.Category;
+import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Sale;
 import com.PopCorp.Purchases.data.model.Shop;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.CategoryInteractor;
+import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
 import com.PopCorp.Purchases.domain.interactor.SaleInteractor;
+import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.SalesInShopView;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -21,12 +25,16 @@ import java.util.Collections;
 import java.util.List;
 
 import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @InjectViewState
-public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implements RecyclerCallback<Sale> {
+public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implements FavoriteRecyclerCallback<Sale> {
 
     private CategoryInteractor categoryInteractor = new CategoryInteractor();
     private SaleInteractor interactor = new SaleInteractor();
+    private ShoppingListInteractor listInteractor = new ShoppingListInteractor();
+    private ListItemInteractor listItemInteractor = new ListItemInteractor();
 
     private Shop currentShop;
 
@@ -266,5 +274,47 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
             PreferencesManager.getInstance().putTapTargetForSalesSearch(true);
             return;
         }
+        if (!PreferencesManager.getInstance().isTapTargetForSalesFavoriteShown()) {
+            getViewState().showTapTargetForSalesFavorite();
+            PreferencesManager.getInstance().putTapTargetForSalesFavorite(true);
+            return;
+        }
+    }
+
+    @Override
+    public void onFavoriteClicked(Sale sale) {
+        if (sale.isFavorite()){
+            listItemInteractor.removeWithSaleIdFromList(listInteractor.getDefaultList().getId(), sale.getId());
+        } else {
+            ListItem item = SaleTOListItemMapper.getListItem(sale);
+            item.setListId(listInteractor.getDefaultList().getId());
+            listItemInteractor.addItem(item);
+        }
+        sale.setFavorite(!sale.isFavorite());
+    }
+
+    public void refreshFavorites() {
+        interactor.refreshFavorites(objects)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        AnalyticsTrackers.getInstance().sendError(e);
+                        ErrorManager.printStackTrace(e);
+                    }
+
+                    @Override
+                    public void onNext(Boolean edited) {
+                        if (edited){
+                            getViewState().update();
+                        }
+                    }
+                });
     }
 }
