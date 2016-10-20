@@ -62,11 +62,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        try {
-            new UpdaterDB().update(context, db, oldVersion, newVersion);
-        } catch (Exception e) {
-            throw new RuntimeException("Error in updating DB");
-        }
+        new UpdaterDB().update(context, db, oldVersion, newVersion);
     }
 
     /*private void changeFavorites(SQLiteDatabase db) {
