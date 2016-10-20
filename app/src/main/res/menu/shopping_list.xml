@@ -23,6 +23,13 @@
     </item>
 
     <item
+        android:id="@+id/action_show_sales"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/action_show_sales"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/action_remove_buyed"
         android:title="@string/action_remove_buyed"
         app:showAsAction="never"/>
