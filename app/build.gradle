@@ -32,8 +32,8 @@ android {
         applicationId "com.PopCorp.Purchases"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 38
-        versionName "4.0.7"
+        versionCode 39
+        versionName "4.0.8"
         signingConfig signingConfigs.release
     }
 
@@ -65,6 +65,10 @@ android {
             debuggable true
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
+        }
+        debuggableRelease{
+            debuggable true
+            signingConfig signingConfigs.release
         }
         release {
             debuggable false
@@ -135,6 +139,8 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.0'
     compile 'io.reactivex:rxandroid:1.2.1'
 
+    debuggableReleaseCompile 'com.facebook.stetho:stetho:1.4.1'
+    debuggableReleaseCompile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
     debugCompile 'com.facebook.stetho:stetho:1.4.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
 }

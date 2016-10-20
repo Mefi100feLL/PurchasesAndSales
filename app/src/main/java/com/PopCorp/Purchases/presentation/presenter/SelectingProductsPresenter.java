@@ -10,7 +10,6 @@ import com.PopCorp.Purchases.data.mapper.ListItemProductMapper;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.Product;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
-import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ProductInteractor;
 import com.PopCorp.Purchases.presentation.view.adapter.SelectingProductsAdapter;
 import com.PopCorp.Purchases.presentation.view.adapter.ShopsAdapter;
@@ -191,7 +190,7 @@ public class SelectingProductsPresenter extends MvpPresenter<SelectingProductsVi
     }
 
     public void showTapTarget() {
-        if (!PreferencesManager.getInstance().isTapTargetForProductsFilterShown()) {
+        /*if (!PreferencesManager.getInstance().isTapTargetForProductsFilterShown()) {
             getViewState().showTapTargetForProductsFilter();
             PreferencesManager.getInstance().putTapTargetForProductsFilter(true);
             return;
@@ -210,6 +209,6 @@ public class SelectingProductsPresenter extends MvpPresenter<SelectingProductsVi
             getViewState().showTapTargetForProductsReturn();
             PreferencesManager.getInstance().putTapTargetForProductsReturn(true);
             return;
-        }
+        }*/
     }
 }

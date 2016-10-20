@@ -9,7 +9,6 @@ import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
 import com.PopCorp.Purchases.data.model.skidkaonline.Shop;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
-import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ListItemInteractor;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
 import com.PopCorp.Purchases.domain.interactor.skidkaonline.SaleInteractor;
@@ -169,7 +168,7 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements FavoriteR
 
 
     public void showTapTarget() {
-        if (filterCatalogs.size() > 1) {
+        /*if (filterCatalogs.size() > 1) {
             if (!PreferencesManager.getInstance().isTapTargetForSalesFilterByCatalogsShown()) {
                 getViewState().showTapTargetForFilter();
                 PreferencesManager.getInstance().putTapTargetForSalesByCatalogsFilter(true);
@@ -180,7 +179,7 @@ public class SalesPresenter extends MvpPresenter<SalesView> implements FavoriteR
             getViewState().showTapTargetForSalesFavorite();
             PreferencesManager.getInstance().putTapTargetForSalesFavorite(true);
             return;
-        }
+        }*/
     }
 
     @Override

@@ -274,7 +274,7 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
     }
 
     public void showTapTarget() {
-        if (!PreferencesManager.getInstance().isTapTargetForCategsFilterShown()){
+        /*if (!PreferencesManager.getInstance().isTapTargetForCategsFilterShown()){
             getViewState().showTapTargetForFilter();
             PreferencesManager.getInstance().putTapTargetForCategsFilter(true);
             return;
@@ -283,6 +283,6 @@ public class CategoriesPresenter extends MvpPresenter<CategoriesView> implements
             getViewState().showTapTargetForCategFavorite();
             PreferencesManager.getInstance().putTapTargetForCategsFavorite(true);
             return;
-        }
+        }*/
     }
 }
