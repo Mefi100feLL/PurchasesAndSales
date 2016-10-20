@@ -225,7 +225,7 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
     }
 
     public void showTapTarget() {
-        if (!PreferencesManager.getInstance().isTapTargetForCroppingRotateSkipShown()) {
+        /*if (!PreferencesManager.getInstance().isTapTargetForCroppingRotateSkipShown()) {
             getViewState().showTapTargetForRotateSkip();
             PreferencesManager.getInstance().putTapTargetForCroppingRotateSkip(true);
             return;
@@ -239,6 +239,6 @@ public class CropPresenter extends MvpPresenter<CropView> implements CreateEditL
             getViewState().showTapTargetForScaleSkip();
             PreferencesManager.getInstance().putTapTargetForCroppingScaleSkip(true);
             return;
-        }
+        }*/
     }
 }

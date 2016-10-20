@@ -262,7 +262,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
     }
 
     public void showTapTarget() {
-        if (filterCategories.size() > 1 && !currentFilter.startsWith("query")) {
+        /*if (filterCategories.size() > 1 && !currentFilter.startsWith("query")) {
             if (!PreferencesManager.getInstance().isTapTargetForSalesFilterByCategsShown()) {
                 getViewState().showTapTargetForFilter();
                 PreferencesManager.getInstance().putTapTargetForSalesByCategsFilter(true);
@@ -278,7 +278,7 @@ public class SalesInShopPresenter extends MvpPresenter<SalesInShopView> implemen
             getViewState().showTapTargetForSalesFavorite();
             PreferencesManager.getInstance().putTapTargetForSalesFavorite(true);
             return;
-        }
+        }*/
     }
 
     @Override
