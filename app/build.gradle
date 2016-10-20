@@ -66,6 +66,10 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
         }
+        debuggableRelease{
+            debuggable true
+            signingConfig signingConfigs.release
+        }
         release {
             debuggable false
             signingConfig signingConfigs.release
@@ -135,6 +139,8 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.0'
     compile 'io.reactivex:rxandroid:1.2.1'
 
+    debuggableReleaseCompile 'com.facebook.stetho:stetho:1.4.1'
+    debuggableReleaseCompile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
     debugCompile 'com.facebook.stetho:stetho:1.4.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
 }
