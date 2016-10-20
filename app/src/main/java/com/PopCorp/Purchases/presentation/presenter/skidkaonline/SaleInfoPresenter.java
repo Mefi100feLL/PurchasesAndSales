@@ -89,10 +89,9 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
 
     private void showSale() {
         getViewState().showInfo(sale);
-        File smallFile = ImageLoader.getInstance().getDiskCache().get(sale.getImageSmall());
-        if (smallFile != null) {
-            getViewState().showImage(ImageSource.uri(smallFile.getAbsolutePath()));
-            loadBigImage(sale);
+        File bigFile = ImageLoader.getInstance().getDiskCache().get(sale.getImageBig());
+        if (bigFile != null) {
+            loadBigImage();
         } else {
             loadSmallImage();
         }
@@ -129,10 +128,9 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                 File smallFile = ImageLoader.getInstance().getDiskCache().get(sale.getImageSmall());
                 if (smallFile != null) {
-                    getViewState().showImage(ImageSource.uri(smallFile.getAbsolutePath()));
+                    getViewState().showImage(ImageSource.bitmap(bitmap));
                 }
-                bitmap.recycle();
-                loadBigImage(sale);
+                loadBigImage();
             }
 
             @Override
@@ -143,7 +141,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
     }
 
 
-    private void loadBigImage(Sale sale) {
+    private void loadBigImage() {
         ImageLoader.getInstance().loadImage(sale.getImageBig(), null, UIL.getScaleImageOptions(), new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -159,7 +157,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
             public void onLoadingComplete(String s, View view, Bitmap bitmap) {
                 File file = ImageLoader.getInstance().getDiskCache().get(sale.getImageBig());
                 if (file != null) {
-                    getViewState().showImage(ImageSource.uri(file.getAbsolutePath()));
+                    getViewState().showImage(ImageSource.bitmap(bitmap));
                 }
                 getViewState().hideProgress();
             }
