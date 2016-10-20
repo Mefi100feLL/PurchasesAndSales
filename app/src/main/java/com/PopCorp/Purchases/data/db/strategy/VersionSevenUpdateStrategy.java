@@ -15,7 +15,12 @@ public class VersionSevenUpdateStrategy implements VersionUpdateStrategy {
 
     @Override
     public void update(Context context, SQLiteDatabase db) {
-        db.execSQL("ALTER TABLE " + ListItemSaleDAO.TABLE_LIST_SALES + " ADD COLUMN " + ListItemSaleDAO.KEY_SALE_ID + " integer;");
+        try {
+            db.execSQL("ALTER TABLE " + ListItemSaleDAO.TABLE_LIST_SALES + " ADD COLUMN " + ListItemSaleDAO.KEY_SALE_ID + " integer;");
+        } catch (Exception e){
+            //Игнорируем. Проявляется, если таблица уже создана сэтим полем
+        }
+
         ShoppingList list = new ShoppingList(-1, "Список акций", 0, 0, "RUB");
         ShoppingListDAO dao = new ShoppingListDAO(db);
         dao.updateOrAddToDB(list);

@@ -381,7 +381,7 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     }
 
     public void showTapTarget() {
-        if (!PreferencesManager.getInstance().isTapTargetForItemsCreateShown()){
+        /*if (!PreferencesManager.getInstance().isTapTargetForItemsCreateShown()){
             getViewState().showTapTargetForCreate();
             PreferencesManager.getInstance().putTapTargetForItemsCreate(true);
             return;
@@ -404,11 +404,11 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
                 PreferencesManager.getInstance().putTapTargetForItemInfo(true);
                 return;
             }
-        }
+        }*/
     }
 
     public void showTapTargetForActionMode() {
-        if (!PreferencesManager.getInstance().isTapTargetForItemsAddToActionModeShown()){
+        /*if (!PreferencesManager.getInstance().isTapTargetForItemsAddToActionModeShown()){
             getViewState().showTapTargetForItemsAddToActionMode();
             PreferencesManager.getInstance().putTapTargetForItemsAddToActionMode(true);
             return;
@@ -422,6 +422,6 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
             getViewState().showTapTargetForItemsRemoveInActionMode();
             PreferencesManager.getInstance().putTapTargetForItemsRemoveInActionMode(true);
             return;
-        }
+        }*/
     }
 }

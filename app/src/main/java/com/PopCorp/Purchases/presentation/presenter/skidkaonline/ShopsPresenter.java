@@ -238,7 +238,7 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
 
 
     public void showTapTarget() {
-        if (!PreferencesManager.getInstance().isTapTargetForShopsFilterShown()){
+        /*if (!PreferencesManager.getInstance().isTapTargetForShopsFilterShown()){
             getViewState().showTapTargetForFilter();
             PreferencesManager.getInstance().putTapTargetForShopsFilter(true);
             return;
@@ -247,6 +247,6 @@ public class ShopsPresenter extends MvpPresenter<ShopsView> implements FavoriteR
             getViewState().showTapTargetForShopFavorite();
             PreferencesManager.getInstance().putTapTargetForShopsFavorite(true);
             return;
-        }
+        }*/
     }
 }

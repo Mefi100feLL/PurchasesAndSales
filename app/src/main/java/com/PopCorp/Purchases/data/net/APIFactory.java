@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIFactory {
 
-    public static final String BASE_URL = "http://purchases.cf";
+    public static final String BASE_URL = "http://138.201.245.117/";
 
     private static API api;
 

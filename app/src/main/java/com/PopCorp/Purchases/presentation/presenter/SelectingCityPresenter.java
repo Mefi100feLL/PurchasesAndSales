@@ -157,18 +157,18 @@ public class SelectingCityPresenter extends MvpPresenter<SelectingCityView> impl
 
 
     public void showTapTarget() {
-        if (!PreferencesManager.getInstance().isTapTargetForCitiesSearch()){
+        /*if (!PreferencesManager.getInstance().isTapTargetForCitiesSearch()){
             getViewState().showTapTargetForSearch();
             PreferencesManager.getInstance().putTapTargetForCitiesSearch(true);
             return;
-        }
+        }*/
 
     }
 
     public void showTapTargetForFab(){
-        if (!PreferencesManager.getInstance().isTapTargetForCitySelect()){
+        /*if (!PreferencesManager.getInstance().isTapTargetForCitySelect()){
             getViewState().showTapTargetForCitySelect();
             PreferencesManager.getInstance().putTapTargetForCitySelect(true);
-        }
+        }*/
     }
 }
