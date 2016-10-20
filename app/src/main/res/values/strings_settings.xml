@@ -39,4 +39,8 @@
     <string name="prefs_program">Программа</string>
     <string name="prefs_display_no_off">Не гасить экран</string>
     <string name="prefs_about">О программе</string>
+
+
+    <string name="prefs_open_default_list">Только один список</string>
+    <string name="prefs_open_default_list_summary">Открывать список по-умолчанию при выборе списков</string>
 </resources>

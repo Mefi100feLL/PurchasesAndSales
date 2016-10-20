@@ -66,6 +66,7 @@ public class PreferencesManager {
     public static final String PREFS_FILTER_LIST = "filter_list";
 
     public static final String PREFS_ABOUT = "about";
+    public static final String PREFS_OPEN_DEFAULT_LIST = "open_default_list";
 
     public static final String PREFS_COLOR_PRIMARY = "colorPrimary";
     public static final String PREFS_COLOR_ACCENT = "colorAccent";
@@ -489,6 +490,13 @@ public class PreferencesManager {
     public String getThemeLightDark() {
         return sPref.getString(PREFS_THEME_LIGHT_DARK, context.getString(R.string.prefs_light_theme));
     }
+
+    public boolean isOpenDefaultList(){
+        return sPref.getBoolean(PREFS_OPEN_DEFAULT_LIST, false);
+    }
+
+
+
 
     public boolean isTapTargetForShopsFilterShown() {
         return sPref.getBoolean(PREFS_TAP_TARGET_SHOPS_FILTER, false);

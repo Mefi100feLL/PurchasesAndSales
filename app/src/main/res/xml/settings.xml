@@ -125,5 +125,11 @@
             android:key="displaynooff"
             android:title="@string/prefs_display_no_off" />
 
+        <CheckBoxPreference
+            android:key="open_default_list"
+            android:title="@string/prefs_open_default_list"
+            android:defaultValue="false"
+            android:summary="@string/prefs_open_default_list_summary"/>
+
     </PreferenceCategory>
 </PreferenceScreen>
