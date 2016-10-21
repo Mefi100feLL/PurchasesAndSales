@@ -371,5 +371,6 @@
     <string name="action_show_sales">Акционные товары</string>
     <string name="empty_no_items_with_sales_for_shop">Нет товаров без акций для магазина \"shopName\"</string>
     <string name="button_all_items">Все товары</string>
+    <string name="empty_no_items_with_sales">Нет товаров без акций</string>
 
 </resources>

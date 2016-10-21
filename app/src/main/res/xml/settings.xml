@@ -2,39 +2,39 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:key="style"
-        android:title="@string/prefs_view"
-        android:persistent="false">
+        android:persistent="false"
+        android:title="@string/prefs_view">
 
         <com.PopCorp.Purchases.presentation.view.view.ColorPreference
             android:key="colorPrimary"
             android:summary="@string/prefs_color_primary_summary"
-            android:title="@string/prefs_color_primary" />
+            android:title="@string/prefs_color_primary"/>
 
         <com.PopCorp.Purchases.presentation.view.view.ColorPreference
             android:key="colorAccent"
             android:summary="@string/prefs_color_accent_summary"
-            android:title="@string/prefs_color_accent" />
+            android:title="@string/prefs_color_accent"/>
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:key="theme_light_dark"
-            android:title="@string/prefs_theme"
+            android:defaultValue="@string/prefs_light_theme"
             android:entries="@array/themes"
             android:entryValues="@array/themes"
-            android:defaultValue="@string/prefs_light_theme" />
+            android:key="theme_light_dark"
+            android:title="@string/prefs_theme"/>
 
         <CheckBoxPreference
-            android:key="replacebuyed"
-            android:title="@string/prefs_replace_buyed"
             android:defaultValue="true"
-            android:summary="@string/prefs_replace_buyed_to_end"/>
+            android:key="replacebuyed"
+            android:summary="@string/prefs_replace_buyed_to_end"
+            android:title="@string/prefs_replace_buyed"/>
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:key="sortlistitem"
-            android:summary="@string/prefs_default_sort"
-            android:title="@string/prefs_sort_listitems"
+            android:defaultValue="@string/prefs_default_sort_listitem_one"
             android:entries="@array/sortarray"
             android:entryValues="@array/sortarray"
-            android:defaultValue="@string/prefs_default_sort_listitem_one"/>
+            android:key="sortlistitem"
+            android:summary="@string/prefs_default_sort"
+            android:title="@string/prefs_sort_listitems"/>
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
             android:defaultValue="@string/prefs_default_sort_list_one"
@@ -42,28 +42,28 @@
             android:entryValues="@array/sorts_of_list"
             android:key="sort_list"
             android:summary="@string/prefs_default_sort"
-            android:title="@string/prefs_sort_lists" />
+            android:title="@string/prefs_sort_lists"/>
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
+            android:defaultValue="@string/prefs_default_size_text"
+            android:entries="@array/sizes"
+            android:entryValues="@array/sizes"
             android:key="listsize"
             android:summary="@string/prefs_text_size_summary"
-            android:title="@string/prefs_text_size"
-            android:entries="@array/sizes"
-            android:entryValues="@array/sizes"
-            android:defaultValue="@string/prefs_default_size_text" />
+            android:title="@string/prefs_text_size"/>
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:key="listsizesmall"
-            android:summary="@string/prefs_text_size_summary_small"
-            android:title="@string/prefs_text_size_small"
+            android:defaultValue="@string/prefs_default_size_text_small"
             android:entries="@array/sizes"
             android:entryValues="@array/sizes"
-            android:defaultValue="@string/prefs_default_size_text_small" />
+            android:key="listsizesmall"
+            android:summary="@string/prefs_text_size_summary_small"
+            android:title="@string/prefs_text_size_small"/>
 
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="showcategories"
-            android:title="@string/prefs_show_categories"
-            android:defaultValue="true"/>
+            android:title="@string/prefs_show_categories"/>
 
     </PreferenceCategory>
 
@@ -75,12 +75,12 @@
         <Preference
             android:key="currency"
             android:summary="@string/prefs_default_currency"
-            android:title="@string/prefs_currency" />
+            android:title="@string/prefs_currency"/>
 
         <Preference
             android:key="unit"
             android:summary="@string/prefs_default_unit"
-            android:title="@string/prefs_unit" />
+            android:title="@string/prefs_unit"/>
 
         <Preference
             android:key="categories"
@@ -88,48 +88,48 @@
 
         <Preference
             android:key="shopes"
-            android:title="@string/prefs_shops" />
+            android:title="@string/prefs_shops"/>
 
         <com.afollestad.materialdialogs.prefs.MaterialListPreference
-            android:key="filter_list"
-            android:summary="@string/prefs_filter_list_default_one"
-            android:title="@string/prefs_filter_list"
+            android:defaultValue="@string/prefs_filter_list_default_one"
             android:entries="@array/filters_list"
             android:entryValues="@array/filters_list"
-            android:defaultValue="@string/prefs_filter_list_default_one" />
+            android:key="filter_list"
+            android:summary="@string/prefs_filter_list_default_one"
+            android:title="@string/prefs_filter_list"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="open_default_list"
+            android:summary="@string/prefs_open_default_list_summary"
+            android:title="@string/prefs_open_default_list"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="sale"
         android:persistent="false"
-        android:title="@string/prefs_sales" >
+        android:title="@string/prefs_sales">
 
         <Preference
             android:key="city"
-            android:title="@string/prefs_region" />
+            android:title="@string/prefs_region"/>
 
         <Preference
             android:key="skidkaonline_city"
-            android:title="@string/prefs_city" />
+            android:title="@string/prefs_city"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="program"
         android:persistent="false"
-        android:title="@string/prefs_program" >
+        android:title="@string/prefs_program">
 
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="displaynooff"
-            android:title="@string/prefs_display_no_off" />
-
-        <CheckBoxPreference
-            android:key="open_default_list"
-            android:title="@string/prefs_open_default_list"
-            android:defaultValue="false"
-            android:summary="@string/prefs_open_default_list_summary"/>
+            android:title="@string/prefs_display_no_off"/>
 
     </PreferenceCategory>
 </PreferenceScreen>

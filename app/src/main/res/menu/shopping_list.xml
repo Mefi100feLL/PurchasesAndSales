@@ -49,6 +49,19 @@
         android:title="@string/action_send_list"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_size_table"
+        android:icon="@drawable/ic_view_carousel_white_24dp"
+        android:title="@string/action_size_table"
+        app:showAsAction="never">
+
+        <menu>
+            <group android:checkableBehavior="single">
+
+            </group>
+        </menu>
+    </item>
+
     <!--<item
         android:id="@+id/action_alarm"
         app:showAsAction="never"

@@ -6,6 +6,7 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
     private String currency;
 
     private boolean showSales = true;
+
+    private int tableSize;
 
     public ListItemAdapter(Context context, ListItemCallback callback, List<ListItem> objects, List<ListItem> selectedItems, Comparator<ListItemDecorator> saleComparator, String currency) {
         this.context = context;
@@ -166,6 +169,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             } else {
                 holder.headerName.setTextColor(decorator.getCategory().getColor());
             }
+            StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+            layoutParams.setFullSpan(true);
         } else {
             if (position == 1) {
                 publishSubject.onNext(holder.name);
@@ -191,6 +196,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 }
             }
         });
+    }
+
+    public void setTableSize(int size){
+        this.tableSize = size;
     }
 
     private int getPrimaryColorForTheme() {
@@ -259,14 +268,17 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
             if (item.getCategory() != null) {
                 ShapeDrawable coloredCircle = new ShapeDrawable(new OvalShape());
                 coloredCircle.getPaint().setColor(item.getCategory().getColor());
-                holder.image.setVisibility(View.VISIBLE);
-                holder.image.setOnClickListener(v -> {
-                });
                 holder.image.setBackground(coloredCircle);
                 holder.image.setImageResource(android.R.color.transparent);
+                if (tableSize == 1) {
+                    holder.image.setVisibility(View.VISIBLE);
+                } else {
+                    holder.image.setVisibility(View.GONE);
+                }
             } else {
                 holder.image.setVisibility(View.GONE);
             }
+            holder.image.setOnClickListener(v -> {});
         }
 
         if (selectedItems.contains(item)) {
@@ -288,16 +300,29 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         if (publishItems.get(position).isHeader()) {
             return 1;
         }
-        return 2;
+        if (tableSize == 1){
+            return 2;
+        } else {
+            return 3;
+        }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
         View v;
-        if (position == 1) {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
-        } else {
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listitem, parent, false);
+        switch (position){
+            case 1:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header, parent, false);
+                break;
+            case 2:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listitem, parent, false);
+                break;
+            case 3:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listitem_grid, parent, false);
+                break;
+            default:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_listitem, parent, false);
+                break;
         }
 
         return new ViewHolder(v);

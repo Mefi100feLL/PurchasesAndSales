@@ -103,4 +103,19 @@ public class TableSizes {
         }
         PreferencesManager.getInstance().putListTableSize(size);
     }
+
+    public static int getListItemTableSize(Activity context) {
+        if (WindowUtils.isLandscape(context)){
+            return PreferencesManager.getInstance().getListItemTableSizeLandscape();
+        }
+        return PreferencesManager.getInstance().getListItemTableSize();
+    }
+
+    public static void putListItemTableSize(Activity context, int size) {
+        if (WindowUtils.isLandscape(context)){
+            PreferencesManager.getInstance().putListItemTableSizeLandscape(size);
+            return;
+        }
+        PreferencesManager.getInstance().putListItemTableSize(size);
+    }
 }

@@ -34,6 +34,7 @@ public class PreferencesManager {
     public static final String PREFS_SIZE_TABLE_CATEGS = "size_table_categs";
     public static final String PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE = "size_table_shops_skidkaonline";
     public static final String PREFS_SIZE_TABLE_SALES_SKIDKAONLINE = "size_table_sales_sakidkaonline";
+    public static final String PREFS_SIZE_TABLE_LISTITEMS = "size_table_listitems";
 
 
     public static final String PREFS_SIZE_TABLE_LISTS_LANDSCAPE = "size_table_lists_landscape";
@@ -42,6 +43,7 @@ public class PreferencesManager {
     public static final String PREFS_SIZE_TABLE_CATEGS_LANDSCAPE = "size_table_categs_landscape";
     public static final String PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE_LANDSCAPE = "size_table_shops_skidkaonline_landscape";
     public static final String PREFS_SIZE_TABLE_SALES_SKIDKAONLINE_LANDSCAPE = "size_table_sales_sakidkaonline_landscape";
+    public static final String PREFS_SIZE_TABLE_LISTITEMS_LANDSCAPE = "size_table_listitems_landscape";
 
     public static final String PREFS_DISPLAY_NO_OFF = "displaynooff";
     public static final String PREFS_LIST_ITEM_FONT_SIZE = "listsize";
@@ -225,6 +227,14 @@ public class PreferencesManager {
         return sPref.getInt(PREFS_SIZE_TABLE_SALES_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
     }
 
+    public int getListItemTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_LISTITEMS_LANDSCAPE, 1);
+    }
+
+    public int getListItemTableSize() {
+        return sPref.getInt(PREFS_SIZE_TABLE_LISTITEMS, 1);
+    }
+
     public void putSaleTableSizeLandscape(int size) {
         editor.putInt(PREFS_SIZE_TABLE_SALES_LANDSCAPE, size).commit();
     }
@@ -253,6 +263,14 @@ public class PreferencesManager {
 
     public void putListTableSizeLandscape(int size) {
         editor.putInt(PREFS_SIZE_TABLE_LISTS_LANDSCAPE, size).commit();
+    }
+
+    public void putListItemTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_LISTITEMS_LANDSCAPE, size).commit();
+    }
+
+    public void putListItemTableSize(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_LISTITEMS, size).commit();
     }
 
 

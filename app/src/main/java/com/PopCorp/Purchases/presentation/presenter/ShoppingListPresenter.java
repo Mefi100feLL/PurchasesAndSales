@@ -166,6 +166,8 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     public void onEmpty() {
         if (!currentFilter.isEmpty() && !showSales){
             getViewState().showEmptyNoSaleItemsForShop(currentFilter);
+        } else if (currentFilter.isEmpty() && !showSales){
+            getViewState().showEmptyNoSaleItems();
         }
     }
 
