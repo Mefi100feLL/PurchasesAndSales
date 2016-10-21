@@ -131,5 +131,9 @@
             android:key="displaynooff"
             android:title="@string/prefs_display_no_off"/>
 
+        <Preference
+            android:key="default_drawer_item"
+            android:title="@string/prefs_default_drawer_item"/>
+
     </PreferenceCategory>
 </PreferenceScreen>

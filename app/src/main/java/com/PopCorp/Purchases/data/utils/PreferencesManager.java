@@ -113,6 +113,7 @@ public class PreferencesManager {
     private static final String PREFS_TAP_TARGET_PRODUCTS_SORTING = "PREFS_TAP_TARGET_PRODUCTS_SORTING";
     private static final String PREFS_TAP_TARGET_PRODUCTS_RETURN = "PREFS_TAP_TARGET_PRODUCTS_RETURN";
     private static final String PREFS_TAP_TARGET_SALES_FAVORITE = "PREFS_TAP_TARGET_SALES_FAVORITE";
+    public static final String PREFS_DEFAULT_DRAWER_ITEM_POSITION = "default_drawer_item";
 
     private Context context;
     private SharedPreferences sPref;
@@ -274,6 +275,13 @@ public class PreferencesManager {
     }
 
 
+    public int getDefaultDrawerItemPosition() {
+        return sPref.getInt(PREFS_DEFAULT_DRAWER_ITEM_POSITION, 0);
+    }
+
+    public void putDefaultDrawerItemPosition(int value) {
+        editor.putInt(PREFS_DEFAULT_DRAWER_ITEM_POSITION, value).commit();
+    }
 
     public boolean isDisplayNoOff() {
         return sPref.getBoolean(PREFS_DISPLAY_NO_OFF, true);
