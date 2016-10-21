@@ -468,6 +468,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public void showData() {
         if (adapter == null) {
             adapter = new ListItemAdapter(getActivity(), presenter, presenter.getObjects(), presenter.getSelectedItems(), PreferencesManager.getInstance().getListItemDecoratorComparator(), presenter.getCurrency());
+            adapter.setShowSales(presenter.isShowSales());
             recyclerView.setAdapter(adapter);
         }
         progressBar.setVisibility(View.INVISIBLE);

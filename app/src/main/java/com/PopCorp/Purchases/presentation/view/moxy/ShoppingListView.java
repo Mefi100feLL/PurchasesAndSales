@@ -26,14 +26,15 @@ public interface ShoppingListView extends SampleDataView {
     void showErrorLoadingList();
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
     void showEmptyItems();
-    @StateStrategyType(value = GroupSingleStrategy.class, tag = "data")
-    void showEmptyNoSaleItemsForShop(String shopName);
 
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "shopsFilter")
     void hideShopsFilter();
     @StateStrategyType(value = GroupSingleStrategy.class, tag = "shopsFilter")
     void showShopsFilter(ArrayList<String> shops, String filter);
 
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void showEmptyNoSaleItemsForShop(String shopName);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void checkFilter(int itemId);

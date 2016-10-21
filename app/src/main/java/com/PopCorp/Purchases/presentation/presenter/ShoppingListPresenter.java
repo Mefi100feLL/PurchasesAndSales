@@ -441,4 +441,8 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     public boolean getShowSales() {
         return showSales;
     }
+
+    public boolean isShowSales() {
+        return showSales;
+    }
 }
