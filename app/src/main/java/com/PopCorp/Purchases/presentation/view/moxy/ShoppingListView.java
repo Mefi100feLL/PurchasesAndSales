@@ -34,6 +34,12 @@ public interface ShoppingListView extends SampleDataView {
 
 
     @StateStrategyType(AddToEndSingleStrategy.class)
+    void showEmptyNoSaleItemsForShop(String shopName);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void checkFilter(int itemId);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void showBuyedTotals(int countBuyed, BigDecimal buyed);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
@@ -48,6 +54,8 @@ public interface ShoppingListView extends SampleDataView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void changeItemInActionMode(int count, ListItem item);
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void checkShowSales(boolean checked);
 
     void onItemBuyedChanged(ListItem item);
 

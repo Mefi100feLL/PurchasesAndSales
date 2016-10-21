@@ -368,6 +368,19 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     }
 
     @Override
+    public void checkShowSales(boolean checked) {
+        if (adapter != null){
+            adapter.setShowSales(checked);
+        }
+        recyclerView.post(() -> {
+            MenuItem item = menu.findItem(R.id.action_show_sales);
+            if (item != null) {
+                item.setChecked(checked);
+            }
+        });
+    }
+
+    @Override
     public void showErrorLoadingList() {
         showError(R.string.error_loading_list, R.drawable.ic_scream, R.string.button_exit, view -> finish());
     }
@@ -413,8 +426,23 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     }
 
     @Override
+    public void checkFilter(int itemId) {
+        recyclerView.post(() -> {
+            MenuItem item = menu.findItem(itemId);
+            if (item != null) {
+                item.setChecked(true);
+            }
+        });
+    }
+
+    @Override
     public void showEmptyItems() {
         showError(R.string.empty_no_listitems, R.drawable.ic_cart_minus, R.string.button_add, view -> showInputFragment(null));
+    }
+
+    @Override
+    public void showEmptyNoSaleItemsForShop(String shopName) {
+        showError(getString(R.string.empty_no_items_with_sales_for_shop).replace("shopName", shopName), R.drawable.ic_cart_minus, R.string.button_all_items, view -> presenter.showSales(true));
     }
 
     @Override
@@ -440,6 +468,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public void showData() {
         if (adapter == null) {
             adapter = new ListItemAdapter(getActivity(), presenter, presenter.getObjects(), presenter.getSelectedItems(), PreferencesManager.getInstance().getListItemDecoratorComparator(), presenter.getCurrency());
+            adapter.setShowSales(presenter.isShowSales());
             recyclerView.setAdapter(adapter);
         }
         progressBar.setVisibility(View.INVISIBLE);
@@ -484,12 +513,14 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getGroupId() == R.id.action_shop_group) {
             presenter.onShopFilter(item.getItemId());
-            item.setChecked(true);
             return true;
         }
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
+                break;
+            case R.id.action_show_sales:
+                presenter.showSales(!item.isChecked());
                 break;
             case R.id.action_select_from_products:
                 showSelectingProducts();
@@ -532,6 +563,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void filter(String filter) {
         if (adapter != null) {
+            showData();
             adapter.getFilter().filter(filter);
         }
     }

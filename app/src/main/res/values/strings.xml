@@ -368,5 +368,8 @@
     <string name="action_from_favorite">Из избранных</string>
     <string name="tap_target_title_sale_favorite">Быстрая отправка</string>
     <string name="tap_target_content_sale_favorite">Отправляйте акцию в список покупок одним касанием</string>
+    <string name="action_show_sales">Акционные товары</string>
+    <string name="empty_no_items_with_sales_for_shop">Нет товаров без акций для магазина \"shopName\"</string>
+    <string name="button_all_items">Все товары</string>
 
 </resources>

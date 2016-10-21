@@ -43,6 +43,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
     private List<ListItem> selectedItems;
     private String currency;
 
+    private boolean showSales = true;
+
     public ListItemAdapter(Context context, ListItemCallback callback, List<ListItem> objects, List<ListItem> selectedItems, Comparator<ListItemDecorator> saleComparator, String currency) {
         this.context = context;
         this.callback = callback;
@@ -91,6 +93,10 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public void setShowSales(boolean showSales) {
+        this.showSales = showSales;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -312,15 +318,12 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
                 FilterResults results = new FilterResults();
                 ArrayList<ListItem> FilteredArrayNames = new ArrayList<>();
 
-                if (constraint.equals("")) {
-                    results.count = objects.size();
-                    results.values = objects;
-                    return results;
-                } else {
-                    for (ListItem item : objects) {
-                        if (item.getShop().equals(constraint) || (!PreferencesManager.getInstance().isFilterListOnlyProductsOfShop() && item.getShop().isEmpty())) {
-                            FilteredArrayNames.add(item);
-                        }
+                for (ListItem item : objects) {
+                    if (!showSales && item.getSale() != null) {
+                        continue;
+                    }
+                    if (constraint.equals("") || (item.getShop().equals(constraint) || (!PreferencesManager.getInstance().isFilterListOnlyProductsOfShop() && item.getShop().isEmpty()))) {
+                        FilteredArrayNames.add(item);
                     }
                 }
 
@@ -346,6 +349,9 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         publishItems.beginBatchedUpdates();
         ArrayList<ListItemDecorator> arrayForRemove = new ArrayList<>();
 
+        if (newItems.size() == 0){
+            publishItems.clear();
+        }
         for (ListItem item : newItems) {
             boolean finded = false;
             for (int i = 0; i < publishItems.size(); i++) {
@@ -372,6 +378,9 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.ViewHo
         }
         recalculateHeaders();
         publishItems.endBatchedUpdates();
+        if (publishItems.size() == 0){
+            callback.onEmpty();
+        }
     }
 
     private void recalculateHeaders() {

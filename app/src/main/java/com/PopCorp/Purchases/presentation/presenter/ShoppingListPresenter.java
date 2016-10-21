@@ -41,6 +41,8 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
     private ArrayList<String> shops = new ArrayList<>();
     private ArrayList<ListItem> selectedItems = new ArrayList<>();
 
+    private boolean showSales = true;
+
     public ShoppingListPresenter() {
         getViewState().showProgress();
     }
@@ -162,7 +164,9 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
 
     @Override
     public void onEmpty() {
-
+        if (!currentFilter.isEmpty() && !showSales){
+            getViewState().showEmptyNoSaleItemsForShop(currentFilter);
+        }
     }
 
     @Override
@@ -325,6 +329,8 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
         } else {
             currentFilter = shops.get(id);
         }
+        getViewState().showData();
+        getViewState().checkFilter(id);
         getViewState().filter(currentFilter);
     }
 
@@ -423,5 +429,20 @@ public class ShoppingListPresenter extends MvpPresenter<ShoppingListView> implem
             PreferencesManager.getInstance().putTapTargetForItemsRemoveInActionMode(true);
             return;
         }*/
+    }
+
+    public void showSales(boolean checked) {
+        showSales = checked;
+        getViewState().showData();
+        getViewState().checkShowSales(checked);
+        getViewState().filter(currentFilter);
+    }
+
+    public boolean getShowSales() {
+        return showSales;
+    }
+
+    public boolean isShowSales() {
+        return showSales;
     }
 }
