@@ -43,6 +43,8 @@
             app:cpv_maxProgress="1000"/>
     </FrameLayout>
 
+    <include layout="@layout/content_empty"/>
+
     <LinearLayout
         android:id="@+id/buttons_layout"
         android:layout_width="match_parent"

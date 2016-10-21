@@ -23,6 +23,7 @@ import com.PopCorp.Purchases.data.callback.SaleMainCallback;
 import com.PopCorp.Purchases.data.model.ListItem;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.model.skidkaonline.Sale;
+import com.PopCorp.Purchases.data.utils.EmptyView;
 import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
@@ -73,6 +74,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
     private CircularProgressView progressView;
     private View progressLayout;
     private SubsamplingScaleImageView image;
+    private EmptyView emptyView;
 
     private Toolbar toolBar;
 
@@ -110,6 +112,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
         toolBar.setOnMenuItemClickListener(this);
         toolBar.setNavigationOnClickListener(this);
 
+        emptyView = new EmptyView(rootView);
         image = (SubsamplingScaleImageView) rootView.findViewById(R.id.image);
         progressView = (CircularProgressView) rootView.findViewById(R.id.progress);
         progressLayout = rootView.findViewById(R.id.progress_layout);
@@ -277,6 +280,7 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showInfo(Sale sale) {
+        emptyView.hide();
         SimpleDateFormat format = new SimpleDateFormat("d MMM. ", new Locale("ru"));
         String title = format.format(new Date(sale.getPeriodStart())) + " - " + format.format(new Date(sale.getPeriodEnd()));
         toolBar.setTitle(title.toLowerCase());
@@ -284,7 +288,17 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showError(Throwable e) {
+        emptyView.showEmpty(e.getMessage(), R.drawable.ic_ghost_top);
+        hideCommentsMenuItem();
+        hideFavorite();
+        hideShare();
+    }
 
+    private void hideShare() {
+        MenuItem item = toolBar.getMenu().findItem(R.id.action_share);
+        if (item != null){
+            item.setVisible(false);
+        }
     }
 
     @Override
