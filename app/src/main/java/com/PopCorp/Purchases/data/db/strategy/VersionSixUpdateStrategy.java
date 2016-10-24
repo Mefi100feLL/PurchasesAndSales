@@ -26,6 +26,7 @@ public class VersionSixUpdateStrategy implements VersionUpdateStrategy {
     @Override
     public void update(Context context, SQLiteDatabase db) {
         addListIdColumnToItems(db);
+        db.execSQL(ListItemCategoryDAO.CREATE_TABLE_CATEGS);
         UpdaterDB.addCategs(context, db);
         replaceCategoryNameToIdInItems(db);
         replaceCategoryNameToIdInProducts(db);
