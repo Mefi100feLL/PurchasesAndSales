@@ -166,9 +166,13 @@ public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.Vie
             });
         }
         holder.setClickListener((v, pos) -> {
-            SaleDecorator saleDecorator = publishItems.get(pos);
-            if (!saleDecorator.isHeader()){
-                callback.onItemClicked(v, saleDecorator.getSale());
+            try {
+                SaleDecorator saleDecorator = publishItems.get(pos);
+                if (!saleDecorator.isHeader()) {
+                    callback.onItemClicked(v, saleDecorator.getSale());
+                }
+            } catch (IndexOutOfBoundsException e){
+                //Игнорируем пока. Хрен знает, почему проявляется
             }
         });
     }
