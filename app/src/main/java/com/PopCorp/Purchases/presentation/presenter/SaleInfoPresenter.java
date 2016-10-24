@@ -156,6 +156,7 @@ public class SaleInfoPresenter extends MvpPresenter<SaleInfoView> implements Cre
 
     public void onItemsRerurned(ListItem item) {
         for (ShoppingList list : selectedLists) {
+            item.setId(-1);
             item.setListId(list.getId());
             listItemInteractor.addItem(item);
         }
