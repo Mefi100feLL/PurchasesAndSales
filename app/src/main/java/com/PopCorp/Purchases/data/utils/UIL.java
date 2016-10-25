@@ -23,7 +23,6 @@ public class UIL {
                 .cacheOnDisk(true)
                 .cacheInMemory(true)
                 .considerExifParams(true)
-                .showImageOnLoading(R.drawable.ic_image_media)
                 .showImageOnFail(R.drawable.ic_image_media_alert)
                 .showImageForEmptyUri(R.drawable.ic_image_media_alert)
                 .bitmapConfig(Bitmap.Config.RGB_565)

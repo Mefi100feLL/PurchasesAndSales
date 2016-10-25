@@ -34,6 +34,7 @@ public class PreferencesManager {
     public static final String PREFS_SIZE_TABLE_CATEGS = "size_table_categs";
     public static final String PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE = "size_table_shops_skidkaonline";
     public static final String PREFS_SIZE_TABLE_SALES_SKIDKAONLINE = "size_table_sales_sakidkaonline";
+    public static final String PREFS_SIZE_TABLE_LISTITEMS = "size_table_listitems";
 
 
     public static final String PREFS_SIZE_TABLE_LISTS_LANDSCAPE = "size_table_lists_landscape";
@@ -42,6 +43,7 @@ public class PreferencesManager {
     public static final String PREFS_SIZE_TABLE_CATEGS_LANDSCAPE = "size_table_categs_landscape";
     public static final String PREFS_SIZE_TABLE_SHOPS_SKIDKAONLINE_LANDSCAPE = "size_table_shops_skidkaonline_landscape";
     public static final String PREFS_SIZE_TABLE_SALES_SKIDKAONLINE_LANDSCAPE = "size_table_sales_sakidkaonline_landscape";
+    public static final String PREFS_SIZE_TABLE_LISTITEMS_LANDSCAPE = "size_table_listitems_landscape";
 
     public static final String PREFS_DISPLAY_NO_OFF = "displaynooff";
     public static final String PREFS_LIST_ITEM_FONT_SIZE = "listsize";
@@ -66,6 +68,7 @@ public class PreferencesManager {
     public static final String PREFS_FILTER_LIST = "filter_list";
 
     public static final String PREFS_ABOUT = "about";
+    public static final String PREFS_OPEN_DEFAULT_LIST = "open_default_list";
 
     public static final String PREFS_COLOR_PRIMARY = "colorPrimary";
     public static final String PREFS_COLOR_ACCENT = "colorAccent";
@@ -110,6 +113,7 @@ public class PreferencesManager {
     private static final String PREFS_TAP_TARGET_PRODUCTS_SORTING = "PREFS_TAP_TARGET_PRODUCTS_SORTING";
     private static final String PREFS_TAP_TARGET_PRODUCTS_RETURN = "PREFS_TAP_TARGET_PRODUCTS_RETURN";
     private static final String PREFS_TAP_TARGET_SALES_FAVORITE = "PREFS_TAP_TARGET_SALES_FAVORITE";
+    public static final String PREFS_DEFAULT_DRAWER_ITEM_POSITION = "default_drawer_item";
 
     private Context context;
     private SharedPreferences sPref;
@@ -224,6 +228,14 @@ public class PreferencesManager {
         return sPref.getInt(PREFS_SIZE_TABLE_SALES_LANDSCAPE, context.getResources().getInteger(R.integer.default_size_table_lists_landscape));
     }
 
+    public int getListItemTableSizeLandscape() {
+        return sPref.getInt(PREFS_SIZE_TABLE_LISTITEMS_LANDSCAPE, 1);
+    }
+
+    public int getListItemTableSize() {
+        return sPref.getInt(PREFS_SIZE_TABLE_LISTITEMS, 1);
+    }
+
     public void putSaleTableSizeLandscape(int size) {
         editor.putInt(PREFS_SIZE_TABLE_SALES_LANDSCAPE, size).commit();
     }
@@ -254,7 +266,22 @@ public class PreferencesManager {
         editor.putInt(PREFS_SIZE_TABLE_LISTS_LANDSCAPE, size).commit();
     }
 
+    public void putListItemTableSizeLandscape(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_LISTITEMS_LANDSCAPE, size).commit();
+    }
 
+    public void putListItemTableSize(int size) {
+        editor.putInt(PREFS_SIZE_TABLE_LISTITEMS, size).commit();
+    }
+
+
+    public int getDefaultDrawerItemPosition() {
+        return sPref.getInt(PREFS_DEFAULT_DRAWER_ITEM_POSITION, 0);
+    }
+
+    public void putDefaultDrawerItemPosition(int value) {
+        editor.putInt(PREFS_DEFAULT_DRAWER_ITEM_POSITION, value).commit();
+    }
 
     public boolean isDisplayNoOff() {
         return sPref.getBoolean(PREFS_DISPLAY_NO_OFF, true);
@@ -489,6 +516,13 @@ public class PreferencesManager {
     public String getThemeLightDark() {
         return sPref.getString(PREFS_THEME_LIGHT_DARK, context.getString(R.string.prefs_light_theme));
     }
+
+    public boolean isOpenDefaultList(){
+        return sPref.getBoolean(PREFS_OPEN_DEFAULT_LIST, false);
+    }
+
+
+
 
     public boolean isTapTargetForShopsFilterShown() {
         return sPref.getBoolean(PREFS_TAP_TARGET_SHOPS_FILTER, false);

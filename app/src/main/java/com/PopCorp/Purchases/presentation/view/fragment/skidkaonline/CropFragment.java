@@ -133,8 +133,7 @@ public class CropFragment extends MvpAppCompatFragment implements CropView, Back
         try {
             cropView.setImageUri(Uri.fromFile(new File(getArguments().getString(CURRENT_FILE_PATH))));
             cropView.setTransformImageListener(presenter);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception | OutOfMemoryError e) {
             showToast(R.string.error_when_openning_image_file);
         }
         return rootView;

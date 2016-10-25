@@ -3,6 +3,7 @@ package com.PopCorp.Purchases.presentation.view.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.data.utils.ThemeManager;
 import com.PopCorp.Purchases.presentation.common.MvpAppCompatActivity;
 import com.PopCorp.Purchases.presentation.presenter.MainPresenter;
@@ -49,7 +51,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
                 .withStatusBarColorRes(ThemeManager.getInstance().getPrimaryDarkColorRes())
                 .build();
 
-        presenter.setSelectedDrawerItem(getIntent().getIntExtra(SELECTED_DRAWER_ITEM, -1));
+        int selectedDrawerItem;
+        TypedArray ar = getResources().obtainTypedArray(R.array.navigation_drawers);
+        int len = ar.length();
+        int[] resIds = new int[len];
+        for (int i = 0; i < len; i++) {
+            resIds[i] = ar.getResourceId(i, 0);
+        }
+        ar.recycle();
+        selectedDrawerItem = resIds[PreferencesManager.getInstance().getDefaultDrawerItemPosition()];
+
+        presenter.setSelectedDrawerItem(getIntent().getIntExtra(SELECTED_DRAWER_ITEM, selectedDrawerItem));
         getIntent().putExtra(SELECTED_DRAWER_ITEM, -1);
     }
 
@@ -57,7 +69,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     @Override
     public void onResume() {
         super.onResume();
-        if (drawer.getCurrentSelection() != presenter.getSelectedDrawerItem()){
+        if (drawer.getCurrentSelection() != presenter.getSelectedDrawerItem()) {
             drawer.setSelection(presenter.getSelectedDrawerItem(), true);
         }
     }
@@ -82,7 +94,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         return super.onOptionsItemSelected(item);
     }
 
-    private void selectFragment(Fragment fragment){
+    private void selectFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         if (fragment != null) {
@@ -98,7 +110,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
         drawer = NavigationBarFactory.createNavigationBar(this, (view, position, drawerItem) -> {
             presenter.setSelectedDrawerItem(drawerItem.getIdentifier());
             Fragment fragment = null;
-            switch ((int) drawerItem.getIdentifier()){
+            switch ((int) drawerItem.getIdentifier()) {
                 case R.string.navigation_drawer_shops:
                     fragment = new ShopsFragment();
                     break;

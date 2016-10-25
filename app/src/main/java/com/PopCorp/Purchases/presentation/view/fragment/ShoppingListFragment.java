@@ -11,8 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,6 +37,7 @@ import com.PopCorp.Purchases.presentation.common.MvpAppCompatFragment;
 import com.PopCorp.Purchases.presentation.controller.DialogController;
 import com.PopCorp.Purchases.presentation.presenter.ShoppingListPresenter;
 import com.PopCorp.Purchases.presentation.utils.DecoratorBigDecimal;
+import com.PopCorp.Purchases.presentation.utils.TableSizes;
 import com.PopCorp.Purchases.presentation.utils.TapTargetManager;
 import com.PopCorp.Purchases.presentation.view.activity.InputListItemActivity;
 import com.PopCorp.Purchases.presentation.view.activity.ListItemSaleActivity;
@@ -80,6 +81,8 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     private MaterialCab actionMode;
     private Menu menu;
 
+    private String[] arraySizesTable;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,9 +115,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         totalBuyedDesc = (TextView) rootView.findViewById(R.id.total_buyed_desc);
 
         ThemeManager.getInstance().putPrimaryColor(totallayout);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
-        recyclerView.setLayoutManager(layoutManager);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         recyclerView.setItemAnimator(itemAnimator);
 
@@ -368,6 +369,19 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     }
 
     @Override
+    public void checkShowSales(boolean checked) {
+        if (adapter != null){
+            adapter.setShowSales(checked);
+        }
+        recyclerView.post(() -> {
+            MenuItem item = menu.findItem(R.id.action_show_sales);
+            if (item != null) {
+                item.setChecked(checked);
+            }
+        });
+    }
+
+    @Override
     public void showErrorLoadingList() {
         showError(R.string.error_loading_list, R.drawable.ic_scream, R.string.button_exit, view -> finish());
     }
@@ -413,8 +427,28 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     }
 
     @Override
+    public void checkFilter(int itemId) {
+        recyclerView.post(() -> {
+            MenuItem item = menu.findItem(itemId);
+            if (item != null) {
+                item.setChecked(true);
+            }
+        });
+    }
+
+    @Override
     public void showEmptyItems() {
         showError(R.string.empty_no_listitems, R.drawable.ic_cart_minus, R.string.button_add, view -> showInputFragment(null));
+    }
+
+    @Override
+    public void showEmptyNoSaleItemsForShop(String shopName) {
+        showError(getString(R.string.empty_no_items_with_sales_for_shop).replace("shopName", shopName), R.drawable.ic_cart_minus, R.string.button_all_items, view -> presenter.showSales(true));
+    }
+
+    @Override
+    public void showEmptyNoSaleItems() {
+        showError(R.string.empty_no_items_with_sales, R.drawable.ic_cart_minus, R.string.button_all_items, view -> presenter.showSales(true));
     }
 
     @Override
@@ -440,6 +474,10 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public void showData() {
         if (adapter == null) {
             adapter = new ListItemAdapter(getActivity(), presenter, presenter.getObjects(), presenter.getSelectedItems(), PreferencesManager.getInstance().getListItemDecoratorComparator(), presenter.getCurrency());
+            adapter.setShowSales(presenter.isShowSales());
+            adapter.setTableSize(TableSizes.getListItemTableSize(getActivity()));
+            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(TableSizes.getListItemTableSize(getActivity()), StaggeredGridLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
         }
         progressBar.setVisibility(View.INVISIBLE);
@@ -473,6 +511,27 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
         inflater.inflate(R.menu.shopping_list, menu);
         this.menu = menu;
         super.onCreateOptionsMenu(menu, inflater);
+
+        try {
+            int groupId = 12;
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            item.getSubMenu().clear();
+            arraySizesTable = getResources().getStringArray(R.array.sizes_table_lists);
+            for (String filterItem : arraySizesTable) {
+                MenuItem addedItem = item.getSubMenu().add(groupId, filterItem.hashCode(), Menu.NONE, filterItem);
+                if (filterItem.equals(String.valueOf(TableSizes.getListItemTableSize(getActivity())))) {
+                    addedItem.setChecked(true);
+                }
+            }
+            item.getSubMenu().setGroupCheckable(groupId, true, true);
+            item.getSubMenu().setGroupEnabled(groupId, true);
+            item.setVisible(true);
+        } catch (IllegalStateException e) {//иногда ошибка на Samsung GT-P5200 c Android 4.4.2
+            MenuItem item = menu.findItem(R.id.action_size_table);
+            if (item != null) {
+                item.setVisible(false);
+            }
+        }
     }
 
     @Override
@@ -484,12 +543,14 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getGroupId() == R.id.action_shop_group) {
             presenter.onShopFilter(item.getItemId());
-            item.setChecked(true);
             return true;
         }
         switch (item.getItemId()) {
             case android.R.id.home:
                 getActivity().onBackPressed();
+                break;
+            case R.id.action_show_sales:
+                presenter.showSales(!item.isChecked());
                 break;
             case R.id.action_select_from_products:
                 showSelectingProducts();
@@ -509,6 +570,16 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
             /*case R.id.action_alarm:
                 DialogController.showDialogForAlarm(getActivity(), presenter.getList(), presenter);
                 break;*/
+        }
+
+        for (String filterItem : arraySizesTable) {
+            if (item.getItemId() == filterItem.hashCode()) {
+                TableSizes.putListItemTableSize(getActivity(), Integer.parseInt(filterItem));
+                item.setChecked(true);
+                StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(Integer.parseInt(filterItem), StaggeredGridLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(layoutManager);
+                adapter.setTableSize(Integer.parseInt(filterItem));
+            }
         }
         return true;
     }
@@ -532,6 +603,7 @@ public class ShoppingListFragment extends MvpAppCompatFragment implements Shoppi
     @Override
     public void filter(String filter) {
         if (adapter != null) {
+            showData();
             adapter.getFilter().filter(filter);
         }
     }

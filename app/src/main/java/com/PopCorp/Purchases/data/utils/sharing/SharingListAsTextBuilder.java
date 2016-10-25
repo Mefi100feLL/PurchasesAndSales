@@ -24,7 +24,7 @@ public class SharingListAsTextBuilder implements SharingListBuilder {
             result += item.getComment().isEmpty() ? " " : " (" + item.getComment() + ") ";
             result += item.getCountString() + " " + item.getEdizm() + " по " + item.getCoastString() + " " + currency;
             result += item.getShop().isEmpty() ? "" : " в " + item.getShop();
-            result += "\n";
+            result += "\n\n";
         }
         return result;
     }

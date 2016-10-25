@@ -17,6 +17,23 @@
         <item>@string/prefs_default_sort_list_two</item>
     </string-array>
 
+    <string-array name="navigation_drawers">
+        <item>@string/navigation_drawer_shops</item>
+        <item>@string/navigation_drawer_categories</item>
+        <item>@string/navigation_drawer_skidkaonline_sales</item>
+        <item>@string/navigation_drawer_lists</item>
+        <item>@string/navigation_drawer_settings</item>
+    </string-array>
+
+
+    <integer-array name="navigation_drawers_int">
+        <item>@string/navigation_drawer_shops</item>
+        <item>@string/navigation_drawer_categories</item>
+        <item>@string/navigation_drawer_skidkaonline_sales</item>
+        <item>@string/navigation_drawer_lists</item>
+        <item>@string/navigation_drawer_settings</item>
+    </integer-array>
+
     <string-array name="sizes">
         <item>10</item>
         <item>12</item>

@@ -23,6 +23,13 @@
     </item>
 
     <item
+        android:id="@+id/action_show_sales"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/action_show_sales"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/action_remove_buyed"
         android:title="@string/action_remove_buyed"
         app:showAsAction="never"/>
@@ -41,6 +48,19 @@
         android:id="@+id/action_send"
         android:title="@string/action_send_list"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_size_table"
+        android:icon="@drawable/ic_view_carousel_white_24dp"
+        android:title="@string/action_size_table"
+        app:showAsAction="never">
+
+        <menu>
+            <group android:checkableBehavior="single">
+
+            </group>
+        </menu>
+    </item>
 
     <!--<item
         android:id="@+id/action_alarm"

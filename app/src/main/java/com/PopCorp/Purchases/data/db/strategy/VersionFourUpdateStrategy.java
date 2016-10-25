@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.PopCorp.Purchases.R;
+import com.PopCorp.Purchases.data.dao.ListItemCategoryDAO;
 import com.PopCorp.Purchases.data.dao.ListItemDAO;
 import com.PopCorp.Purchases.data.dao.ProductDAO;
 import com.PopCorp.Purchases.data.dao.RegionDAO;
@@ -20,6 +21,7 @@ public class VersionFourUpdateStrategy implements VersionUpdateStrategy {
     @Override
     public void update(Context context, SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + DB.trans("All") + " RENAME TO " + ProductDAO.TABLE_ALL_ITEMS + ";");
+        db.execSQL(ListItemCategoryDAO.CREATE_TABLE_CATEGS);
         UpdaterDB.addCategs(context, db);
         db.execSQL(SaleDAO.CREATE_TABLE_SALES);
         db.execSQL(RegionDAO.CREATE_TABLE_CITIES);

@@ -6,6 +6,7 @@ import com.PopCorp.Purchases.data.callback.CreateEditListCallback;
 import com.PopCorp.Purchases.data.callback.ShareListCallback;
 import com.PopCorp.Purchases.data.model.ShoppingList;
 import com.PopCorp.Purchases.data.utils.ErrorManager;
+import com.PopCorp.Purchases.data.utils.PreferencesManager;
 import com.PopCorp.Purchases.domain.interactor.ShoppingListInteractor;
 import com.PopCorp.Purchases.presentation.view.moxy.ShoppingListsView;
 import com.arellomobile.mvp.InjectViewState;
@@ -25,6 +26,9 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
     private ShoppingListInteractor interactor = new ShoppingListInteractor();
 
     private ArrayList<ShoppingList> objects = new ArrayList<>();
+
+    private boolean firstLoading = true;
+
 
     public ShoppingListsPresenter() {
         getViewState().showProgress();
@@ -72,6 +76,19 @@ public class ShoppingListsPresenter extends MvpPresenter<ShoppingListsView> impl
                                 getViewState().showRemovedLists(removedLists);
                             }
                             getViewState().showData();
+                            if (PreferencesManager.getInstance().isOpenDefaultList() && firstLoading){
+                                ShoppingList defaultList = null;
+                                for (ShoppingList list : objects){
+                                    if (list.getDateTime() == 0){
+                                        defaultList = list;
+                                        break;
+                                    }
+                                }
+                                if (defaultList != null) {
+                                    getViewState().openShoppingList(defaultList);
+                                }
+                            }
+                            firstLoading = false;
                         } else {
                             getViewState().showEmptyLists();
                         }

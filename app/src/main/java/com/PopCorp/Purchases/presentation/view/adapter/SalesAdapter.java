@@ -149,9 +149,9 @@ public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.Vie
                 }
             }
             if (sale.isFavorite()) {
-                holder.favorite.setImageResource(R.drawable.ic_star_white_24dp);
+                holder.favorite.setImageResource(R.drawable.ic_star_amber_24dp);
             } else {
-                holder.favorite.setImageResource(R.drawable.ic_star_border_white_24dp);
+                holder.favorite.setImageResource(R.drawable.ic_star_border_amber_24dp);
             }
 
             holder.favorite.setTag(sale);
@@ -159,16 +159,20 @@ public abstract class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.Vie
                 Sale clickedSale = (Sale) v.getTag();
                 callback.onFavoriteClicked(clickedSale);
                 if (clickedSale.isFavorite()) {
-                    ((ImageView) v).setImageResource(R.drawable.ic_star_white_24dp);
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_amber_24dp);
                 } else {
-                    ((ImageView) v).setImageResource(R.drawable.ic_star_border_white_24dp);
+                    ((ImageView) v).setImageResource(R.drawable.ic_star_border_amber_24dp);
                 }
             });
         }
         holder.setClickListener((v, pos) -> {
-            SaleDecorator saleDecorator = publishItems.get(pos);
-            if (!saleDecorator.isHeader()){
-                callback.onItemClicked(v, saleDecorator.getSale());
+            try {
+                SaleDecorator saleDecorator = publishItems.get(pos);
+                if (!saleDecorator.isHeader()) {
+                    callback.onItemClicked(v, saleDecorator.getSale());
+                }
+            } catch (IndexOutOfBoundsException e){
+                //Игнорируем пока. Хрен знает, почему проявляется
             }
         });
     }

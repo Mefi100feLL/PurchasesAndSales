@@ -289,6 +289,31 @@ public class SettingsFragment extends MvpPreferenceFragment implements SettingsV
                 return true;
             });
         }
+
+        final Preference defaultDrawerItem = findPreference(PreferencesManager.PREFS_DEFAULT_DRAWER_ITEM_POSITION);
+        if (defaultDrawerItem != null) {
+            defaultDrawerItem.setOnPreferenceClickListener(preference -> {
+                showDialogWithDrawerItems(defaultDrawerItem);
+                return true;
+            });
+            String[] array = getResources().getStringArray(R.array.navigation_drawers);
+            defaultDrawerItem.setSummary(getString(R.string.prefs_default_drawer_item_summary).replace("drawer_item", array[PreferencesManager.getInstance().getDefaultDrawerItemPosition()]));
+        }
+    }
+
+    private void showDialogWithDrawerItems(Preference preference) {
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity());
+        builder.title(R.string.prefs_default_drawer_item);
+        builder.items(R.array.navigation_drawers);
+        builder.itemsCallbackSingleChoice(PreferencesManager.getInstance().getDefaultDrawerItemPosition(), (dialog, itemView, which, text) -> {
+            preference.setSummary(getString(R.string.prefs_default_drawer_item_summary).replace("drawer_item", text));
+            PreferencesManager.getInstance().putDefaultDrawerItemPosition(which);
+            return false;
+        });
+        builder.negativeText(R.string.dialog_button_cancel);
+        MaterialDialog dialog = builder.build();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     private void refreshActivity() {

@@ -1,6 +1,5 @@
 package com.PopCorp.Purchases.data.utils.sharing;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -45,10 +44,9 @@ public class SharingListAsEmailBuilder implements SharingListBuilder {
             result += item.getComment().isEmpty() ? " " : " (" + item.getComment() + ") ";
             result += item.getCountString() + " " + item.getEdizm() + " по " + item.getCoastString() + " " + currency;
             result += item.getShop().isEmpty() ? "" : " в " + item.getShop();
-            result += "<br>";
+            result += "<br><br>";
         }
-        result += "<br>Отправлено из приложения <a href='https://play.google.com/store/apps/details?id=com.PopCorp.Purchases'>Покупки по акциям</a>.<br>" +
-                "Если у Вас установлено данное приложение, нажмите на файл, чтобы загрузить список в приложение</html>";
+        result += "<br>Отправлено из приложения <a href='https://play.google.com/store/apps/details?id=com.PopCorp.Purchases'>Покупки по акциям</a>.<br></html>";
         return Html.fromHtml(result);
     }
 

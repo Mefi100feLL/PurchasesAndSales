@@ -5,8 +5,10 @@
     <string name="navigation_drawer_mestoskidki">Mestoskidki.ru</string>
     <string name="navigation_drawer_shops">Магазины</string>
     <string name="navigation_drawer_categories">Категории</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_skidkaonline">SkidkaOnline.ru</string>
+    <string name="navigation_drawer_skidkaonline_sales">Акции</string>
+    <string name="navigation_drawer_lists">Списки</string>
+    <string name="navigation_drawer_settings">Настройки</string>
 
 
     <!-- Empty -->
@@ -146,11 +148,6 @@
     <string name="string_for_share_sale">В \"shop\" period проводится акция на: name (comment). Цена: coast\n\nОтправлено из приложения \"Покупки по акциям\"</string>
     <string name="string_for_share_sale_skidkaonline">Акция проводится в \"shop\" period \n\nОтправлено из приложения \"Покупки по акциям\"</string>
     <string name="string_send_sale_with_app">Отправить акцию через</string>
-    <string name="navigation_drawer_skidkaonline">SkidkaOnline.ru</string>
-    <string name="navigation_drawer_shopping_lists">Списки покупок</string>
-    <string name="navigation_drawer_all_products">Все товары</string>
-    <string name="navigation_drawer_settings">Настройки</string>
-    <string name="navigation_drawer_lists">Списки</string>
     <string name="title_selecting_city">Выбор города</string>
     <string name="title_shops">Магазины</string>
     <string name="name_of_list">Имя списка</string>
@@ -173,7 +170,6 @@
     <string name="action_comments">Комментарии</string>
     <string name="notification_no_apps_for_share_sale">Нет приложений для отправки акции</string>
     <string name="sending_comment">Отправка...</string>
-    <string name="navigation_drawer_skidkaonline_sales">Акции</string>
     <string name="dialog_button_add">Добавить</string>
     <string name="hint_category_name">Имя категории</string>
     <string name="dialog_title_edit_category">Изменение категории</string>
@@ -368,5 +364,9 @@
     <string name="action_from_favorite">Из избранных</string>
     <string name="tap_target_title_sale_favorite">Быстрая отправка</string>
     <string name="tap_target_content_sale_favorite">Отправляйте акцию в список покупок одним касанием</string>
+    <string name="action_show_sales">Акционные товары</string>
+    <string name="empty_no_items_with_sales_for_shop">Нет товаров без акций для магазина \"shopName\"</string>
+    <string name="button_all_items">Все товары</string>
+    <string name="empty_no_items_with_sales">Нет товаров без акций</string>
 
 </resources>
