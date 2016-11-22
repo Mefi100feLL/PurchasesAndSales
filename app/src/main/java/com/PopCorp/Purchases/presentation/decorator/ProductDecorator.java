@@ -23,7 +23,7 @@ public class ProductDecorator implements ContentSame<ProductDecorator> {
     @Override
     public boolean equalsContent(ProductDecorator decorator) {
         boolean result = Arrays.equals(getFields(), decorator.getFields());
-        if ((!header && !decorator.isHeader()) && result){
+        if ((!header && !decorator.isHeader()) && result) {
             result = Arrays.equals(getItemFields(), decorator.getItemFields());
         }
         return result;
@@ -34,35 +34,39 @@ public class ProductDecorator implements ContentSame<ProductDecorator> {
         if (!(object instanceof ProductDecorator)) return false;
         ProductDecorator decorator = (ProductDecorator) object;
         boolean result = false;
-        if (header && decorator.isHeader()){
+        if (header && decorator.isHeader()) {
             if (category != null && decorator.getCategory() != null) {
                 result = category.equals(decorator.getCategory());
-            } else if (category == null && decorator.getCategory() == null){
+            } else if (category == null && decorator.getCategory() == null) {
                 result = name.equals(decorator.getName());
             }
-        } else if (!header && !decorator.isHeader()){
+        } else if (!header && !decorator.isHeader()) {
             result = item.equals(decorator.getItem());
         }
         return result;
     }
 
-    public String[] getFields(){
+    public String[] getFields() {
         String categoryId = "";
-        if (category != null){
+        if (category != null) {
             categoryId = String.valueOf(category.getId());
         }
-        return new String[] {
+        return new String[]{
                 name,
                 String.valueOf(header),
                 categoryId
         };
     }
 
-    public String[] getItemFields(){
-        return new String[] {
+    public String[] getItemFields() {
+        String categoryId = "";
+        if (item.getCategory() != null) {
+            categoryId = String.valueOf(item.getCategory().getId());
+        }
+        return new String[]{
                 item.getName(),
                 item.getCountString(),
-                String.valueOf(item.getCategory().getId())
+                categoryId
         };
     }
 

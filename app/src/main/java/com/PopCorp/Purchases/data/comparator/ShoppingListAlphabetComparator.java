@@ -8,14 +8,17 @@ public class ShoppingListAlphabetComparator implements Comparator<ShoppingList> 
 
     @Override
     public int compare(ShoppingList lhs, ShoppingList rhs) {
-        if (lhs.getId() == rhs.getId()){
+        if (lhs.getId() == rhs.getId()) {
             return 0;
         }
-        int result = lhs.getName().compareToIgnoreCase(rhs.getName());
-        if (result == 0){
-            if (lhs.getId() > rhs.getId()){
+        int result = 0;
+        if (lhs.getName() != null && rhs.getName() != null) {
+            result = lhs.getName().compareToIgnoreCase(rhs.getName());
+        }
+        if (result == 0) {
+            if (lhs.getId() > rhs.getId()) {
                 result = 1;
-            } else if (lhs.getId() < rhs.getId()){
+            } else if (lhs.getId() < rhs.getId()) {
                 result = -1;
             }
         }

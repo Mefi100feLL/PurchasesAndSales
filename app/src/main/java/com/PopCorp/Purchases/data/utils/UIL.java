@@ -8,7 +8,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class UIL {
 
-    public static DisplayImageOptions getScaleImageOptions(){
+    public static DisplayImageOptions getScaleImageOptions() {
         return new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .cacheOnDisk(true)
@@ -17,19 +17,20 @@ public class UIL {
                 .build();
     }
 
-    public static DisplayImageOptions getImageOptions(){
+    public static DisplayImageOptions getImageOptions() {
         return new DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
                 .cacheOnDisk(true)
-                .cacheInMemory(true)
+                .cacheInMemory(false)
                 .considerExifParams(true)
+                .showImageOnLoading(android.R.color.transparent)
                 .showImageOnFail(R.drawable.ic_image_media_alert)
                 .showImageForEmptyUri(R.drawable.ic_image_media_alert)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }
 
-    public static DisplayImageOptions getDownloadOptions(){
+    public static DisplayImageOptions getDownloadOptions() {
         return new DisplayImageOptions.Builder()
                 .cacheOnDisk(true)
                 .considerExifParams(true)

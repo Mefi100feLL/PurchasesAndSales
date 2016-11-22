@@ -16,29 +16,28 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion '23.0.3'
 
     signingConfigs {
         release {
+            storeFile file('androidsign')
+            storePassword KEYSTORE_PASSWORD
             keyAlias 'sign'
-            keyPassword 'popsuenkoae16'
-            storeFile file('D:\\androidsign')
-            storePassword 'popsuenkoae16'
+            keyPassword KEY_PASSWORD
         }
     }
 
     defaultConfig {
         applicationId "com.PopCorp.Purchases"
         minSdkVersion 16
-        targetSdkVersion 23
-        versionCode 40
-        versionName "4.0.9"
-        signingConfig signingConfigs.release
+        targetSdkVersion 24
+        versionCode 41
+        versionName "4.0.10"
     }
 
-    dexOptions{
-        javaMaxHeapSize "2g"
+    dexOptions {
+        javaMaxHeapSize JAVA_MAX_HEAP_SIZE
     }
 
     sourceSets {
@@ -50,7 +49,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        incremental false
     }
 
     applicationVariants.all { variant ->
@@ -66,7 +64,7 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
         }
-        debuggableRelease{
+        debuggableRelease {
             debuggable true
             signingConfig signingConfigs.release
         }
@@ -78,12 +76,9 @@ android {
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    productFlavors {
-    }
 }
 
-ext.supportVersion = "24.2.1"
+ext.supportVersion = "25.0.1"
 ext.moxyVersion = "0.4.3"
 ext.retrofitVersion = "2.1.0"
 dependencies {
@@ -91,7 +86,6 @@ dependencies {
 
     //images
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-
 
     //material
     compile('com.mikepenz:materialdrawer:5.6.0@aar') {
@@ -102,7 +96,6 @@ dependencies {
     compile 'com.afollestad:material-cab:0.1.12'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.4.1'
 
-
     //ui
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
@@ -110,7 +103,6 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.yalantis:ucrop:1.1.1'
-
 
     //support
     compile "com.android.support:design:$supportVersion"
@@ -120,15 +112,14 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-analytics:9.6.1'
 
-
     //utils
-    provided ("com.arello-mobile:moxy-compiler:$moxyVersion"){
+    provided("com.arello-mobile:moxy-compiler:$moxyVersion") {
         exclude group: 'com.google.android'
     }
-    compile ("com.arello-mobile:moxy:$moxyVersion"){
+    compile("com.arello-mobile:moxy:$moxyVersion") {
         exclude group: 'com.google.android'
     }
-    compile ("com.arello-mobile:moxy-android:$moxyVersion"){
+    compile("com.arello-mobile:moxy-android:$moxyVersion") {
         exclude group: 'com.google.android'
     }
 

@@ -15,6 +15,7 @@ import com.PopCorp.Purchases.R;
 import com.PopCorp.Purchases.data.callback.FavoriteRecyclerCallback;
 import com.PopCorp.Purchases.data.comparator.ShopComparator;
 import com.PopCorp.Purchases.data.model.Shop;
+import com.PopCorp.Purchases.data.utils.ErrorManager;
 import com.PopCorp.Purchases.data.utils.UIL;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -80,7 +81,7 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
 
     private ReplaySubject<View> publishSubject = ReplaySubject.create();
 
-    public Observable<View> getFavoriteViews(){
+    public Observable<View> getFavoriteViews() {
         return publishSubject;
     }
 
@@ -127,7 +128,7 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
         Shop shop = publishItems.get(position);
 
         ImageLoader.getInstance().displayImage(shop.getImageUrl(), holder.image, UIL.getImageOptions());
-        if (position == 0){
+        if (position == 0) {
             if (!publishSubject.hasCompleted()) {
                 publishSubject.onNext(holder.favorite);
                 publishSubject.onCompleted();
@@ -154,7 +155,13 @@ public class ShopsAdapter extends RecyclerView.Adapter<ShopsAdapter.ViewHolder> 
             }
         });
 
-        holder.setClickListener((v, position1) -> callback.onItemClicked(v, publishItems.get(position1)));
+        holder.setClickListener((v, position1) -> {
+            try {
+                callback.onItemClicked(v, publishItems.get(position1));
+            } catch (IndexOutOfBoundsException e) {
+                ErrorManager.printStackTrace(e);
+            }
+        });
     }
 
     @Override

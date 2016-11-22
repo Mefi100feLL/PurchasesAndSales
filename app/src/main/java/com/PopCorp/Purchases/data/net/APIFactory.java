@@ -2,6 +2,8 @@ package com.PopCorp.Purchases.data.net;
 
 import com.PopCorp.Purchases.data.utils.StethoLauncher;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -26,11 +28,14 @@ public class APIFactory {
         return api;
     }
 
-    private static OkHttpClient buildClient(){
+    private static OkHttpClient buildClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (StethoLauncher.getStethoInterceptor() != null){
+        if (StethoLauncher.getStethoInterceptor() != null) {
             builder.addNetworkInterceptor(StethoLauncher.getStethoInterceptor());
         }
+        builder.connectTimeout(10, TimeUnit.SECONDS);
+        builder.readTimeout(30, TimeUnit.SECONDS);
+        builder.writeTimeout(60, TimeUnit.SECONDS);
         return builder.build();
     }
 }

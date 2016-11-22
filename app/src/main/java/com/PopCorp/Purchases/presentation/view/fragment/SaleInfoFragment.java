@@ -409,18 +409,22 @@ public class SaleInfoFragment extends MvpAppCompatFragment
 
     @Override
     public void showFavorite(boolean favorite) {
-        MenuItem item = toolBar.getMenu().findItem(R.id.action_to_favorite);
-        if (item != null){
-            item.setVisible(true);
-            item.setIcon(favorite ? R.drawable.ic_star_white_24dp : R.drawable.ic_star_border_white_24dp);
-            item.setTitle(favorite ? R.string.action_from_favorite : R.string.action_to_favorite);
+        try {
+            MenuItem item = toolBar.getMenu().findItem(R.id.action_to_favorite);
+            if (item != null) {
+                item.setVisible(true);
+                item.setIcon(favorite ? R.drawable.ic_star_white_24dp : R.drawable.ic_star_border_white_24dp);
+                item.setTitle(favorite ? R.string.action_from_favorite : R.string.action_to_favorite);
+            }
+        } catch (Exception e) {
+            // Игнорируем, т.к. часто может вылазить ошибка при переключении фрагмента.
         }
     }
 
     @Override
     public void hideFavorite() {
         MenuItem item = toolBar.getMenu().findItem(R.id.action_to_favorite);
-        if (item != null){
+        if (item != null) {
             item.setVisible(false);
         }
     }

@@ -11,6 +11,10 @@ public class VersionFiveUpdateStrategy implements VersionUpdateStrategy {
     @Override
     public void update(Context context, SQLiteDatabase db) {
         db.execSQL(CategoryDAO.CREATE_TABLE_SALE_CATEGS);
-        db.execSQL("ALTER TABLE " + SaleDAO.TABLE_SALES + " ADD COLUMN " + SaleDAO.KEY_SALE_CATEGORY + " text;");
+        try {
+            db.execSQL("ALTER TABLE " + SaleDAO.TABLE_SALES + " ADD COLUMN " + SaleDAO.KEY_SALE_CATEGORY + " text;");
+        } catch (Exception e) {
+            // игнорируем, потому что такой столбец уже есть
+        }
     }
 }
