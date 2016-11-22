@@ -6,18 +6,19 @@
 com_crashlytics_export_strings.xml
 
 # Local configuration file (sdk path, etc)
+gradle.properties
 local.properties
 
 # Gradle generated files
 .gradle/
 
 # Signing files
-androidsign
 .signing/
 
 # User-specific configurations
 .idea/libraries/
 .idea/workspace.xml
+.idea/*
 
 *.iml
 /lifeline/lifeline.iml
